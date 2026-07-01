@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Surat Tugas - Verifikasi TUK AJJ</title>
+  <link rel="stylesheet" href="shared-ajj.css" />
+</head>
+<body>
+
+<div class="page">
+  <div class="body">
+    <div class="title-center">
+      <div class="title-main">Surat Tugas</div>
+      <div class="title-number">Nomor: {{noSuratTugas}}</div>
+    </div>
+
+    <p class="body-text">
+      Yang bertandatangan di bawah ini Direktur Lembaga Sertifikasi Profesi Gatensi Karya Konstruksi dengan ini memberi tugas kepada Tim Verifikator Tempat Uji Kompetensi (TUK):
+    </p>
+
+    <ul>
+      <li><strong>{{namaAsesor1}}</strong></li>
+      <li><strong>{{namaAsesor2}}</strong></li>
+    </ul>
+
+    <p class="body-text">
+      Untuk melakukan verifikasi Persyaratan Teknis Tempat Uji Kompetensi (TUK) bidang konstruksi di:
+    </p>
+
+    <table class="data-table" style="border: none;">
+      <tr><td style="width: 180px; border: none; padding: 3px 0;">Nama TUK</td><td style="width: 20px; text-align: center; border: none; padding: 3px 0;">:</td><td style="border: none; padding: 3px 0;">{{namaTUK}}</td></tr>
+      <tr><td style="border: none; padding: 3px 0;">Alamat</td><td style="text-align: center; border: none; padding: 3px 0;">:</td><td style="border: none; padding: 3px 0;">{{alamatTUK}}</td></tr>
+      <tr><td style="border: none; padding: 3px 0;">Hari, Tanggal</td><td style="text-align: center; border: none; padding: 3px 0;">:</td><td style="border: none; padding: 3px 0;">{{hariTanggal}}</td></tr>
+      <tr><td style="border: none; padding: 3px 0;">Metode Verifikasi</td><td style="text-align: center; border: none; padding: 3px 0;">:</td><td style="border: none; padding: 3px 0;">{{metodeVerifikasi}}</td></tr>
+      <tr><td style="border: none; padding: 3px 0;">Jumlah Peserta</td><td style="text-align: center; border: none; padding: 3px 0;">:</td><td style="border: none; padding: 3px 0;">{{jumlahPeserta}}</td></tr>
+      <tr><td style="border: none; padding: 3px 0;">Skema Sertifikasi</td><td style="text-align: center; border: none; padding: 3px 0;">:</td><td style="border: none; padding: 3px 0;">{{skemaSertifikasi}}</td></tr>
+    </table>
+
+    <p class="body-text">Demikian Surat tugas ini diberikan untuk dilaksanakan dengan penuh tanggung jawab.</p>
+
+    <table style="width: 45%; float: right; border: none; margin-top: 20px;">
+      <tr><td style="text-align: center; border: none; padding: 4px;">Jakarta, {{tanggalverifikasi-1}}</td></tr>
+      <tr><td style="text-align: center; border: none; padding: 4px;"><strong>LSP GATENSI KARYA KONSTRUKSI</strong></td></tr>
+      <tr><td style="text-align: center; border: none; padding: 25px 4px;">(ttd)</td></tr>
+      <tr><td style="text-align: center; border: none; padding: 4px;"><strong>{{namaDirektur}}</strong></td></tr>
+      <tr><td style="text-align: center; border: none; padding: 4px;">Direktur</td></tr>
+    </table>
+  </div>
+  <div style="clear: both;"></div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Form Checklist Verifikasi TUK - AJJ</title>
+  <link rel="stylesheet" href="shared-ajj.css" />
+</head>
+<body>
+
+<div class="page">
+  <div class="body">
+    <div class="title-center">
+      <div class="title-main">Form Checklist Verifikasi Tempat Uji Kompetensi</div>
+    </div>
+
+    <div class="inline-form"><span class="label">Nama TUK</span><span class="dots">:</span><span class="value">{{namaTUK}}</span></div>
+    <div class="inline-form"><span class="label">Alamat</span><span class="dots">:</span><span class="value">{{alamatTUK}}</span></div>
+    <div class="inline-form"><span class="label">Hari, Tanggal</span><span class="dots">:</span><span class="value">{{hariTanggal}}</span></div>
+    <div class="inline-form"><span class="label">Jenis Asesmen</span><span class="dots">:</span><span class="value">{{jenisAsesmen}}</span></div>
+    <div class="inline-form"><span class="label">Metode Asesmen</span><span class="dots">:</span><span class="value"><strong>{{metodeAsesmen}}</strong></span></div>
+    <div class="inline-form"><span class="label">Skema Sertifikasi</span><span class="dots">:</span><span class="value">{{skemaSertifikasi}}</span></div>
+
+    <br/>
+    <table class="check-table">
+      <thead>
+        <tr>
+          <th rowspan="2" style="width: 30px;">No.</th>
+          <th rowspan="2">Perlengkapan<br/>Sarana dan Prasarana</th>
+          <th rowspan="2">Spesifikasi</th>
+          <th rowspan="2" style="width: 50px;">Jml</th>
+          <th colspan="2">Kondisi</th>
+          <th rowspan="2">Keterangan</th>
+        </tr>
+        <tr>
+          <th style="width: 38px;">Baik</th>
+          <th style="width: 38px;">Rusak</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Ruangan Uji (meja &amp; kursi)</td>
+          <td>
+            <ul>
+              <li>Ruangan Tertutup</li>
+              <li>Meja dan Kursi</li>
+              <li>Tersedia Kelistrikan</li>
+              <li>Pencahayaan cukup</li>
+            </ul>
+          </td>
+          <td>1</td>
+          <td></td>
+          <td></td>
+          <td>{{kondisiRuangan}}</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Laptop</td>
+          <td>
+            <ul>
+              <li>Laptop + Webcam</li>
+              <li>Min. Windows 10</li>
+              <li>Min. RAM 4 GB</li>
+              <li>Min. Memory 256 GB</li>
+              <li>Browser Google Chrome</li>
+              <li>Aplikasi Zoom</li>
+            </ul>
+          </td>
+          <td>1</td>
+          <td></td>
+          <td></td>
+          <td>{{kondisiLaptop}}</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Kecepatan Jaringan</td>
+          <td><ul><li>Min. 1 Mbps</li></ul></td>
+          <td>1</td>
+          <td></td>
+          <td></td>
+          <td>{{kondisiJaringan}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</body>
+</html>

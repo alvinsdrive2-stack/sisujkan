@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hasil Verifikasi dan Standardisasi TUK - AJJ</title>
+  <link rel="stylesheet" href="shared-ajj.css" />
+</head>
+<body>
+
+<div class="page">
+  <div class="body">
+    <div class="title-center">
+      <div class="title-main" style="padding-bottom: 6px; text-align: left;">Hasil Verifikasi dan Standardisasi TUK</div>
+    </div>
+
+    <p class="rekomendasi"><strong>Rekomendasi :</strong> {{statusRekomendasi}}</p>
+    <p style="margin-top: 4px; font-size: 12pt; padding-left: 95px;">Sebagai Tempat Penyelenggaraan Uji Sertifikasi Kompetensi</p>
+
+    <br/>
+    <p><strong>Penanggung jawab TUK</strong></p>
+    <table class="sign-table" style="margin-top: 8px;">
+      <thead>
+        <tr>
+          <th style="width: 50px;">No.</th>
+          <th>Ketua TUK</th>
+          <th style="width: 120px;">Tanda Tangan</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1.</td>
+          <td>{{namaKetuaTUK}}</td>
+          <td>{{barcodeKetuaTUK}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <br/>
+    <div style="text-align: right; margin-bottom: 8px;">Jakarta, {{tanggalVerifikasi}}</div>
+
+    <table class="sign-table">
+      <thead>
+        <tr>
+          <th style="width: 50px;">No.</th>
+          <th>Tim Verifikator</th>
+          <th style="width: 120px;">Tanda Tangan</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1.</td>
+          <td>{{namaVerifikator}}</td>
+          <td>{{barcodeVerifikator}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</body>
+</html>

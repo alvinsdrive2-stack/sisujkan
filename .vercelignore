@@ -1,0 +1,30 @@
+# PSD files
+*.psd
+**/*.psd
+
+# Other design files
+*.ai
+*.sketch
+*.fig
+
+# Development files
+node_modules
+.DS_Store
+*.log
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Testing
+coverage
+.nyc_output
+
+# Misc
+.claude

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Berita Acara Pleno Komite Teknis</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 11pt;
+            line-height: 1.5;
+        }
+
+        .page {
+            width: 210mm;
+            height: 297mm;
+            padding: 25mm 30mm;
+            background-image: url('src/template-skdirektur.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            page-break-after: always;
+            position: relative;
+        }
+
+        .page:last-child {
+            page-break-after: auto;
+        }
+
+        .header {
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 14pt;
+            font-weight: bold;
+        }
+
+        .nomor {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .content {
+            text-align: justify;
+            margin-bottom: 20px;
+        }
+
+        .content p {
+            margin-bottom: 15px;
+        }
+
+        .table-section {
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11pt;
+        }
+
+        table th, table td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: center;
+        }
+
+        table th {
+            background-color: #fff;
+            font-weight: bold;
+        }
+
+        table td:nth-child(2),
+        table td:nth-child(3) {
+            text-align: left;
+        }
+
+        .tanggal {
+            text-align: right;
+            margin-bottom: 10px;
+        }
+
+        .komtek-section {
+            margin-bottom: 20px;
+        }
+
+        .komtek-row {
+            display: flex;
+            margin-bottom: 8px;
+        }
+
+        .komtek-label {
+            width: 130px;
+            flex-shrink: 0;
+        }
+
+        .komtek-colon {
+            width: 15px;
+        }
+
+        .komtek-indent {
+            margin-left: 145px;
+            margin-bottom: 3px;
+        }
+
+        .ttd-section {
+            position: absolute;
+            bottom: 80px;
+            right: 100px;
+            text-align: center;
+            width: 250px;
+        }
+
+        .ttd-section .title {
+            font-weight: bold;
+            margin-bottom: 60px;
+        }
+
+        .ttd-section .nama {
+            font-weight: bold;
+        }
+
+        .ttd-section .signatures {
+            margin-top: 10px;
+        }
+
+        .ttd-section .signatures p {
+            margin-bottom: 5px;
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .page {
+                background-image: url('src/template-skdirektur.png');
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <div class="header">
+            <h1>Berita Acara Pleno Komite Teknis</h1>
+        </div>
+        <hr/><hr/>
+
+        <div class="nomor">
+            <strong>Nomor : 1083/LSP GKK B.002-A-NS/VIII/2025</strong>
+        </div>
+
+        <div class="content">
+            <p>
+                Bahwa pada tanggal 28 Agustus 2025, telah dilakukan rapat pleno Komite Teknis
+                Lembaga Sertifikasi Profesi Gatensi Karya Konstruksi, setelah dilakukan verifikasi
+                rekaman asesmen maka dari 1 asesi dinyatakan: 1 asesi kompeten dan tidak ada asesi
+                belum kompeten dengan daftar sebagaimana berikut:
+            </p>
+        </div>
+
+        <div class="table-section">
+            <table>
+                <thead>
+                    <tr>
+                        <th rowspan="2">No</th>
+                        <th rowspan="2">Nama Asesi</th>
+                        <th rowspan="2">Skema Sertifikasi</th>
+                        <th colspan="2">Keterangan</th>
+                    </tr>
+                    <tr>
+                        <th>K</th>
+                        <th>BK</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>KEVIN SINAR UTAMA GIRSANG</td>
+                        <td>Perakit Struktur Bangunan RISHA</td>
+                        <td>K</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="tanggal" style="text-align: center;">Jakarta, 28 Agustus 2025</div>
+
+        <table style="margin-top: 20px;">
+            <thead>
+                <tr>
+                    <th>Ketua Rapat Pleno Komite Teknis</th>
+                    <th>Tanda Tangan</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="text-align: left;">Sigit Winarto</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;">Bambang Esti Marsono</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;">Bambang Hariadi</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

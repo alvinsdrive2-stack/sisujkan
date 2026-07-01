@@ -1,0 +1,110 @@
+/* ================================================
+   SHARED CSS — Verifikasi TUK AJJ Documents
+   Clean modern template for cert management
+   ================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Cambria', serif;
+  font-size: 12pt;
+  color: #1a1a2e;
+  background: #f5f5f5;
+  padding: 40px 20px;
+  line-height: 1.5;
+}
+
+.page {
+  width: 100%;
+  min-height: 297mm;
+  margin: 0 auto 40px auto;
+  background: #ffffff;
+  background-image: url('images/image5.jpg');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  border: 1px solid #d1d5db;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  page-break-after: always;
+  padding: 38mm 22mm 18mm 22mm;
+}
+
+@media print {
+  @page { size: A4; margin: 0; }
+  .page { box-shadow: none; border: none; margin: 0 auto; }
+  body { padding: 0; background: white; }
+}
+
+/* --- Header --- */
+.header { display: flex; align-items: flex-start; gap: 16px; margin: 0 20mm; }
+.header-logo { width: 200px; height: 200px; flex-shrink: 0; }
+.header-info { flex: 1; padding-top: 25px; }
+.header-address { font-size: 9pt; color: #555; line-height: 1.5; text-align: right; }
+.header-contact { font-size: 9pt; color: #555; margin-top: 2px; text-align: right; }
+
+/* --- Titles --- */
+.title-center { text-align: center; margin-bottom: 20px; }
+.title-main { font-size: 16pt; font-weight: 700; color: #1a1a2e; text-transform: uppercase; letter-spacing: 1px; }
+.title-number { font-size: 12pt; font-weight: 600; margin-top: 4px; color: #333; }
+.section-title { text-align: center; font-weight: 700; font-size: 12pt; margin: 14px 0 6px; }
+.decision { text-align: center; font-weight: 700; margin: 16px 0 8px; font-size: 13pt; }
+
+/* --- Text --- */
+.body { margin: 0; }
+.body-text { margin-bottom: 16px; font-size: 12pt; text-align: justify; }
+.paragraph { margin-bottom: 16px; text-align: justify; }
+.content { margin: 0; font-size: 12pt; line-height: 1.5; text-align: justify; }
+.rekomendasi { margin-top: 12px; font-size: 12pt; }
+
+/* --- Inline Form (key : value grid) --- */
+.inline-form { display: grid; grid-template-columns: 180px 20px 1fr; gap: 0; margin-bottom: 0; font-size: 12pt; }
+.inline-form .label { padding: 2px 0; }
+.inline-form .dots { color: #999; text-align: center; padding: 2px 4px; }
+.inline-form .value { padding: 2px 0; }
+
+/* --- Tables --- */
+.data-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 12pt; }
+.data-table th { border: 1px solid #333; padding: 6px 10px; text-align: center; font-weight: 700; background: #fff; }
+.data-table td { border: 1px solid #333; padding: 6px 10px; vertical-align: top; }
+.data-table td:first-child { text-align: center; font-weight: 700; width: 30px; }
+
+.doc-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+.doc-table th { border: 1px solid #333; padding: 6px 10px; text-align: center; font-weight: 700; background: #fff; }
+.doc-table td { border: 1px solid #333; padding: 10px; vertical-align: middle; text-align: center; }
+.doc-table td:first-child { width: 30px; text-align: center; }
+
+.check-table { width: 100%; border-collapse: collapse; font-size: 10pt; table-layout: fixed; }
+.check-table th { border: 1px solid #333; padding: 6px 8px; text-align: center; font-weight: 700; background: #fff; vertical-align: middle; }
+.check-table td { border: 1px solid #333; padding: 5px 8px; vertical-align: top; }
+.check-table td:first-child { text-align: center; width: 30px; }
+
+.sign-table { width: 100%; border-collapse: collapse; margin-top: 24px; font-size: 12pt; }
+.sign-table th { border: 1px solid #333; padding: 8px 10px; text-align: center; font-weight: 700; background: #fff; }
+.sign-table td { border: 1px solid #333; padding: 8px 10px; text-align: center; height: 80px; vertical-align: top; font-size: 10pt; color: #555; }
+
+.result-table { width: 100%; border-collapse: collapse; font-size: 12pt; }
+.result-table th { border: 1px solid #333; padding: 6px 10px; text-align: center; font-weight: 700; background: #3fb4ea; }
+.result-table td { border: 1px solid #333; padding: 6px 10px; vertical-align: top; }
+
+/* --- Content key-value table --- */
+.content table { width: 100%; border-collapse: collapse; margin: 6px 0; }
+.content td { vertical-align: top; padding: 2px 0; font-size: 12pt; }
+.content td.label { width: 110px; }
+.content td.separator { width: 16px; text-align: center; }
+.content td.index { width: 22px; }
+
+/* --- Signatures --- */
+.sign-row { display: table; width: 100%; margin-top: 24px; border-collapse: collapse; }
+.sign-cell { display: table-cell; width: 50%; text-align: center; vertical-align: bottom; padding: 8px; }
+.sign-name { font-size: 12pt; text-decoration: underline; }
+.sign-role { font-size: 12pt; color: #000; margin-top: 4px; }
+
+.signature-block { margin-top: 32px; text-align: right; padding-right: 20px; }
+.signature-date { font-size: 12pt; margin-bottom: 16px; }
+.signature-title { font-weight: 700; margin-bottom: 4px; }
+.signature-role { font-size: 12pt; color: #555; }
+
+.salutation-line { display: block; margin-bottom: 0; }
+.section-break { margin-top: 40px; padding-top: 20px; border-top: 2px solid #ccc; }
+
+ul { padding-left: 20px; margin: 4px 0; }
+li { margin-bottom: 2px; }

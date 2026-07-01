@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Surat Perintah Tugas Asesor</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 11pt;
+            line-height: 1.5;
+        }
+
+        .page {
+            width: 210mm;
+            height: 297mm;
+            padding: 25mm 30mm;
+            background-image: url('src/template-skdirektur.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            page-break-after: always;
+            position: relative;
+        }
+
+        .page:last-child {
+            page-break-after: auto;
+        }
+
+        .header {
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 12pt;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .nomor {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .intro {
+            text-align: justify;
+            margin-bottom: 20px;
+        }
+
+        .asesor-section {
+            margin-bottom: 20px;
+        }
+
+        .asesor-row {
+            display: flex;
+            margin-bottom: 8px;
+        }
+
+        .asesor-label {
+            width: 150px;
+            flex-shrink: 0;
+        }
+
+        .asesor-colon {
+            width: 15px;
+        }
+
+        .asesor-value {
+            flex: 1;
+        }
+
+        .asesor-status {
+            font-weight: bold;
+            margin-bottom: 5px;
+            margin-top: 15px;
+        }
+
+        .detail-section {
+            margin-bottom: 20px;
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 8px;
+        }
+
+        .detail-label {
+            width: 130px;
+            flex-shrink: 0;
+        }
+
+        .detail-colon {
+            width: 15px;
+        }
+
+        .detail-value {
+            flex: 1;
+        }
+
+        .detail-indent {
+            margin-left: 145px;
+            margin-bottom: 3px;
+        }
+
+        .ttd-section {
+            position: absolute;
+            bottom: 80px;
+            right: 100px;
+            text-align: center;
+            width: 250px;
+        }
+
+        .ttd-section .tanggal {
+            margin-bottom: 10px;
+        }
+
+        .ttd-section .lembaga {
+            font-weight: bold;
+            margin-bottom: 60px;
+        }
+
+        .ttd-section .nama {
+            font-weight: bold;
+        }
+
+        .tembusan {
+            position: absolute;
+            bottom: 40px;
+            left: 30mm;
+            font-size: 10pt;
+            transform: translateY(-50%);
+        }
+
+        .tembusan-title {
+            font-style: italic;
+            text-decoration: underline;
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .page {
+                background-image: url('src/template-skdirektur.png');
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <div class="header">
+            <h1>SURAT PERINTAH TUGAS</h1>
+        </div>
+        <hr/><hr/>
+        <div class="nomor">
+            <strong>Nomor : 1130/LSP GKK B.012-A-NS/VIII/2025</strong>
+        </div>
+
+        <div class="intro">
+            <p>Yang bertandatangan di bawah ini Direktur LSP GKK, dengan ini memberi tugas kepada :</p>
+        </div>
+
+        <div class="asesor-section">
+            <!-- Asesor 1 -->
+            <div class="asesor-status">Status Penugasan : Asesor 1</div>
+            <div class="asesor-row">
+                <span class="asesor-label">Nama</span>
+                <span class="asesor-colon">:</span>
+                <span class="asesor-value">AKHMADI HAFID</span>
+            </div>
+            <div class="asesor-row">
+                <span class="asesor-label">No. Reg</span>
+                <span class="asesor-colon">:</span>
+                <span class="asesor-value">MET 000.006417 2021</span>
+            </div>
+
+            <!-- Asesor 2 -->
+            <div class="asesor-status">Status Penugasan : Asesor 2</div>
+            <div class="asesor-row">
+                <span class="asesor-label">Nama</span>
+                <span class="asesor-colon">:</span>
+                <span class="asesor-value">MUHAMMAD NASIR YUSUF</span>
+            </div>
+            <div class="asesor-row">
+                <span class="asesor-label">No. Reg</span>
+                <span class="asesor-colon">:</span>
+                <span class="asesor-value">MET.000.007752 2023</span>
+            </div>
+        </div>
+
+        <div class="intro">
+            <p>Untuk melaksanakan uji kompetensi bidang konstruksi di :</p>
+        </div>
+
+        <div class="detail-section">
+            <div class="detail-row">
+                <span class="detail-label">Nama TUK</span>
+                <span class="detail-colon">:</span>
+                <span class="detail-value">TUK SEWAKTU GKK</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Alamat</span>
+                <span class="detail-colon">:</span>
+                <span class="detail-value">GRAHA GAPENSI, Jl. Raya Ragunan No.</span>
+            </div>
+            <div class="detail-indent">C/1, Kel. Jatipadang Kec. Pasar Minggu,</div>
+            <div class="detail-indent">Provinsi DKI Jakarta</div>
+
+            <div class="detail-row">
+                <span class="detail-label">Hari/Tanggal</span>
+                <span class="detail-colon">:</span>
+                <span class="detail-value">Kamis, 28 Agustus 2025</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Jumlah Peserta</span>
+                <span class="detail-colon">:</span>
+                <span class="detail-value">1</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Sub Klasifikasi</span>
+                <span class="detail-colon">:</span>
+                <span class="detail-value">GEDUNG</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Jabatan Kerja</span>
+                <span class="detail-colon">:</span>
+                <span class="detail-value">Perakit Struktur Bangunan RISHA</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Nama Peserta</span>
+                <span class="detail-colon">:</span>
+                <span class="detail-value">1. KEVIN SINAR UTAMA GIRSANG</span>
+            </div>
+        </div>
+
+        <div class="ttd-section">
+            <div class="tanggal">Rabu, 27 Agustus 2025</div>
+            <div style="margin-bottom: 10px;">Hormat kami,</div>
+            <div class="lembaga">Lembaga Sertifikasi Profesi<br/>Gatensi Karya Konstruksi</div>
+            <div style="border-top: 1px solid #000; border-bottom: 1px solid #000; height: 2px; margin: 10px 0;"></div>
+            <div class="nama">RADINAL EFENDY, ST</div>
+            <div>Direktur LSP</div>
+        </div>
+
+        <div class="tembusan">
+            <span class="tembusan-title">Tembusan :</span>
+            <br />1. Ketua Dewan Pengarah
+            <br />2. Yang bersangkutan
+            <br />3. Arsip
+        </div>
+    </div>
+</body>
+</html>

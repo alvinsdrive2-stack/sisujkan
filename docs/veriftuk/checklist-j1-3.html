@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checklist J1-3 - LSP Gatensi</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Cambria', serif;
+      font-size: 12pt;
+      color: #1a1a2e;
+      background: #f5f5f5;
+      padding: 40px 20px;
+      line-height: 1.5;
+    }
+
+    .page {
+      width: 100%;
+      margin: 0 auto 40px auto;
+      background: #ffffff;
+      border: 1px solid #d1d5db;
+      border-radius: 0;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      page-break-after: always;
+    }
+
+    @media print {
+      @page {
+        size: A4;
+        margin: 0;
+      }
+      .page {
+        box-shadow: none;
+        border: none;
+        margin: 0 auto;
+        padding: 20mm 5mm;
+      }
+      body {
+        padding: 0;
+        background: white;
+      }
+    }
+
+    /* ── Header ── */
+    .header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin: 0 20mm 0 20mm;
+    }
+
+    .header-logo {
+      width: 200px;
+      height: 200px;
+      flex-shrink: 0;
+    }
+
+    .header-info {
+      flex: 1;
+      padding-top: 25px;
+    }
+
+    .header-address {
+      font-size: 9pt;
+      color: #555;
+      line-height: 1.5;
+      text-align: right;
+    }
+
+    .header-contact {
+      font-size: 9pt;
+      color: #555;
+      margin-top: 2px;
+      text-align: right;
+    }
+
+    /* ── Body ── */
+    .body {
+      margin: 0 20mm;
+    }
+
+    /* ── Info bar ── */
+    .info-bar {
+      display: grid;
+      grid-template-columns: 180px 20px 1fr;
+      gap: 0;
+      font-size: 12pt;
+    }
+
+    .info-bar .label { padding: 2px 0; }
+    .info-bar .dots  { color: #999; text-align: center; padding: 2px 4px; }
+    .info-bar .value { padding: 2px 0; }
+
+    /* ── Section title ── */
+    .section-title {
+      font-size: 12pt;
+      font-weight: 700;
+      margin: 16px 0 8px 0;
+    }
+
+    /* ── Main table ── */
+    .check-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 8pt;
+      table-layout: fixed;
+    }
+
+    .check-table th {
+      border: 1px solid #333;
+      padding: 6px 8px;
+      text-align: center;
+      font-weight: 700;
+      background: #fff;
+      vertical-align: middle;
+    }
+
+    .check-table td {
+      border: 1px solid #333;
+      padding: 5px 8px;
+      vertical-align: top;
+    }
+
+    .col-no       { width: 30px;  text-align: center; font-weight: 700; }
+    .col-per      { width: auto;   text-align: left; }
+    .col-spes     { width: auto;   text-align: left; }
+    .col-jumlah   { width: 50px;  text-align: center; }
+    .col-ketersediaan { width: 80px; text-align: center; }
+    .col-kelayakan  { width: 80px;  text-align: center; }
+
+    /* ── Checklist rows ── */
+    .check-table .row-label {
+      font-weight: 700;
+      background: #f8f8f8;
+    }
+
+    .check-table .sub-item td {
+      padding-left: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+  
+
+  <div class="body">
+    <br/>
+    <div style="font-weight: bold; padding-bottom: 16px;">INFORMASI JABATAN KERJA</div>
+    <!-- Info bar -->
+    <div class="info-bar">
+      <span class="label">JABATAN KERJA</span>
+      <span class="dots">:</span>
+      <span class="value">{{jabatan_kerja}}</span>
+    </div>
+    <div class="info-bar">
+      <span class="label">JENJANG</span>
+      <span class="dots">:</span>
+      <span class="value">{{jenjang}}</span>
+    </div>
+    <div class="info-bar">
+      <span class="label">METODE UJI</span>
+      <span class="dots">:</span>
+      <span class="value">{{metode_uji}}</span>
+    </div>
+
+    <!-- MAIN TABLE -->
+    <table class="check-table">
+      <thead>
+        <tr>
+          <th rowspan="2" class="col-no">No.</th>
+          <th rowspan="2" class="col-per">Perlengkapan</th>
+          <th rowspan="2" class="col-spes">Spesifikasi</th>
+          <th rowspan="2" class="col-jumlah">Jumlah</th>
+          <th colspan="2" class="col-ketersediaan">Ketersediaan</th>
+          <th colspan="2" class="col-kelayakan">Kelayakan</th>
+        </tr>
+        <tr>
+          <th class="col-spes">ada</th>
+          <th class="col-spes">tidak ada</th>
+          <th class="col-spes">ada</th>
+          <th class="col-spes">tidak ada</th>
+      </thead>
+      <tbody>
+        <!-- LOKASI PARKIR -->
+       <tr>
+        <td colspan="8" style="font-weight: bold;">Alat</td>
+       </tr>
+        <tr>
+          <td class="col-no">1</td>
+          <td class="col-per">{{perlengkapan}}</td>
+          <td class="col-spes">{{spesifikasi}}</td>
+          <td class="col-jumlah"></td>
+          <td class="col-ketersediaan"></td>
+          <td class="col-kelayakan"></td>
+          <td class="col-ketersediaan"></td>
+          <td class="col-kelayakan"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,405 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Surat Permohonan Peminjaman TUK - LSP Gatensi</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Cambria', serif;
+      font-size: 12pt;
+      color: #1a1a2e;
+      background: #f5f5f5;
+      padding: 40px 20px;
+      line-height: 1.5;
+    }
+
+    .page {
+      width: 100%;
+      margin: 0 auto 40px auto;
+      background: #ffffff;
+      border: 1px solid #d1d5db;
+      border-radius: 0;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      page-break-after: always;
+    }
+
+    @media print {
+      @page {
+        size: A4;
+        margin: 0;
+      }
+      .page {
+        box-shadow: none;
+        border: none;
+        margin: 0 auto;
+        padding: 20mm 5mm;
+      }
+      body {
+        padding: 0;
+        background: white;
+      }
+    }
+
+    /* ── Header ── */
+    .header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin: 0 20mm 0 20mm;
+    }
+
+    .header-logo {
+      width: 200px;
+      height: 200px;
+      flex-shrink: 0;
+    }
+
+    .header-info {
+      flex: 1;
+      padding-top: 25px;
+    }
+
+    .header-name {
+      font-size: 14pt;
+      font-weight: 700;
+      color: #c0392b;
+      margin-bottom: 2px;
+    }
+
+    .header-address {
+      font-size: 9pt;
+      color: #555;
+      line-height: 1.5;
+      text-align: right;
+    }
+
+    .header-contact {
+      font-size: 9pt;
+      color: #555;
+      margin-top: 2px;
+      text-align: right;
+    }
+
+
+    /* ── Body ── */
+    .body {
+      margin: 0 20mm;
+    }
+
+    /* ── Reference block ── */
+    .ref-block {
+      display: grid;
+      grid-template-columns: 80px 16px 1fr;
+      gap: 0;
+      margin-bottom: 20px;
+      font-size: 12pt;
+    }
+
+    .ref-label {
+      color: #1a1a2e;
+      padding: 2px 0;
+    }
+
+    .ref-dots {
+      color: #999;
+      user-select: none;
+    }
+
+    .ref-value {
+      color: #333;
+      padding: 2px 0;
+    }
+
+    /* ── Salutation ── */
+    .salutation {
+      margin-bottom: 16px;
+      font-size: 12pt;
+    }
+
+    .salutation-line {
+      display: block;
+      margin-bottom: 0px;
+    }
+
+    /* ── Section label ── */
+    .section-label {
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    /* ── Form table ── */
+    .form-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 16px;
+      font-size: 12pt;
+    }
+
+    .form-table td:first-child {
+      width: 130px;
+      vertical-align: top;
+      padding: 4px 8px 4px 0;
+      color: #1a1a2e;
+      white-space: nowrap;
+    }
+
+    .form-table td:nth-child(2) {
+      width: 20px;
+      text-align: center;
+      vertical-align: top;
+      padding: 4px 4px;
+      color: #555;
+    }
+
+    .form-table td:last-child {
+      padding: 4px 0;
+      color: #333;
+    }
+
+    .form-table tr:not(:last-child) td {
+      padding-bottom: 6px;
+    }
+
+    /* ── Paragraph ── */
+    .paragraph {
+      margin-bottom: 16px;
+      text-align: justify;
+    }
+
+    /* ── Signature ── */
+    .signature-block {
+      margin-top: 32px;
+      text-align: right;
+      padding-right: 20px;
+    }
+
+    .signature-date {
+      font-size: 12pt;
+      margin-bottom: 16px;
+    }
+
+    .signature-title {
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .signature-role {
+      font-size: 12pt;
+      color: #555;
+    }
+
+    /* ── Surat Tugas specific ── */
+    .title-center {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .title-main {
+      font-size: 16pt;
+      font-weight: 700;
+      color: #1a1a2e;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .title-number {
+      font-size: 16pt;
+      font-weight: 600;
+      margin-top: 4px;
+      color: #333;
+    }
+
+    .body-text {
+      margin-bottom: 16px;
+      text-align: justify;
+      font-size: 12pt;
+    }
+
+    .body-text:last-child { margin-bottom: 0; }
+
+    .inline-form {
+      display: grid;
+      grid-template-columns: 130px 20px 1fr;
+      gap: 0;
+      margin-bottom: 8px;
+      font-size: 12pt;
+    }
+
+    .inline-form .label { padding: 2px 0; }
+    .inline-form .dots  { color: #999; text-align: center; padding: 2px 4px; }
+    .inline-form .value { padding: 2px 0; }
+
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════ PAGE 1 ══ -->
+<div class="page">
+  <div class="header">
+    <img src="template1-sewaktu_files/template1-logo.png" alt="Logo LSP Gatensi" class="header-logo">
+    <div class="header-info">
+      <div class="header-address">
+        Graha Gapensi Jl. Raya Ragunan No. 1C, Jati Padang, Pasar Minggu, Jakarta Selatan
+      </div>
+      <div class="header-contact">
+        Telp. 0217810454
+        <br/>Email: admin@lspgatensi.id
+        <br/>Website: <a href="https://lspgatensi.id" target="_blank">https://lspgatensi.id</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="body">
+    <br/><br/>
+    <!-- Reference block -->
+    <div class="ref-block">
+      <span class="ref-label">No</span>
+      <span class="ref-dots">:</span>
+      <span class="ref-value"> {{nomor}}</span>
+
+      <span class="ref-label">Lampiran</span>
+      <span class="ref-dots">:</span>
+      <span class="ref-value">1 (satu) lembar</span>
+
+      <span class="ref-label">Hal</span>
+      <span class="ref-dots">:</span>
+      <span class="ref-value">Permohonan Peminjaman Tempat Uji Kompetensi</span>
+    </div>
+
+    <!-- Addressee -->
+    <div class="salutation">
+      <span class="salutation-line">Kepada Yth.</span>
+      <span class="salutation-line">Pimpinan, {{pimpinan}}</span>
+      <br/>
+      <span class="salutation-line">di - Tempat</span>
+    </div>
+
+    <!-- Greeting -->
+    <p class="paragraph">Assalamu'alaikum Wr. Wb.</p>
+
+    <!-- Intro -->
+    <p class="paragraph">
+      Sehubungan dengan adanya asesmen atau uji kompetensi oleh Lembaga Sertifikasi Profesi Gatensi
+      Karya Konstruksi yang akan dilaksanakan pada:
+    </p>
+
+    <!-- Form -->
+    <table class="form-table">
+      <tr>
+        <td>Hari, Tanggal</td>
+        <td>:</td>
+        <td>{{hari, tanggal}}</td>
+      </tr>
+      <tr>
+        <td>Pukul</td>
+        <td>:</td>
+        <td>07:30:00 - Selesai</td>
+      </tr>
+      <tr>
+        <td>Tempat</td>
+        <td>:</td>
+        <td>{{tempat}}</td>
+      </tr>
+    </table>
+
+    <!-- Body -->
+    <p class="paragraph">
+      Dengan ini mengajukan permohonan pemakaian tempat uji kompetensi untuk skema sertifikasi
+      sebagaimana terlampir.
+    </p>
+    <p class="paragraph">
+      Demikian surat ini kami sampaikan, atas segala bentuk kerjasamanya disampaikan terima kasih. <br/>Wassalamu'alaikum Wr. Wb.</p>
+
+    <!-- Signature -->
+    <div class="signature-block">
+      <div class="signature-date">Jakarta, {{tanggal}}</div>
+      <div class="signature-title">Lembaga Sertifikasi Profesi Gatensi Karya Konstruksi</div>
+      <div class="signature-role">&nbsp;</div>
+      <div style="margin-top:52px; font-weight:700; text-decoration:underline;">Radinal Efendy, ST</div>
+      <div class="signature-role">Direktur</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ PAGE 2 ══ -->
+<div class="page">
+  <div class="header">
+    <img src="template1-sewaktu_files/template1-logo.png" alt="Logo LSP Gatensi" class="header-logo">
+    <div class="header-info">
+      <div class="header-address">
+        Graha Gapensi Jl. Raya Ragunan No. 1C, Jati Padang, Pasar Minggu, Jakarta Selatan
+      </div>
+      <div class="header-contact">
+        Telp. 0217810454
+        <br/>Email: admin@lspgatensi.id
+        <br/>Website: <a href="https://lspgatensi.id" target="_blank">https://lspgatensi.id</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="body">
+    <div class="title-center">
+      <div class="title-main">Surat Tugas</div>
+      <div class="title-number">Nomor: {{nomorsk}}</div>
+    </div>
+
+    <p class="paragraph">
+      Yang bertandatangan di bawah ini Direktur Lembaga Sertifikasi Profesi Gatensi Karya
+      Konstruksi dengan ini memberi tugas kepada Verifikator Tempat Uji Kompetensi (TUK):
+    </p>
+    <p class="paragraph" style="font-weight: bold;">
+      • {{nama_verifikator}}
+    </p>
+    <p class="paragraph">
+      Untuk melakukan verifikasi Persyaratan Teknis Tempat Uji Kompetensi (TUK) bidang
+      konstruksi di:
+    </p>
+
+    <!-- Form -->
+    <div class="inline-form">
+      <span class="label">Nama TUK</span>
+      <span class="dots">:</span>
+      <span class="value">{{nama_tuk}}</span>
+    </div>
+    <div class="inline-form">
+      <span class="label">Alamat</span>
+      <span class="dots">:</span>
+      <span class="value">{{alamat}}</span>
+    </div>
+    <div class="inline-form">
+      <span class="label">Hari, Tanggal</span>
+      <span class="dots">:</span>
+      <span class="value">{{hari, tanggal}}</span>
+    </div>
+    <div class="inline-form">
+      <span class="label">Skema Sertifikasi</span>
+      <span class="dots">:</span>
+      <span class="value">{{skema_sertifikasi}}</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ PAGE 3 ══ -->
+<div class="page">
+  <div class="body">
+    <p class="body-text" style="margin-top:40px;">
+      Demikian Surat tugas ini diberikan untuk dilaksanakan dengan penuh tanggung jawab.
+    </p>
+
+    <div class="signature-block">
+      <div class="signature-date">Jakarta, {{tanggal}}</div>
+      <div class="signature-title">Lembaga Sertifikasi Profesi Gatensi Karya Konstruksi</div>
+      <div class="signature-role">&nbsp;</div>
+      <div style="margin-top:52px; font-weight:700; text-decoration:underline;">Radinal Efendy, ST</div>
+      <div class="signature-role">Direktur</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Berita Acara Verifikasi TUK - AJJ</title>
+  <link rel="stylesheet" href="shared-ajj.css" />
+</head>
+<body>
+
+<div class="page" style="page-break-before: always;">
+  <div class="body">
+    <div class="title-center">
+      <div class="title-main">Berita Acara Verifikasi TUK</div>
+      <div class="title-number">Nomor: {{nomorBeritaAcara}}</div>
+    </div>
+
+    <p class="body-text">Bahwa telah dilakukan Verifikasi TUK Sewaktu terhadap:</p>
+
+    <div class="inline-form"><span class="label">Nama TUK</span><span class="dots">:</span><span class="value">{{namaTUK}}</span></div>
+    <div class="inline-form"><span class="label">Alamat</span><span class="dots">:</span><span class="value">{{alamatTUK}}</span></div>
+    <div class="inline-form"><span class="label">Hari, Tanggal</span><span class="dots">:</span><span class="value">{{hariTanggal}}</span></div>
+    <div class="inline-form"><span class="label">Jenis Asesmen</span><span class="dots">:</span><span class="value">{{jenisAsesmen}}</span></div>
+    <div class="inline-form"><span class="label">Metode Asesmen</span><span class="dots">:</span><span class="value"><strong>{{metodeAsesmen}}</strong></span></div>
+
+    <br/>
+    <p class="body-text">Untuk menyelenggarakan Uji Kompetensi dengan Skema sertifikasi:</p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>No.</th>
+          <th>Skema Sertifikasi</th>
+          <th>Jenjang</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1.</td>
+          <td>{{skemaSertifikasi}}</td>
+          <td>{{jenjang}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <br/>
+    <p class="body-text">
+      Dengan ini menetapkan TUK Sewaktu tersebut di atas <strong>{{statusLayak}}</strong> sebagai Tempat Uji Kompetensi (TUK) terverifikasi.
+    </p>
+
+    <div style="text-align: right; margin-bottom: 16px;">Jakarta, {{tanggalVerifikasi}}</div>
+
+    <table class="sign-table">
+      <thead>
+        <tr>
+          <th style="width: 50px;">No.</th>
+          <th>Tim Verifikator</th>
+          <th style="width: 120px;">Tanda Tangan</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1.</td>
+          <td>{{namaVerifikator}}</td>
+          <td>{{barcodeVerifikator}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</body>
+</html>

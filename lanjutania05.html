@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Lembar Jawaban</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #ddd;
+}
+
+.container {
+  width: 800px;
+  margin: 20px auto;
+  background: #eee;
+  padding: 20px;
+}
+
+.title {
+  text-align: center;
+  color: #1f4ed8;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #f8f8f8;
+}
+
+td, th {
+  border: 1px solid #000;
+  padding: 5px;
+  font-size: 14px;
+}
+
+.header-red {
+  background: #c00000;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+}
+
+.header-pink {
+  background: #c28ea0;
+  font-weight: bold;
+  text-align: center;
+}
+
+.center {
+  text-align: center;
+}
+
+.small-note {
+  font-size: 12px;
+  margin-top: 5px;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<div class="title">
+FR.05.C. LEMBAR JAWABAN PERTANYAAN TERTULIS PILIHAN GANDA
+</div>
+
+<table>
+<tr>
+<td>Skema Sertifikasi (KKNI/Okupasi/Klaster)</td>
+<td class="center">:</td>
+<td></td>
+</tr>
+<tr>
+<td>Nomor</td>
+<td class="center">:</td>
+<td></td>
+</tr>
+<tr>
+<td>TUK</td>
+<td class="center">:</td>
+<td>Sewaktu/Tempat Kerja/Mandiri*</td>
+</tr>
+<tr>
+<td>Nama Asesor</td>
+<td class="center">:</td>
+<td></td>
+</tr>
+<tr>
+<td>Nama Asesi</td>
+<td class="center">:</td>
+<td></td>
+</tr>
+<tr>
+<td>Tanggal</td>
+<td class="center">:</td>
+<td></td>
+</tr>
+<tr>
+<td>Waktu</td>
+<td class="center">:</td>
+<td>60 menit</td>
+</tr>
+</table>
+
+<div class="small-note">*Coret yang tidak perlu</div>
+
+<br>
+
+<table>
+<tr>
+<th colspan="2" class="header-red">Lembar Jawaban</th>
+<th colspan="2" class="header-red">Rekomendasi</th>
+</tr>
+<tr>
+<th class="header-pink">No.</th>
+<th class="header-pink">Jawaban</th>
+<th class="header-pink">K</th>
+<th class="header-pink">BK</th>
+</tr>
+
+<!-- Rows -->
+<script>
+for(let i=1;i<=7;i++){
+  document.write(`
+    <tr>
+      <td class="center">${i}</td>
+      <td></td>
+      <td class="center"><input type="checkbox"></td>
+      <td class="center"><input type="checkbox"></td>
+    </tr>
+  `);
+}
+</script>
+
+</table>
+
+</div>
+</body>
+</html>

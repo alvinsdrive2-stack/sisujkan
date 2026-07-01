@@ -1,0 +1,26 @@
+{
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)/sse",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache, no-store, no-transform" },
+        { "key": "X-Accel-Buffering", "value": "no" },
+        { "key": "Connection", "value": "keep-alive" }
+      ]
+    },
+    {
+      "source": "/api/(.*)/sse(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache, no-store, no-transform" },
+        { "key": "X-Accel-Buffering", "value": "no" },
+        { "key": "Connection", "value": "keep-alive" }
+      ]
+    }
+  ]
+}

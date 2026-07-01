@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>SK Direktur - Template</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 11pt;
+            line-height: 1.5;
+            background-color: #f0f0f0;
+        }
+
+        .page {
+            width: 210mm;
+            height: 297mm;
+            padding: 25mm 30mm;
+            background-color: white;
+            background-image: url('src/template-skdirektur.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            page-break-after: always;
+            position: relative;
+            margin: 10px auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .page:last-child {
+            page-break-after: auto;
+        }
+
+        /* Header Styles */
+        .header {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .header h1 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .header h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .nomor {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .tentang {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .tentang h3 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .double-line {
+            border-top: 2px solid #000;
+            border-bottom: 1px solid #000;
+            height: 3px;
+            margin-bottom: 20px;
+        }
+
+        /* --- KUNCI PERAPIAN TITIK DUA --- */
+        .section {
+            display: flex;
+            margin-bottom: 15px;
+            align-items: flex-start;
+        }
+
+        .section-title {
+            width: 100px; /* Lebar label kiri */
+            flex-shrink: 0;
+            font-weight: normal;
+        }
+
+        .section-separator {
+            width: 20px; /* Ruang untuk titik dua */
+            flex-shrink: 0;
+            text-align: center;
+        }
+
+        .section-content {
+            flex: 1;
+            text-align: justify;
+        }
+
+        .section-content ol {
+            padding-left: 18px; /* Ruang untuk angka list */
+            margin: 0;
+        }
+
+        .section-content ol li {
+            margin-bottom: 8px;
+        }
+
+        .section-content p {
+            margin: 0;
+        }
+        /* ------------------------------- */
+
+        .memutuskan {
+            text-align: center;
+            font-weight: bold;
+            font-size: 11pt;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
+
+        .ttd-area {
+            position: absolute;
+            bottom: 80px;
+            right: 80px;
+            text-align: left;
+            width: 280px;
+        }
+
+        .ttd-area .tanggal {
+            margin-bottom: 5px;
+        }
+
+        .ttd-area .lembaga {
+            font-weight: bold;
+            margin-bottom: 60px;
+            display: block;
+        }
+
+        .ttd-area .nama {
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table th, table td {
+            border: 1px solid black;
+            padding: 8px;
+        }
+
+        @media print {
+            body { background-color: white; }
+            .page { margin: 0; box-shadow: none; 
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;}
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page">
+        <div class="header">
+            <h1>SURAT KEPUTUSAN DIREKTUR</h1>
+            <h2>LEMBAGA SERTIFIKASI PROFESI GATENSI KARYA KONSTRUKSI</h2>
+        </div>
+        <div class="nomor">
+            <strong>Nomor : 1/LSP GKK C.003-B/III/2026</strong>
+        </div>
+        <div class="tentang">
+            <h3>TENTANG</h3>
+            <h3>PENETAPAN KOMITE TEKNIS LEMBAGA SERTIFIKASI PROFESI GATENSI KARYA KONSTRUKSI</h3>
+        </div>
+        
+        <div class="double-line"></div>
+
+        <div style="font-weight: bold; text-align: center; margin-bottom: 25px;">
+            DIREKTUR LEMBAGA SERTIFIKASI PROFESI GATENSI KARYA KONSTRUKSI
+        </div>
+
+        <div class="section">
+            <div class="section-title">Menimbang</div>
+            <div class="section-separator">:</div>
+            <div class="section-content">
+                <ol>
+                    <li>Bahwa untuk kelancaran dalam melaksanakan kegiatan operasional LSP Gatensi Karya Konstruksi sesuai dengan tugas, fungsi dan wewenang yang diberikan oleh Badan Nasional Sertifikasi Profesi;</li>
+                    <li>Bahwa untuk keperluan tersebut perlu ditetapkan Surat Keputusan LSP Gatensi Karya Konstruksi tentang Komite Teknis.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Mengingat</div>
+            <div class="section-separator">:</div>
+            <div class="section-content">
+                <ol>
+                    <li>Undang-undang Nomor 13 Tahun 2003 tentang Ketenagakerjaan</li>
+                    <li>Peraturan Pemerintah Nomor 10 Tahun 2018 tentang Badan Nasional Sertifikasi Profesi</li>
+                    <li>Peraturan Presiden Nomor 8 Tahun 2012 Tentang Kerangka Kualifikasi Nasional Indonesia</li>
+                    <li>Peraturan Menteri Tenaga Kerja dan Transmigrasi Republik Indonesia Nomor 5 Tahun 2012 tentang Sistem Standardisasi Kompetensi Kerja Nasional</li>
+                    <li>Akte Notaris Suci Hastuti Zamachsyarief, SH., M.Kn Nomor 2 Tahun 2021;</li>
+                    <li>ISO/IEC 17024:2012, Tentang Penilaian Kesesuaian Persyaratan Umum untuk Lembaga Sertifikasi Person</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="page">
+        <div class="header" style="margin-bottom: 30px;">
+            <h1>M E M U T U S K A N :</h1>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Menetapkan</div>
+            <div class="section-separator">:</div>
+            <div class="section-content">
+                <p>Surat Keputusan Direktur Lembaga Sertifikasi Profesi Gatensi Karya Konstruksi Tentang Penetapan Komite Teknis Lembaga Sertifikasi Profesi Gatensi Karya Konstruksi</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Pertama</div>
+            <div class="section-separator">:</div>
+            <div class="section-content">
+                <p>Komite Teknis Lembaga Sertifikasi Profesi Gatensi Karya Konstruksi.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Kedua</div>
+            <div class="section-separator">:</div>
+            <div class="section-content">
+                <p>Keputusan ini berlaku sejak tanggal ditetapkan</p>
+            </div>
+        </div>
+
+        <div class="ttd-area">
+            <div class="tanggal">Ditetapkan di : Jakarta</div>
+            <div class="tanggal">Pada tanggal : 27 Agustus 2025</div>
+            <div class="lembaga">LSP GATENSI KARYA KONSTRUKSI</div>
+            <br><br><br>
+            <div class="nama">RADINAL EFENDY, ST</div>
+            <div class="jabatan">Direktur</div>
+        </div>
+    </div>
+
+    <div class="page">
+        <div style="font-weight: bold; text-align: center;">LAMPIRAN SURAT KEPUTUSAN NOMOR: 004/LSP GKK C.003-B/I/2025 TENTANG PENETAPAN KOMITE TEKNIS LEMBAGA SERTIFIKASI PROFESI GATENSI KARYA KONSTRUKSI
+</div>
+        <div class="memutuskan">
+LEMBAGA SERTIFIKASI PROFESI GATENSI KARYA KONSTRUKSI</div>
+            <div style="font-weight: bold;">SUSUNAN KOMITE TEKNIS HASIL UJI KOMPETENSI:</div>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 10%;">No.</th>
+                    <th style="width: 60%;">Nama</th>
+                    <th style="width: 30%;">Jabatan</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="text-align: center;">1.</td>
+                    <td>OM UCUP</td>
+                    <td style="text-align: center;">ORANG KEREN</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="ttd-area">
+            <div class="tanggal">Jakarta, 27 Agustus 2025</div>
+            <div class="lembaga">LSP GATENSI KARYA KONSTRUKSI</div>
+            <br><br><br>
+            <div class="nama">RADINAL EFENDY, ST</div>
+            <div class="jabatan">Direktur</div>
+        </div>
+    </div>
+
+</body>
+</html>

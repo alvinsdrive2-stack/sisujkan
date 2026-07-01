@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Form Survei Kepuasan LSP</title>
+
+  <style>
+    body{
+      font-family: Arial, sans-serif;
+      background:#f5f5f5;
+      padding:20px;
+    }
+
+    .container{
+      max-width:900px;
+      margin:auto;
+      background:#fff;
+      padding:25px;
+      border:1px solid #ccc;
+    }
+
+    h2{
+      text-align:center;
+      margin-bottom:25px;
+      font-size:22px;
+    }
+
+    .section-title{
+      font-weight:bold;
+      margin:25px 0 10px;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+    }
+
+    th, td{
+      border:1px solid #000;
+      padding:8px;
+      vertical-align:top;
+      font-size:14px;
+    }
+
+    .no-border td{
+      border:none;
+      padding:5px 0;
+    }
+
+    .label{
+      width:220px;
+      font-weight:bold;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    textarea{
+      width:100%;
+      border:none;
+      border-bottom:1px solid #000;
+      padding:5px;
+      outline:none;
+      font-size:14px;
+      background:transparent;
+    }
+
+    textarea{
+      border:1px solid #000;
+      min-height:80px;
+      resize:vertical;
+    }
+
+    .score-table th,
+    .score-table td{
+      text-align:center;
+    }
+
+    .aspect-title{
+      font-weight:bold;
+      margin-bottom:5px;
+    }
+
+    .description{
+      font-style:italic;
+      line-height:1.5;
+    }
+
+    .center{
+      text-align:center;
+    }
+
+    .signature-box{
+      height:80px;
+      border:1px solid #000;
+      margin-top:10px;
+    }
+
+    @media(max-width:768px){
+      th, td{
+        font-size:12px;
+        padding:6px;
+      }
+
+      h2{
+        font-size:18px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h2>FORM SURVEI KEPUASAN TERHADAP LSP</h2>
+
+  <!-- A -->
+  <div class="section-title">A. Identitas Responden</div>
+
+  <table class="no-border">
+    <tr>
+      <td class="label">Nama</td>
+      <td><input type="text"></td>
+    </tr>
+
+    <tr>
+      <td class="label">ID Ijin</td>
+      <td><input type="text"></td>
+    </tr>
+
+    <tr>
+      <td class="label">Skema Sertifikasi</td>
+      <td><input type="text"></td>
+    </tr>
+
+    <tr>
+      <td class="label">Tempat Uji Kompetensi (TUK)</td>
+      <td><input type="text"></td>
+    </tr>
+
+    <tr>
+      <td class="label">Tanggal Uji Kompetensi</td>
+      <td><input type="date"></td>
+    </tr>
+  </table>
+
+  <!-- B -->
+  <div class="section-title">B. Petunjuk Pengisian</div>
+
+  <p>
+    Beri penilaian sesuai pengalaman Anda selama proses sertifikasi.
+  </p>
+
+  <table class="score-table">
+    <tr>
+      <th width="100">Skor</th>
+      <th>Keterangan</th>
+    </tr>
+
+    <tr>
+      <td><b>1</b></td>
+      <td>Sangat Tidak Puas</td>
+    </tr>
+
+    <tr>
+      <td><b>2</b></td>
+      <td>Tidak Puas</td>
+    </tr>
+
+    <tr>
+      <td><b>3</b></td>
+      <td>Cukup Puas</td>
+    </tr>
+
+    <tr>
+      <td><b>4</b></td>
+      <td>Puas</td>
+    </tr>
+
+    <tr>
+      <td><b>5</b></td>
+      <td>Sangat Puas</td>
+    </tr>
+  </table>
+
+  <!-- C -->
+  <div class="section-title">C. Penilaian Berdasarkan Prinsip Asesmen</div>
+
+  <table>
+    <tr>
+      <th rowspan="2" width="50">No.</th>
+      <th rowspan="2">Aspek Penilaian</th>
+      <th colspan="5" class="center">Skor</th>
+    </tr>
+
+    <tr>
+      <th width="50">1</th>
+      <th width="50">2</th>
+      <th width="50">3</th>
+      <th width="50">4</th>
+      <th width="50">5</th>
+    </tr>
+
+    <!-- 1 -->
+    <tr>
+      <td class="center">1</td>
+      <td>
+        <div class="aspect-title">Aspek Informasi dan Transparansi</div>
+        <div class="description">
+          Informasi diterima dengan jelas meliputi persyaratan peserta dan biaya sertifikasi
+        </div>
+      </td>
+
+      <td class="center"><input type="radio" name="q1"></td>
+      <td class="center"><input type="radio" name="q1"></td>
+      <td class="center"><input type="radio" name="q1"></td>
+      <td class="center"><input type="radio" name="q1"></td>
+      <td class="center"><input type="radio" name="q1"></td>
+    </tr>
+
+    <!-- 2 -->
+    <tr>
+      <td class="center">2</td>
+      <td>
+        <div class="aspect-title">Aspek Ketidakberpihakan (Impartiality)</div>
+        <div class="description">
+          Proses uji kompetensi dilakukan secara adil tanpa diskriminasi dan sikap objektif asesor saat asesmen
+        </div>
+      </td>
+
+      <td class="center"><input type="radio" name="q2"></td>
+      <td class="center"><input type="radio" name="q2"></td>
+      <td class="center"><input type="radio" name="q2"></td>
+      <td class="center"><input type="radio" name="q2"></td>
+      <td class="center"><input type="radio" name="q2"></td>
+    </tr>
+
+    <!-- 3 -->
+    <tr>
+      <td class="center">3</td>
+      <td>
+        <div class="aspect-title">Aspek Kompetensi Asesor</div>
+        <div class="description">
+          Asesor bersikap profesional, komunikatif dan menguasai materi uji kompetensi
+        </div>
+      </td>
+
+      <td class="center"><input type="radio" name="q3"></td>
+      <td class="center"><input type="radio" name="q3"></td>
+      <td class="center"><input type="radio" name="q3"></td>
+      <td class="center"><input type="radio" name="q3"></td>
+      <td class="center"><input type="radio" name="q3"></td>
+    </tr>
+
+    <!-- 4 -->
+    <tr>
+      <td class="center">4</td>
+      <td>
+        <div class="aspect-title">Aspek Pelaksanaan Sertifikasi</div>
+        <div class="description">
+          Proses asesmen berjalan sesuai prosedur dan waktu pelaksanaan sesuai jadwal
+        </div>
+      </td>
+
+      <td class="center"><input type="radio" name="q4"></td>
+      <td class="center"><input type="radio" name="q4"></td>
+      <td class="center"><input type="radio" name="q4"></td>
+      <td class="center"><input type="radio" name="q4"></td>
+      <td class="center"><input type="radio" name="q4"></td>
+    </tr>
+
+    <!-- 5 -->
+    <tr>
+      <td class="center">5</td>
+      <td>
+        <div class="aspect-title">Aspek Hasil dan Banding</div>
+        <div class="description">
+          Hasil uji kompetensi dan mekanisme banding disampaikan dengan jelas
+        </div>
+      </td>
+
+      <td class="center"><input type="radio" name="q5"></td>
+      <td class="center"><input type="radio" name="q5"></td>
+      <td class="center"><input type="radio" name="q5"></td>
+      <td class="center"><input type="radio" name="q5"></td>
+      <td class="center"><input type="radio" name="q5"></td>
+    </tr>
+
+  </table>
+
+  <!-- D -->
+  <div class="section-title">D. Saran dan Masukan</div>
+
+  <textarea></textarea>
+
+  <!-- E -->
+  <div class="section-title">E. Pernyataan</div>
+
+  <p>
+    Saya mengisi survei ini dengan jujur sesuai pengalaman saya.
+  </p>
+
+  <p><i>Tanda tangan (opsional):</i></p>
+
+  <div class="signature-box"></div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hasil Verifikasi dan Standardisasi TUK - LSP Gatensi</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Cambria', serif;
+      font-size: 12pt;
+      color: #1a1a2e;
+      background: #f5f5f5;
+      padding: 40px 20px;
+      line-height: 1.5;
+    }
+
+    .page {
+      width: 100%;
+      margin: 0 auto 40px auto;
+      background: #ffffff;
+      border: 1px solid #d1d5db;
+      border-radius: 0;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      page-break-after: always;
+    }
+
+    @media print {
+      @page {
+        size: A4;
+        margin: 0;
+      }
+      .page {
+        box-shadow: none;
+        border: none;
+        margin: 0 auto;
+        padding: 20mm 5mm;
+      }
+      body {
+        padding: 0;
+        background: white;
+      }
+    }
+
+    /* ── Header ── */
+    .header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin: 0 20mm 0 20mm;
+    }
+
+    .header-logo {
+      width: 200px;
+      height: 200px;
+      flex-shrink: 0;
+    }
+
+    .header-info {
+      flex: 1;
+      padding-top: 25px;
+    }
+
+    .header-address {
+      font-size: 9pt;
+      color: #555;
+      line-height: 1.5;
+      text-align: right;
+    }
+
+    .header-contact {
+      font-size: 9pt;
+      color: #555;
+      margin-top: 2px;
+      text-align: right;
+    }
+
+    /* ── Body ── */
+    .body {
+      margin: 0 20mm;
+    }
+
+    /* ── Title ── */
+    .title-center {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .title-main {
+      font-size: 16pt;
+      font-weight: 700;
+      color: #1a1a2e;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .title-number {
+      font-size: 12pt;
+      font-weight: 600;
+      margin-top: 4px;
+      color: #333;
+    }
+
+    /* ── Table ── */
+    .result-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10pt;
+    }
+
+    .result-table th {
+      border: 1px solid #333;
+      padding: 6px 10px;
+      text-align: center;
+      font-weight: 700;
+      background: #3fb4ea   ;
+    }
+
+    .result-table td {
+      border: 1px solid #333;
+      padding: 6px 10px;
+      vertical-align: top;
+    }
+
+    .col-no      { width: 30px;  text-align: center; }
+    .col-unsur   { text-align: left; }
+    .col-layak   { width: 50px;  text-align: center; }
+    .col-tdk-layak { width: 60px; text-align: center; }
+
+    /* ── Rekomendasi ── */
+    .rekomendasi {
+      margin-top: 12px;
+      font-size: 12pt;
+    }
+
+    .rekomendasi-label {
+      margin-right: 8px;
+    }
+
+    /* ── Signature block ── */
+    .sign-row {
+      display: table;
+      width: 100%;
+      margin-top: 24px;
+      border-collapse: collapse;
+    }
+
+    .sign-cell {
+      display: table-cell;
+      width: 50%;
+      text-align: center;
+      vertical-align: bottom;
+      padding: 8px;
+    }
+
+    .sign-label {
+      font-size: 12pt;
+      font-weight: 700;
+      margin-bottom: 60px;
+      display: block;
+    }
+
+    .sign-name {
+      font-size: 12pt;
+      text-decoration: underline;
+    }
+
+    .sign-role {
+      font-size: 11pt;
+      color: #000000;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+  
+
+  <div class="body">
+    <br/><br/>
+
+    <!-- Title -->
+    <div class="title-center">
+      <div class="title-main" style="border-bottom: #000000; border-bottom-style: solid; border-bottom-width: 2px;">Hasil Verifikasi dan Standardisasi TUK</div>
+    </div>
+
+    <!-- Table -->
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th rowspan="2" class="col-no">No</th>
+          <th rowspan="2" class="col-unsur">Unsur Yang Diverifikasi</th>
+          <th colspan="2" class="col-layak">Hasil Verifikasi</th>
+        </tr>
+        <tr>
+          <th class="col-layak">Layak</th>
+          <th class="col-tdk-layak">Tidak Layak</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td rowspan="2" class="col-no">1</td>
+          <td class="col-unsur">1.1. Standar Persyaratan Sarana dan Prasarana Metode Uji Observasi</td>
+          <td class="col-layak"></td>
+          <td class="col-tdk-layak"></td>
+        </tr>
+        <tr>
+          <td class="col-unsur">1.2. Standar Persyaratan Peralatan Metode Uji Observasi</td>
+          <td class="col-layak"></td>
+          <td class="col-tdk-layak"></td>
+        </tr>
+        <tr><td colspan="4" style="background-color: #f0f0f0;"></td></tr>
+      </tbody>
+    </table>
+    <br/>
+    <!-- Rekomendasi -->
+    <p class="rekomendasi">
+      <span class="rekomendasi-label">Rekomendasi</span>
+      <span>:</span>
+      <span class="rekomendasi-value">&nbsp;&nbsp;&nbsp;Layak / Tidak Layak</span>
+    </p>
+
+    <p style="margin-top: 10px; font-size: 12pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      Sebagai Tempat Penyelenggaraan Uji Sertifikasi Kompetensi
+    </p>
+    <br/><br/><br/><br/><br/>
+    <!-- Signature -->
+    <div class="sign-row">
+      <div class="sign-cell">
+        <span class="sign-name">{{nama_penanggung_jawab}}</span>
+        <div class="sign-role">Penanggung Jawab TUK</div>
+      </div>
+      <div class="sign-cell">
+        <span class="sign-name">{{nama_pemeriksa}}</span>
+        <div class="sign-role">Pemeriksa</div>
+      </div>
+    </div>
+    <br/><br/><br/>
+     <p style="margin-top: 10px; font-size: 12pt;">
+    <div class="sign-row">
+      <div class="sign-cell">
+        <span class="sign-name">{{nama_ketua_tuk}}</span>
+        <div class="sign-role">Ketua TUK</div>
+      </div>
+      <div class="sign-cell">
+        <span class="sign-name">{{nama_asesor}}</span>
+        <div class="sign-role">Asesor Kompetensi</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

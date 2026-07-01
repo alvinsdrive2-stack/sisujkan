@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Permohonan Peminjaman TUK - AJJ</title>
+  <link rel="stylesheet" href="shared-ajj.css" />
+</head>
+<body>
+
+<div class="page">
+  <div class="body">
+    <table class="data-table" style="border: none; width: auto;">
+      <tr><td style="border: none; text-align: left; width: 100px;">Nomor</td><td style="border: none; width: 20px; text-align: left;">:</td><td style="border: none;">{{nomorSurat}}</td></tr>
+      <tr><td style="border: none; text-align: left;">Lampiran</td><td style="border: none; text-align: left;">:</td><td style="border: none;">1 (satu) lembar</td></tr>
+      <tr><td style="border: none; text-align: left;">Perihal</td><td style="border: none; text-align: left;">:</td><td style="border: none;">Permohonan Peminjaman Tempat Uji Kompetensi</td></tr>
+    </table>
+
+    <div class="salutation" style="margin-top: 16px;">
+      <span class="salutation-line">Kepada Yth.</span>
+      <span class="salutation-line">{{namaKetuaTUK}}</span>
+      <span class="salutation-line">di Tempat</span>
+    </div>
+
+    <p class="paragraph" style="margin-top: 16px;">
+      Sehubungan dengan adanya pelaksanaan kegiatan Asesmen atau uji kompetensi oleh Lembaga Sertifikasi Profesi Gatensi Karya Konstruksi yang akan dilaksanakan pada:
+    </p>
+
+    <table class="data-table" style="border: none; width: auto;">
+      <tr><td style="border: none; width: 130px; text-align: left;">Hari, Tanggal</td><td style="border: none; width: 20px; text-align: center;">:</td><td style="border: none;">{{hariTanggal}}</td></tr>
+      <tr><td style="border: none; text-align: left;">Pukul</td><td style="border: none; text-align: center;">:</td><td style="border: none;">{{waktu}}</td></tr>
+      <tr><td style="border: none; text-align: left;">Tempat</td><td style="border: none; text-align: center;">:</td><td style="border: none;">{{tempat}}</td></tr>
+    </table>
+
+    <p class="paragraph">
+      Dengan ini mengajukan permohonan pemakaian Tempat Uji Kompetensi untuk Skema sertifikasi sebagaimana terlampir.
+    </p>
+    <p class="paragraph">
+      Demikian permohonan ini kami sampaikan, atas perhatian dan kerja samanya kami ucapkan terima kasih.
+    </p>
+
+    <div class="signature-block">
+      <div class="signature-date">Jakarta, {{tanggalverifikasi-1}}</div>
+      <div class="signature-title">LSP GATENSI KARYA KONSTRUKSI</div>
+      <div style="font-weight: 700; text-decoration: underline;">{{namaDirektur}}</div>
+      <div class="signature-role">Direktur</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

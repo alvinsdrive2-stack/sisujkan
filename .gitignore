@@ -1,0 +1,11 @@
+.vercel
+.nul
+nul
+node_modules
+dist
+.claude
+.env
+.env.*
+!.env.local.example
+!.env.example
+main-portal/.env.example

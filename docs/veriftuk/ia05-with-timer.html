@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>FR.IA.05 - Dengan Timer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .timer-container {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #c40000;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 18px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            z-index: 1000;
+        }
+        .timer-warning {
+            background: #ff0000;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .timer-expired {
+            background: #000;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        td, th {
+            border: 1px solid #000;
+            padding: 6px;
+        }
+        .radio {
+            width: 12px;
+            height: 12px;
+            border: 1px solid #000;
+            border-radius: 50%;
+            display: inline-block;
+            text-align: center;
+            line-height: 10px;
+            font-size: 10px;
+            cursor: pointer;
+        }
+        .radio.checked::after {
+            content: "•";
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- TIMER DISPLAY -->
+<div id="timerContainer" class="timer-container">
+    <span id="timerDisplay">60:00</span>
+</div>
+
+<!-- CONTROLS (Optional) -->
+<div style="margin-bottom: 10px;">
+    <button onclick="timer.pause()" id="pauseBtn">Pause</button>
+    <button onclick="timer.resume()" id="resumeBtn" style="display:none;">Resume</button>
+    <button onclick="if(confirm('Reset timer?')) timer.reset()">Reset</button>
+    <button onclick="saveAndSubmit()">Simpan & Selesai</button>
+</div>
+
+<div style="margin-bottom: 10px;">
+    <strong>FR.IA.05. PERTANYAAN TERTULIS PILIHAN GANDA</strong>
+</div>
+
+<!-- FORM SOAL -->
+<form id="ia05Form">
+    <table style="border: 2px solid #000;">
+        <tr style="background: #c40000; color: white; font-weight: bold;">
+            <td colspan="3">SOAL, Pilih Jawaban semua pertanyaan berikut (A / B / C / D) :</td>
+        </tr>
+
+        <!-- Soal 1 -->
+        <tr>
+            <td style="width: 40px; text-align: center;">1.</td>
+            <td colspan="2">Undang-undang yang mengatur tentang (SMK3-L) pada kegiatan pemasangan jembatan rangka baja yaitu…..</td>
+        </tr>
+        <tr><td></td><td></td><td><span class="radio" onclick="selectRadio(this, 1, 'A')"></span> a. UU No.1 Tahun 1970</td></tr>
+        <tr><td></td><td></td><td><span class="radio" onclick="selectRadio(this, 1, 'B')"></span> b. UU No.18 Tahun 1999</td></tr>
+        <tr><td></td><td></td><td><span class="radio" onclick="selectRadio(this, 1, 'C')"></span> c. UU No.10 Tahun 1876</td></tr>
+        <tr><td></td><td></td><td><span class="radio" onclick="selectRadio(this, 1, 'D')"></span> d. UU No.12 Tahun 2000</td></tr>
+
+        <!-- Soal 2 -->
+        <tr>
+            <td style="text-align: center;">2.</td>
+            <td colspan="2">Yang memeriksa terealisasinya SMK3-L pada kegiatan pemasangan rangka baja adalah…..</td>
+        </tr>
+        <tr><td></td><td></td><td><span class="radio" onclick="selectRadio(this, 2, 'A')"></span> a. Ahli K3</td></tr>
+        <tr><td></td><td></td><td><span class="radio" onclick="selectRadio(this, 2, 'B')"></span> b. Tukang</td></tr>
+        <tr><td></td><td></td><td><span class="radio" onclick="selectRadio(this, 2, 'C')"></span> c. Mandor</td></tr>
+        <tr><td></td><td></td><td><span class="radio" onclick="selectRadio(this, 2, 'D')"></span> d. Kontraktor</td></tr>
+
+        <!-- Soal 3 -->
+        <tr>
+            <td style="text-align: center;">3.</td>
+            <td colspan="2">Penerapan SMK3 dilakukan berdasarkan kebijakan nasional, meliputi:</td>
+        </tr>
+        <tr><td></td><td></td><td><span class="radio" onclick="selectRadio(this, 3, 'A')"></span> a. Penetapan kebijakan k3</td></tr>
+        <tr><td></td><td></td><td><span class="radio" onclick="selectRadio(this, 3, 'B')"></span> b. Perencanaan k3</td></tr>
+        <tr><td></td><td></td><td><span class="radio" onclick="selectRadio(this, 3, 'C')"></span> c. Pelaksanaan rencana k3</td></tr>
+        <tr><td></td><td></td><td><span class="radio" onclick="selectRadio(this, 3, 'D')"></span> d. Pemantauan dan evaluasi kinerja k3</td></tr>
+
+        <!-- Soal 4 -->
+        <tr>
+            <td style="text-align: center;">4.</td>
+            <td colspan="2">Hal yang paling utama yang dilakukan untuk persiapan checklist informasi dan instruktur kerja adalah…..</td>
+        </tr>
+        <tr><td></td><td></td><td><span class="radio" onclick="selectRadio(this, 4, 'A')"></span> a. Nomor proyek</td></tr>
+        <tr><td></td><td></td><td><span class="radio" onclick="selectRadio(this, 4, 'B')"></span> b. Waktu pengerjaan</td></tr>
+        <tr><td></td><td></td><td><span class="radio" onclick="selectRadio(this, 4, 'C')"></span> c. Nama proyek</td></tr>
+        <tr><td></td><td></td><td><span class="radio" onclick="selectRadio(this, 4, 'D')"></span> d. Nomor urut</td></tr>
+    </table>
+</form>
+
+<script src="timer-ia05.js"></script>
+<script>
+    // ===== KONFIGURASI =====
+    const CONFIG = {
+        duration: 60 * 60, // 60 menit (ubah sesuai kebutuhan)
+        storageKey: 'ia05_exam_timer',
+        saveUrl: '/api/ia05/save', // Ganti dengan URL save kamu
+        redirectUrl: '/ia06' // Ganti dengan URL next page
+    };
+
+    // ===== STATE JAWABAN =====
+    const answers = {};
+
+    // ===== INIT TIMER =====
+    const timer = new ExamTimer({
+        duration: CONFIG.duration,
+        onTick: (remaining) => {
+            // Update display
+            const display = document.getElementById('timerDisplay');
+            display.textContent = timer.formatTime(remaining);
+
+            // Warning di 5 menit terakhir
+            const container = document.getElementById('timerContainer');
+            if (remaining <= 300) {
+                container.classList.add('timer-warning');
+            }
+        },
+        onExpire: () => {
+            // Tampilkan expired state
+            const container = document.getElementById('timerContainer');
+            container.classList.add('timer-expired');
+            document.getElementById('timerDisplay').textContent = 'WAKTU HABIS!';
+
+            // Auto-save + redirect
+            handleSave();
+        }
+    });
+
+    // Mulai timer saat page load
+    window.addEventListener('load', () => {
+        // Cek apakah sudah expired sebelumnya
+        if (timer.isExpired()) {
+            alert('Waktu pengerjaan sudah habis!');
+            window.location.href = CONFIG.redirectUrl;
+            return;
+        }
+        timer.start();
+    });
+
+    // ===== FUNGSI SAVE =====
+    async function handleSave() {
+        // Collect answers
+        const formData = new FormData();
+        Object.keys(answers).forEach(q => formData.append(`q${q}`, answers[q]));
+
+        try {
+            const response = await fetch(CONFIG.saveUrl, {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                // Clear timer setelah berhasil save
+                timer.clear();
+                // Redirect
+                window.location.href = CONFIG.redirectUrl;
+            } else {
+                alert('Gagal menyimpan jawaban. Silakan coba lagi.');
+            }
+        } catch (error) {
+            console.error('Save error:', error);
+            // Untuk development, redirect saja
+            window.location.href = CONFIG.redirectUrl;
+        }
+    }
+
+    // ===== FUNGSI MANUAL SAVE & SUBMIT =====
+    function saveAndSubmit() {
+        if (confirm('Simpan jawaban dan selesaikan ujian?')) {
+            handleSave();
+        }
+    }
+
+    // ===== PAUSE/RESUME =====
+    document.getElementById('pauseBtn').addEventListener('click', () => {
+        timer.pause();
+        document.getElementById('pauseBtn').style.display = 'none';
+        document.getElementById('resumeBtn').style.display = 'inline-block';
+    });
+
+    document.getElementById('resumeBtn').addEventListener('click', () => {
+        timer.resume();
+        document.getElementById('resumeBtn').style.display = 'none';
+        document.getElementById('pauseBtn').style.display = 'inline-block';
+    });
+
+    // ===== RADIO SELECTION =====
+    function selectRadio(el, question, answer) {
+        // Remove checked dari semua radio di soal yang sama
+        const row = el.closest('tr');
+        const allRows = row.parentElement.querySelectorAll('tr');
+        allRows.forEach(r => {
+            const radio = r.querySelector('.radio');
+            if (radio) radio.classList.remove('checked');
+        });
+
+        // Add checked ke yang dipilih
+        el.classList.add('checked');
+
+        // Simpan jawaban
+        answers[question] = answer;
+
+        // Auto-save ke localStorage (backup)
+        localStorage.setItem('ia05_answers', JSON.stringify(answers));
+    }
+
+    // ===== RESTORE JAWABAN DARI LOCALSTORAGE =====
+    window.addEventListener('load', () => {
+        const saved = localStorage.getItem('ia05_answers');
+        if (saved) {
+            const savedAnswers = JSON.parse(saved);
+            Object.assign(answers, savedAnswers);
+
+            // Restore UI
+            Object.keys(savedAnswers).forEach(q => {
+                const answer = savedAnswers[q];
+                // Find and check the radio button
+                document.querySelectorAll(`.radio`).forEach(radio => {
+                    if (radio.textContent.includes(`. ${answer}.`) ||
+                        radio.onclick.toString().includes(`'${answer}'`)) {
+                        radio.classList.add('checked');
+                    }
+                });
+            });
+        }
+    });
+</script>
+
+</body>
+</html>

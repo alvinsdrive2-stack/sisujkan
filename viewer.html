@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Document Viewer</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial,sans-serif;background:#1a1a2e;color:#e0e0e0;height:100vh;display:flex;flex-direction:column}
+.header{background:#16213e;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #0f3460}
+.header h1{font-size:16px;color:#e94560}
+.header .status{font-size:12px;display:flex;align-items:center;gap:8px}
+.dot{width:8px;height:8px;border-radius:50%;background:#00e676;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.tabs{display:flex;background:#16213e;border-bottom:1px solid #0f3460}
+.tab{flex:1;padding:10px;text-align:center;cursor:pointer;font-size:13px;border:none;background:transparent;color:#aaa;transition:all .2s}
+.tab:hover{background:#0f3460;color:#fff}
+.tab.active{background:#0f3460;color:#e94560;font-weight:bold;border-bottom:2px solid #e94560}
+iframe{flex:1;width:100%;border:none;background:#f5f5f5}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>DOCUMENT VIEWER</h1>
+  <div class="status"><span class="dot"></span><span id="timer">Refreshing in 30s</span></div>
+</div>
+<div class="tabs">
+  <button class="tab active" onclick="switchTab(0,this)">BA Komtek</button>
+  <button class="tab" onclick="switchTab(1,this)">SK Direktur</button>
+  <button class="tab" onclick="switchTab(2,this)">SPT Asesor</button>
+  <button class="tab" onclick="switchTab(3,this)">SPT Komtek</button>
+  <button class="tab" onclick="switchTab(4,this)">SK Penetapan</button>
+</div>
+<iframe id="viewer" src="bakomtek.html"></iframe>
+<script>
+var docs=['bakomtek.html','skdirekturnew.html','sptasesor.html','sptkomtek.html','skpenetapan.html'];
+var interval=30;
+var countdown=interval;
+function switchTab(i,btn){
+  document.getElementById('viewer').src=docs[i];
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});
+  btn.classList.add('active');
+  countdown=interval;
+}
+setInterval(function(){
+  countdown--;
+  document.getElementById('timer').textContent='Refreshing in '+countdown+'s';
+  if(countdown<=0){
+    var v=document.getElementById('viewer');
+    v.src=v.src;
+    countdown=interval;
+  }
+},1000);
+</script>
+</body>
+</html>

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Surat Keputusan</title>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Cambria', serif;
+      font-size: 10pt;
+      color: #1a1a2e;
+      background: #f5f5f5;
+      padding: 40px 20px;
+      line-height: 1.5;
+    }
+
+    .page {
+      width: 100%;
+      margin: 0 auto 40px auto;
+      background: #ffffff;
+      border: 1px solid #d1d5db;
+      border-radius: 0;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      page-break-after: always;
+    }
+
+    @media print {
+      @page { size: A4; margin: 0; }
+      .page {
+        box-shadow: none;
+        border: none;
+        margin: 0 auto;
+        padding: 20mm 5mm;
+      }
+      body { padding: 0; background: white; }
+    }
+
+    /* ── Header ── */
+    .header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin: 0 20mm 0 20mm;
+    }
+
+    .header-logo {
+      width: 200px;
+      height: 200px;
+      flex-shrink: 0;
+    }
+
+    .header-info {
+      flex: 1;
+      padding-top: 20px;
+    }
+
+    .header-address {
+      font-size: 7pt;
+      color: #555;
+      line-height: 1.4;
+      text-align: right;
+    }
+
+    .header-contact {
+      font-size: 7pt;
+      color: #555;
+      margin-top: 2px;
+      text-align: right;
+    }
+
+    /* ── Content wrapper ── */
+    .body-wrap {
+      margin: 0 15mm;
+    }
+
+    /* ── Title ── */
+    .title {
+      text-align: center;
+      margin: 18px 20mm 14px 20mm;
+    }
+
+    .title h1 {
+      margin: 0;
+      font-size: 13pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .title p {
+      margin: 4px 0;
+      font-size: 10pt;
+    }
+
+    .number {
+      display: inline-block;
+      min-width: 200px;
+      border-bottom: 1px solid #000;
+      height: 18px;
+    }
+
+    .section-title {
+      text-align: center;
+      font-weight: 700;
+      font-size: 11pt;
+      margin: 8px 0 4px;
+    }
+
+    /* ── Content body ── */
+    .content {
+      margin: 14px 20mm 0 20mm;
+      font-size: 10pt;
+      line-height: 1.5;
+      text-align: justify;
+    }
+
+    .content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 6px 0;
+    }
+
+    .content td {
+      vertical-align: top;
+      padding: 2px 0;
+      font-size: 10pt;
+    }
+
+    .content td.label {
+      width: 150px;
+    }
+
+    .content td.separator {
+      width: 16px;
+      text-align: center;
+    }
+
+    .content td.index {
+      width: 22px;
+    }
+
+    .decision {
+      text-align: center;
+      font-weight: 700;
+      margin: 14px 0 6px;
+      font-size: 12pt;
+    }
+
+    .blank {
+      display: inline-block;
+      border-bottom: 1px solid #000;
+      min-width: 200px;
+      height: 18px;
+    }
+
+    .signature {
+      margin-top: 40px;
+      text-align: right;
+    }
+
+    .signature strong {
+      display: block;
+      margin-top: 60px;
+      text-decoration: underline;
+      font-size: 11pt;
+    }
+
+    /* ── Attachment page ── */
+    .lampiran {
+      page-break-before: always;
+      margin: 40px 15mm 0 15mm;
+      text-align: center;
+    }
+
+    .lampiran h1 {
+      margin: 0;
+      font-size: 16pt;
+      font-weight: 700;
+    }
+
+    .lampiran h2 {
+      margin: 6px 0;
+      font-size: 13pt;
+      font-weight: 700;
+    }
+
+    .schema {
+      margin-top: 30px;
+      font-size: 12pt;
+      font-weight: 700;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- PAGE 1 -->
+  <div class="page">
+
+    <div class="header">
+      <img src="template1-sewaktu_files/template1-logo.png" alt="Logo LSP Gatensi" class="header-logo">
+      <div class="header-info">
+        <div class="header-address">
+          Graha Gapensi Jl. Raya Ragunan No. 1C, Jati Padang, Pasar Minggu, Jakarta Selatan
+        </div>
+        <div class="header-contact">
+          Telp. 0217810454<br/>
+          Email: admin@lspgatensi.id<br/>
+          Website: <a href="https://lspgatensi.id" target="_blank">https://lspgatensi.id</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="title">
+      <h1>Surat Keputusan</h1>
+
+      <p>Direktur Lembaga Sertifikasi Profesi Gatensi Karya Konstruksi</p>
+
+      <p>
+        Nomor: {{nomor_sk}}
+      </p>
+
+      <div class="section-title">Tentang</div>
+
+      <p>
+        Penetapan Tempat Uji Kompetensi (TUK) Terverifikasi<br>
+        Lembaga Sertifikasi Profesi Gatensi Karya Konstruksi
+      </p>
+    </div>
+
+    <div class="content">
+
+      <table>
+        <tr>
+          <td class="label">Menimbang</td>
+          <td class="separator">:</td>
+          <td class="index">a.</td>
+          <td>
+            Undang-Undang Republik Indonesia Nomor 13 Tahun 2003 Tentang
+            Ketenagakerjaan
+          </td>
+        </tr>
+
+        <tr>
+          <td></td>
+          <td></td>
+          <td class="index">b.</td>
+          <td>
+            Bahwa dalam rangka penjaminan mutu sertifikasi kompetensi perlu
+            Tempat Uji Kompetensi (TUK) yang sudah sesuai dengan prosedur
+          </td>
+        </tr>
+
+        <tr>
+          <td></td>
+          <td></td>
+          <td class="index">c.</td>
+          <td>
+            Bahwa berdasarkan poin b maka perlu ditetapkan Tempat Uji Kompetensi
+            (TUK) yang sudah terverifikasi
+          </td>
+        </tr>
+
+        <tr>
+          <td class="label">Mengingat</td>
+          <td class="separator">:</td>
+          <td class="index">a.</td>
+          <td>
+            Peraturan Pemerintah Nomor: 10 Tahun 2018 tentang Badan Nasional
+            Sertifikasi Profesi
+          </td>
+        </tr>
+
+        <tr>
+          <td></td>
+          <td></td>
+          <td class="index">b.</td>
+          <td>
+            Peraturan Badan Nasional Sertifikasi Profesi Nomor:
+            1/BNSP/III/2014 tentang pedoman penilaian kesesuaian persyaratan
+            umum Lembaga Sertifikasi Profesi
+          </td>
+        </tr>
+
+        <tr>
+          <td></td>
+          <td></td>
+          <td class="index">c.</td>
+          <td>
+            Peraturan Badan Nasional Sertifikasi Profesi Nomor:
+            5/BNSP/VII/2014 tentang pedoman persyaratan umum tempat uji kompetensi
+          </td>
+        </tr>
+      </table>
+
+      <div class="decision">Memutuskan</div>
+
+      <table>
+        <tr>
+          <td class="label">Memutuskan</td>
+          <td class="separator">:</td>
+          <td class="index">a.</td>
+          <td>{{memutuskan_a}}</td>
+        </tr>
+
+        <tr>
+          <td></td>
+          <td></td>
+          <td class="index">b.</td>
+          <td>{{memutuskan_b}}</td>
+        </tr>
+
+        <tr>
+          <td></td>
+          <td></td>
+          <td class="index">c.</td>
+          <td>{{memutuskan_c}}</td>
+        </tr>
+
+        <tr>
+          <td></td>
+          <td></td>
+          <td class="index">d.</td>
+          <td>
+            Berdasarkan hasil berita acara verifikasi, {{nama_tuk}}
+            ditetapkan layak untuk melaksanakan Uji Kompetensi pada tanggal
+            {{tanggal_penetapan}}.
+          </td>
+        </tr>
+
+        <tr>
+          <td></td>
+          <td></td>
+          <td class="index">e.</td>
+          <td>
+            Berdasarkan hasil berita acara verifikasi, {{nama_tuk}}
+            ditetapkan layak untuk melaksanakan Uji Kompetensi dengan
+            skema terlampir.
+          </td>
+        </tr>
+      </table>
+
+      <div style="margin-top:40px; text-align: right;">
+        Ditetapkan<br/>{{tanggal_penetapan}}
+      </div>
+      <div style="font-weight: bold; text-align: right;">Lembaga Sertifikasi Profesi Gatensi Karya Konstruksi</div>
+      <div class="signature">
+        <strong>Radinal Efendy, ST</strong>
+        Direktur
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- PAGE 2 -->
+  <div class="page lampiran">
+
+    <h1>Lampiran</h1>
+
+    <h2>Surat Keputusan</h2>
+
+    <p>
+      Direktur Lembaga Sertifikasi Profesi Gatensi Karya Konstruksi
+    </p>
+
+    <p>
+      Nomor: {{nomor_sk}}
+    </p>
+
+    <div class="section-title">Tentang</div>
+
+    <p>
+      Penetapan Tempat Uji Kompetensi (TUK) Terverifikasi<br>
+      Lembaga Sertifikasi Profesi Gatensi Karya Konstruksi
+    </p>
+
+    <div class="schema">
+      Daftar Skema
+    </div>
+    <div style="margin-top: 10px; font-size: 12pt;">
+      {{skema_sertifikasi}}
+    </div>
+  </div>
+
+</body>
+</html>

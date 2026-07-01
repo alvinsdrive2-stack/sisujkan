@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asesmen Mandiri Pengawas Struktur Bangunan</title>
+    <style>
+        :root {
+            --primary-color: #0056b3; /* Biru Teknik */
+            --secondary-color: #f0f4f8;
+            --accent-color: #ff9800; /* Oranye Safety */
+            --text-dark: #333;
+            --text-light: #666;
+            --border-color: #ddd;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #e9ecef;
+            color: var(--text-dark);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* HEADER */
+        header {
+            background-color: white;
+            padding: 1rem 2rem;
+            border-bottom: 3px solid var(--primary-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+            box-shadow: var(--shadow);
+            z-index: 10;
+        }
+
+        header h1 {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .header-actions button {
+            padding: 8px 16px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .header-actions button:hover {
+            background-color: #004494;
+        }
+
+        .header-actions button.secondary {
+            background-color: white;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            margin-right: 10px;
+        }
+
+        /* MAIN LAYOUT */
+        main {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* LEFT COLUMN: EDITOR */
+        .editor-pane {
+            flex: 1;
+            background-color: white;
+            overflow-y: auto;
+            padding: 2rem;
+            border-right: 1px solid var(--border-color);
+        }
+
+        /* RIGHT COLUMN: PREVIEW */
+        .preview-pane {
+            flex: 1;
+            background-color: #525659; /* Warna latar belakang PDF viewer umum */
+            padding: 2rem;
+            overflow-y: auto;
+            display: flex;
+            justify-content: center;
+        }
+
+        .paper-preview {
+            background-color: white;
+            width: 100%;
+            max-width: 210mm; /* Ukuran A4 */
+            min-height: 297mm;
+            padding: 20mm;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            font-size: 12px; /* Ukuran font dokumen */
+            position: relative;
+        }
+
+        /* FORM COMPONENTS */
+        .form-section {
+            margin-bottom: 2rem;
+            background: var(--secondary-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #dde1e6;
+        }
+
+        .form-section h3 {
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 0.5rem;
+        }
+
+        .input-group {
+            margin-bottom: 1rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        /* FILE UPLOAD STYLING */
+        .drop-zone {
+            border: 2px dashed var(--primary-color);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            background-color: rgba(0, 86, 179, 0.05);
+            cursor: pointer;
+            transition: background 0.2s;
+            position: relative;
+        }
+
+        .drop-zone:hover {
+            background-color: rgba(0, 86, 179, 0.1);
+        }
+
+        .drop-zone p {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .drop-zone input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-info {
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* ASSESSMENT TABLE (EDITOR) */
+        .assessment-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .assessment-table th, .assessment-table td {
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .assessment-table th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .assessment-table .criteria-col {
+            width: 40%;
+        }
+
+        .assessment-table .status-col {
+            width: 20%;
+            text-align: center;
+        }
+
+        .assessment-table .action-col {
+            width: 20%;
+            text-align: center;
+        }
+
+        /* Custom Radio Buttons for Y/N */
+        .status-options {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .radio-label {
+            cursor: pointer;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: white;
+            transition: all 0.2s;
+        }
+
+        .radio-input {
+            display: none;
+        }
+
+        .radio-input:checked + .radio-label.yes {
+            background-color: var(--success-color);
+            color: white;
+            border-color: var(--success-color);
+        }
+
+        .radio-input:checked + .radio-label.no {
+            background-color: var(--danger-color);
+            color: white;
+            border-color: var(--danger-color);
+        }
+
+        /* Evidence Button */
+        .btn-upload-evidence {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-upload-evidence:hover {
+            background-color: #e68900;
+        }
+
+        .evidence-list {
+            margin-top: 5px;
+            font-size: 0.75rem;
+            color: var(--text-light);
+            display: block;
+        }
+
+        /* PREVIEW STYLES (PAPER) */
+        .paper-header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid black;
+            padding-bottom: 10px;
+        }
+        
+        .paper-header h2 {
+            font-size: 16px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .paper-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .paper-info-item {
+            margin-bottom: 8px;
+            display: flex;
+        }
+
+        .paper-label {
+            font-weight: bold;
+            width: 140px;
+        }
+
+        .paper-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .paper-table th, .paper-table td {
+            border: 1px solid black;
+            padding: 8px;
+            vertical-align: top;
+        }
+
+        .paper-table th {
+            background-color: #eee !important; /* Tidak full color agar hemat tinta */
+            -webkit-print-color-adjust: exact;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .checkbox-cell {
+            text-align: center;
+            width: 40px;
+        }
+        
+        .check-mark {
+            display: none;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .checked .check-mark {
+            display: block;
+        }
+
+        /* TOAST NOTIFICATION */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 4px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+        .toast.show {
+            opacity: 1;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            main {
+                flex-direction: column;
+                overflow-y: auto;
+            }
+            .editor-pane, .preview-pane {
+                overflow: visible;
+                flex: none;
+                height: auto;
+            }
+            .preview-pane {
+                background-color: white;
+                border-top: 10px solid #e9ecef;
+            }
+            body {
+                overflow-y: auto;
+                height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div style="display:flex; align-items:center; gap:10px;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        <h1>Sistem Asesmen Kompetensi - Struktur Bangunan</h1>
+    </div>
+    <div class="header-actions">
+        <button class="secondary" onclick="window.print()">Cetak / PDF</button>
+        <button onclick="saveData()">Simpan Data</button>
+    </div>
+</header>
+
+<main>
+    <!-- LEFT: INPUT SECTION -->
+    <section class="editor-pane">
+        
+        <!-- Personal Data -->
+        <div class="form-section">
+            <h3>1. Identitas Peserta</h3>
+            <div class="input-group">
+                <label>Nama Lengkap</label>
+                <input type="text" id="inputName" placeholder="Masukkan nama sesuai KTP" oninput="updatePreview()">
+            </div>
+            <div class="input-group">
+                <label>NIK / Nomor Registrasi</label>
+                <input type="text" id="inputNIK" placeholder="Nomor Induk Kependudukan" oninput="updatePreview()">
+            </div>
+            <div class="input-group">
+                <label>Unit Kerja / Perusahaan</label>
+                <input type="text" id="inputUnit" placeholder="Nama perusahaan atau dinas" oninput="updatePreview()">
+            </div>
+            <div class="input-group">
+                <label>Tanggal Asesmen</label>
+                <input type="date" id="inputDate" oninput="updatePreview()">
+            </div>
+        </div>
+
+        <!-- Document Reference -->
+        <div class="form-section">
+            <h3>2. Upload Dokumen Referensi</h3>
+            <p style="margin-bottom:10px; font-size:0.9rem; color:#666;">
+                Silakan upload foto/scan dari "PL-02 ASESMENT MANDIRI" yang Anda miliki sebagai panduan isi.
+            </p>
+            <div class="drop-zone" id="dropZone">
+                <input type="file" id="refFile" accept="image/*,.pdf" onchange="handleRefUpload(this)">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--primary-color); margin-bottom:10px;">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                <p>Klik atau Drag file dokumen di sini</p>
+                <div id="refFileInfo" class="file-info"></div>
+            </div>
+        </div>
+
+        <!-- Competency Matrix Input -->
+        <div class="form-section">
+            <h3>3. Matrik Asesmen (Kriteria Unjuk Kerja)</h3>
+            <p style="font-size:0.85rem; color:#666; margin-bottom:10px;">Isi status kompetensi dan lampirkan bukti pendukung (Foto/Dokumen).</p>
+            
+            <table class="assessment-table">
+                <thead>
+                    <tr>
+                        <th width="50%">Elemen & Kriteria Unjuk Kerja</th>
+                        <th width="25%">Status (Y/N)</th>
+                        <th width="25%">Lampiran Bukti</th>
+                    </tr>
+                </thead>
+                <tbody id="assessmentBody">
+                    <!-- Rows generated by JS -->
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+    <!-- RIGHT: LIVE PREVIEW SECTION -->
+    <section class="preview-pane">
+        <div class="paper-preview" id="paperPreview">
+            <div class="paper-header">
+                <h2>Lembar Asesmen Mandiri</h2>
+                <h3>Pengawas Pekerjaan Struktur Bangunan Gedung</h3>
+                <div style="font-size: 10px; margin-top:5px;">Kode Unit: PL - 02</div>
+            </div>
+
+            <div class="paper-info-grid">
+                <div class="paper-info-item">
+                    <span class="paper-label">Nama Peserta:</span>
+                    <span id="prevName">-</span>
+                </div>
+                <div class="paper-info-item">
+                    <span class="paper-label">Tanggal:</span>
+                    <span id="prevDate">-</span>
+                </div>
+                <div class="paper-info-item">
+                    <span class="paper-label">NIK / Reg.:</span>
+                    <span id="prevNIK">-</span>
+                </div>
+                <div class="paper-info-item">
+                    <span class="paper-label">Unit Kerja:</span>
+                    <span id="prevUnit">-</span>
+                </div>
+            </div>
+
+            <table class="paper-table">
+                <thead>
+                    <tr>
+                        <th style="width: 5%;">No</th>
+                        <th style="width: 60%;">Elemen & Kriteria Unjuk Kerja</th>
+                        <th style="width: 10%;">Y</th>
+                        <th style="width: 10%;">T</th>
+                        <th style="width: 15%;">Bukti Terlampir</th>
+                    </tr>
+                </thead>
+                <tbody id="previewTableBody">
+                    <!-- Preview Rows -->
+                </tbody>
+            </table>
+
+            <div style="margin-top: 40px; display:flex; justify-content:space-between; text-align:center;">
+                <div>
+                    <div style="margin-bottom:60px;">Peserta,</div>
+                    <div style="border-top:1px solid black; padding-top:5px; width: 150px; margin-left:auto; margin-right:auto;">( ................ )</div>
+                </div>
+                <div>
+                    <div style="margin-bottom:60px;">Asesor,</div>
+                    <div style="border-top:1px solid black; padding-top:5px; width: 150px; margin-left:auto; margin-right:auto;">( ................ )</div>
+                </div>
+            </div>
+            
+            <div style="margin-top:20px; font-size:10px; border-top:1px dashed #ccc; padding-top:10px;">
+                <strong>Dokumen ini digenerate secara digital.</strong> Lampiran bukti fisik/digital disimpan terpisah sesuai daftar terlampir.
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- TOAST MSG -->
+<div id="toast" class="toast">Pesan Notifikasi</div>
+
+<script>
+    // Data Model untuk Kriteria (Sesuai gambar)
+    const competencyData = [
+        {
+            element: "Elemen 1: Menerapkan peraturan perundangan dan sistem manajemen mutu, K3L dan lingkungan.",
+            criteria: "1.1 Melakukan inventory peraturan perundangan yang relevan dengan pekerjaan struktur bangunan gedung."
+        },
+        {
+            criteria: "1.2 Melakukan penjelasan mengenai struktur organisasi proyek dan job description masing-masing personil."
+        },
+        {
+            criteria: "1.3 Menyusun dokumentasi sistem manajemen mutu, K3L dan lingkungan."
+        },
+        {
+            element: "Elemen 2: Menetapkan dan melaksanakan persyaratan mutu, K3L dan lingkungan.",
+            criteria: "2.1 Menetapkan rencana mutu, K3L dan lingkungan pelaksanaan pekerjaan struktur bangunan gedung."
+        },
+        {
+            criteria: "2.2 Mengimplementasikan rencana mutu, K3L dan lingkungan pelaksanaan pekerjaan struktur bangunan gedung."
+        },
+        {
+            criteria: "2.3 Melakukan monitoring pelaksanaan mutu, K3L dan lingkungan pekerjaan struktur bangunan gedung."
+        },
+        {
+            criteria: "2.4 Melakukan evaluasi pelaksanaan mutu, K3L dan lingkungan pekerjaan struktur bangunan gedung."
+        }
+    ];
+
+    // State Management
+    let formData = {
+        evidences: {} // Map index -> array of file names
+    };
+
+    // Inisialisasi Halaman
+    document.addEventListener('DOMContentLoaded', () => {
+        renderInputTable();
+        renderPreviewTable();
+        updatePreview(); // Set initial empty states
+    });
+
+    // 1. Render Tabel Input (Kiri)
+    function renderInputTable() {
+        const tbody = document.getElementById('assessmentBody');
+        tbody.innerHTML = '';
+
+        competencyData.forEach((item, index) => {
+            const tr = document.createElement('tr');
+            
+            // Logic untuk menampilkan Element Name hanya di baris pertama jika berkelompok
+            let displayCriteria = item.criteria;
+            if (item.element) {
+                displayCriteria = `<strong style="color:var(--primary-color); display:block; margin-bottom:4px;">${item.element}</strong>${item.criteria}`;
+            }
+
+            tr.innerHTML = `
+                <td>
+                    <div style="font-weight:bold; font-size:0.8rem; color:#999;">${index + 1}</div>
+                    <div style="font-size:0.85rem;">${displayCriteria}</div>
+                </td>
+                <td class="status-col">
+                    <div class="status-options">
+                        <input type="radio" name="status_${index}" id="y_${index}" value="Y" class="radio-input" onchange="updatePreview()">
+                        <label for="y_${index}" class="radio-label yes">Y</label>
+                        
+                        <input type="radio" name="status_${index}" id="n_${index}" value="N" class="radio-input" onchange="updatePreview()">
+                        <label for="n_${index}" class="radio-label no">T</label>
+                    </div>
+                </td>
+                <td class="action-col">
+                    <input type="file" id="ev_${index}" style="display:none" onchange="handleEvidenceUpload(this, ${index})">
+                    <button class="btn-upload-evidence" onclick="document.getElementById('ev_${index}').click()">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                        Upload Bukti
+                    </button>
+                    <div id="ev_list_${index}" class="evidence-list"></div>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    // 2. Render Tabel Preview (Kanan) - Struktur Statis
+    function renderPreviewTable() {
+        const tbody = document.getElementById('previewTableBody');
+        tbody.innerHTML = '';
+
+        competencyData.forEach((item, index) => {
+            let displayCriteria = item.criteria;
+            if (item.element) {
+                displayCriteria = `<strong>${item.element}</strong><br>${item.criteria}`;
+            }
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${displayCriteria}</td>
+                <td class="checkbox-cell" id="prev_y_${index}"><div class="check-mark">✓</div></td>
+                <td class="checkbox-cell" id="prev_n_${index}"><div class="check-mark">✓</div></td>
+                <td id="prev_ev_${index}" style="font-size:10px;">-</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    // 3. Update Logika: Sinkronisasi Input -> Preview
+    function updatePreview() {
+        // Update Personal Info
+        document.getElementById('prevName').textContent = document.getElementById('inputName').value || '-';
+        document.getElementById('prevNIK').textContent = document.getElementById('inputNIK').value || '-';
+        document.getElementById('prevUnit').textContent = document.getElementById('inputUnit').value || '-';
+        
+        const dateVal = document.getElementById('inputDate').value;
+        document.getElementById('prevDate').textContent = dateVal ? new Date(dateVal).toLocaleDateString('id-ID') : '-';
+
+        // Update Table Status & Evidence
+        competencyData.forEach((item, index) => {
+            // Status Y/N
+            const statusVal = document.querySelector(`input[name="status_${index}"]:checked`)?.value;
+            
+            const cellY = document.getElementById(`prev_y_${index}`);
+            const cellN = document.getElementById(`prev_n_${index}`);
+
+            // Reset classes
+            cellY.classList.remove('checked');
+            cellN.classList.remove('checked');
+
+            if (statusVal === 'Y') {
+                cellY.classList.add('checked');
+            } else if (statusVal === 'N') {
+                cellN.classList.add('checked');
+            }
+
+            // Evidence Text
+            const evList = formData.evidences[index] || [];
+            const evCell = document.getElementById(`prev_ev_${index}`);
+            if (evList.length > 0) {
+                // Tampilkan nama file, max 2 agar rapi
+                evCell.innerHTML = evList.slice(0, 2).join(', ') + (evList.length > 2 ? '...' : '');
+                evCell.style.fontWeight = 'bold';
+                evCell.style.color = '#000';
+            } else {
+                evCell.textContent = '-';
+                evCell.style.fontWeight = 'normal';
+            }
+        });
+    }
+
+    // 4. Handle Upload Referensi Utama
+    function handleRefUpload(input) {
+        const infoDiv = document.getElementById('refFileInfo');
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+            infoDiv.innerHTML = `
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>${file.name} (${(file.size/1024).toFixed(1)} KB)</span>
+            `;
+            showToast("Dokumen referensi berhasil dimuat!");
+        }
+    }
+
+    // 5. Handle Upload Bukti Per Baris
+    function handleEvidenceUpload(input, index) {
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+            
+            // Simpan ke state
+            if (!formData.evidences[index]) formData.evidences[index] = [];
+            formData.evidences[index].push(file.name);
+
+            // Update UI Editor (Kecil)
+            const listDiv = document.getElementById(`ev_list_${index}`);
+            listDiv.innerHTML = `<span style="color:var(--success-color);">✓ ${file.name}</span>`;
+            
+            // Update Preview
+            updatePreview();
+            showToast(`Bukti untuk kriteria ${index + 1} dilampirkan.`);
+        }
+    }
+
+    // Utility: Simpan Data (Simulasi)
+    function saveData() {
+        const name = document.getElementById('inputName').value;
+        if(!name) {
+            showToast("Harap isi Nama Peserta terlebih dahulu!", "error");
+            return;
+        }
+        // Di aplikasi nyata, ini mengirim formData ke API/Database
+        console.log("Saving Data:", formData);
+        showToast("Data asesmen berhasil disimpan secara lokal.");
+    }
+
+    // Utility: Toast Notification
+    function showToast(message, type = 'success') {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.style.backgroundColor = type === 'error' ? '#dc3545' : '#333';
+        toast.classList.add('show');
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000);
+    }
+
+</script>
+
+</body>
+</html>

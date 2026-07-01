@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Berita Acara Verifikasi TUK - LSP Gatensi</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Cambria', serif;
+      font-size: 12pt;
+      color: #1a1a2e;
+      background: #f5f5f5;
+      padding: 40px 20px;
+      line-height: 1.5;
+    }
+
+    .page {
+      width: 100%;
+      margin: 0 auto 40px auto;
+      background: #ffffff;
+      border: 1px solid #d1d5db;
+      border-radius: 0;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      page-break-after: always;
+    }
+
+    @media print {
+      @page {
+        size: A4;
+        margin: 0;
+      }
+      .page {
+        box-shadow: none;
+        border: none;
+        margin: 0 auto;
+        padding: 20mm 5mm;
+      }
+      body {
+        padding: 0;
+        background: white;
+      }
+    }
+
+    /* ── Header ── */
+    .header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin: 0 20mm 0 20mm;
+    }
+
+    .header-logo {
+      width: 200px;
+      height: 200px;
+      flex-shrink: 0;
+    }
+
+    .header-info {
+      flex: 1;
+      padding-top: 25px;
+    }
+
+    .header-address {
+      font-size: 9pt;
+      color: #555;
+      line-height: 1.5;
+      text-align: right;
+    }
+
+    .header-contact {
+      font-size: 9pt;
+      color: #555;
+      margin-top: 2px;
+      text-align: right;
+    }
+
+    /* ── Body ── */
+    .body {
+      margin: 0 20mm;
+    }
+
+    /* ── Title ── */
+    .title-center {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .title-main {
+      font-size: 16pt;
+      font-weight: 700;
+      color: #1a1a2e;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .title-number {
+      font-size: 12pt;
+      font-weight: 600;
+      margin-top: 4px;
+      color: #333;
+    }
+
+    /* ── Body text ── */
+    .body-text {
+      margin-bottom: 16px;
+      font-size: 12pt;
+    }
+
+    /* ── Inline form ── */
+    .inline-form {
+      display: grid;
+      grid-template-columns: 180px 20px 1fr;
+      gap: 0;
+      margin-bottom: 0px;
+      font-size: 12pt;
+    }
+
+    .inline-form .label {
+      padding: 2px 0;
+    }
+
+    .inline-form .dots {
+      color: #999;
+      text-align: center;
+      padding: 2px 4px;
+    }
+
+    .inline-form .value {
+      padding: 2px 0;
+    }
+
+    /* ── Table ── */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 12pt;
+    }
+
+    .data-table th {
+      border: 1px solid #333;
+      padding: 6px 10px;
+      text-align: center;
+      font-weight: 700;
+      background: #fff;
+    }
+
+    .data-table td {
+      border: 1px solid #333;
+      padding: 6px 10px;
+      vertical-align: top;
+    }
+
+    .data-table td:first-child {
+      text-align: center;
+      font-weight: 700;
+      width: 30px;
+    }
+
+    /* ── Signature table ── */
+    .sign-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 24px;
+      font-size: 12pt;
+    }
+
+    .sign-table th {
+      border: 1px solid #333;
+      padding: 8px 10px;
+      text-align: center;
+      font-weight: 700;
+      background: #fff;
+    }
+
+    .sign-table td {
+      border: 1px solid #333;
+      padding: 8px 10px;
+      text-align: center;
+      height: 100px;
+      vertical-align: top;
+      font-size: 10pt;
+      color: #555;
+    }
+
+    /* ── Footnote ── */
+    .footnote {
+      font-size: 10pt;
+      color: #555;
+      margin-top: 8px;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════ PAGE 1 ══ -->
+<div class="page">
+  <div class="header">
+    <img src="template1-sewaktu_files/template1-logo.png" alt="Logo LSP Gatensi" class="header-logo">
+    <div class="header-info">
+      <div class="header-address">
+        Graha Gapensi Jl. Raya Ragunan No. 1C, Jati Padang, Pasar Minggu, Jakarta Selatan
+      </div>
+      <div class="header-contact">
+        Telp. 0217810454
+        <br/>Email: admin@lspgatensi.id
+        <br/>Website: <a href="https://lspgatensi.id" target="_blank">https://lspgatensi.id</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="body">
+    <br/><br/>
+
+    <!-- Title -->
+    <div class="title-center">
+      <div class="title-main">Berita Acara Verifikasi TUK</div>
+      <div class="title-number">Nomor: {{nomor}}</div>
+    </div>
+
+    <!-- Intro -->
+    <p class="body-text">
+      Bahwa telah dilakukan Verifikasi TUK Sewaktu terhadap:
+    </p>
+
+    <!-- Form -->
+    <div class="inline-form">
+      <span class="label">Nama TUK</span>
+      <span class="dots">:</span>
+      <span class="value">{{nama_tuk}}</span>
+    </div>
+    <div class="inline-form">
+      <span class="label">Alamat</span>
+      <span class="dots">:</span>
+      <span class="value">{{alamat}}</span>
+    </div>
+    <div class="inline-form">
+      <span class="label">Hari, Tanggal Verifikasi</span>
+      <span class="dots">:</span>
+      <span class="value">{{hari_tanggal_verifikasi}}</span>
+    </div>
+    <div class="inline-form">
+      <span class="label">Metode Verifikasi</span>
+      <span class="dots">:</span>
+      <span class="value">{{metode_verifikasi}}</span>
+    </div>
+
+    
+
+    <!-- Uji info -->
+    <div class="inline-form">
+      <span class="label">Hari, Tanggal Uji</span>
+      <span class="dots">:</span>
+      <span class="value">{{hari_tanggal_uji}}</span>
+    </div>
+    <div class="inline-form">
+      <span class="label">Metode Uji</span>
+      <span class="dots">:</span>
+      <span class="value" style="font-weight: bold;">{{metode_uji}}</span>
+    </div>
+    <br/><br/>
+    <!-- Skema table -->
+    <p class="body-text">
+      Untuk menyelenggarakan Uji Kompetensi dengan Skema sertifikasi:
+    </p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>No.</th>
+          <th>TUK Skema Sertifikasi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1.</td>
+          <td>{{skema_sertifikasi}}</td>
+        </tr>
+        <tr>
+          <td>2.</td>
+          <td>{{skema_sertifikasi}}</td>
+        </tr>
+        <tr>
+          <td>3.</td>
+          <td>{{skema_sertifikasi}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ PAGE 2 ══ -->
+<div class="page">
+  <div class="header">
+    <img src="template1-sewaktu_files/template1-logo.png" alt="Logo LSP Gatensi" class="header-logo">
+    <div class="header-info">
+      <div class="header-address">
+        Graha Gapensi Jl. Raya Ragunan No. 1C, Jati Padang, Pasar Minggu, Jakarta Selatan
+      </div>
+      <div class="header-contact">
+        Telp. 0217810454
+        <br/>Email: admin@lspgatensi.id
+        <br/>Website: <a href="https://lspgatensi.id" target="_blank">https://lspgatensi.id</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="body">
+    <br/><br/>
+
+    <!-- Closing statement -->
+    <p class="body-text">
+      Dengan ini menetapkan TUK sesuai Skema Sertifikasi dengan metode uji Observasi di atas
+      <strong>Layak / Tidak Layak</strong>
+      sebagai Tempat Uji Kompetensi (TUK) terverifikasi.
+    </p>
+
+    <!-- Signature table -->
+    <table class="sign-table">
+      <thead>
+        <tr>
+          <th colspan="2">Verifikator</th>
+          <th>Tanda Tangan</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td width="5%">1</td>
+          <td width="60%">{{verifikator}}</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="footnote">*) Coret yang tidak perlu</p>
+  </div>
+</div>
+
+</body>
+</html>
