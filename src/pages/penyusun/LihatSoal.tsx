@@ -1,5 +1,5 @@
-import { useState, useRef } from "react"
-import { extractFromDocx } from "@/lib/docx-extractor"
+import { useState, useRef, useCallback } from "react"
+import { extractFromDocx, extractAnswersFromDocx } from "@/lib/docx-extractor"
 
 type SoalRow = Record<string, string | number>
 
@@ -10,7 +10,17 @@ export default function LihatSoal() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const [fileName, setFileName] = useState("")
+  const [answerFileName, setAnswerFileName] = useState("")
+  const [answerKey, setAnswerKey] = useState<Record<number, string>>({})
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const answerInputRef = useRef<HTMLInputElement>(null)
+
+  const mergeAnswers = useCallback((rows: SoalRow[], answers: Record<number, string>) => {
+    return rows.map(row => ({
+      ...row,
+      jawaban: answers[row.no as number] || (row.jawaban as string) || '',
+    }))
+  }, [])
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -32,12 +42,44 @@ export default function LihatSoal() {
 
     try {
       const rows = await extractFromDocx(file, selectedDokumen)
-      setSoalData(rows)
+      const merged = mergeAnswers(rows, answerKey)
+      setSoalData(merged)
     } catch (err: any) {
       setError(err.message || "Gagal extract")
     }
 
     setLoading(false)
+    // Reset file input so re-uploading same file triggers onChange
+    if (fileInputRef.current) fileInputRef.current.value = ''
+  }
+
+  const handleAnswerUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    if (!file.name.endsWith('.docx')) {
+      setError("File kunci jawaban harus format .docx")
+      return
+    }
+
+    setError("")
+    setLoading(true)
+    setAnswerFileName(file.name)
+
+    try {
+      const answers = await extractAnswersFromDocx(file)
+      setAnswerKey(answers)
+
+      // Merge into existing soalData if any
+      if (soalData.length > 0) {
+        setSoalData(prev => mergeAnswers(prev, answers))
+      }
+    } catch (err: any) {
+      setError(err.message || "Gagal extract kunci jawaban")
+    }
+
+    setLoading(false)
+    if (answerInputRef.current) answerInputRef.current.value = ''
   }
 
   const handleAddManual = () => {
@@ -107,8 +149,7 @@ export default function LihatSoal() {
           </select>
         </div>
 
-        <div className="flex items-end gap-2">
-          {/* Hidden file input */}
+        <div className="flex items-end gap-2 flex-wrap">
           <input
             ref={fileInputRef}
             type="file"
@@ -123,6 +164,26 @@ export default function LihatSoal() {
           >
             {loading ? "Extracting..." : "Extract Soal dari Word"}
           </button>
+
+          {selectedDokumen === 'ia05' && (
+            <>
+              <input
+                ref={answerInputRef}
+                type="file"
+                accept=".docx"
+                className="hidden"
+                onChange={handleAnswerUpload}
+              />
+              <button
+                onClick={() => answerInputRef.current?.click()}
+                disabled={loading}
+                className="bg-purple-600 hover:bg-purple-700 disabled:bg-purple-400 text-white px-4 py-2 rounded-lg text-sm font-medium"
+              >
+                {answerFileName ? "Ganti Kunci Jawaban" : "+ Kunci Jawaban (05B)"}
+              </button>
+            </>
+          )}
+
           <button
             onClick={handleAddManual}
             className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap"
@@ -133,8 +194,13 @@ export default function LihatSoal() {
       </div>
 
       {fileName && (
+        <div className="mb-2 text-sm text-slate-500 dark:text-slate-400">
+          File Soal: <span className="font-medium text-slate-700 dark:text-slate-300">{fileName}</span>
+        </div>
+      )}
+      {answerFileName && (
         <div className="mb-4 text-sm text-slate-500 dark:text-slate-400">
-          File: <span className="font-medium text-slate-700 dark:text-slate-300">{fileName}</span>
+          Kunci Jawaban: <span className="font-medium text-slate-700 dark:text-slate-300">{answerFileName}</span>
         </div>
       )}
 
@@ -267,7 +333,7 @@ export default function LihatSoal() {
       {soalData.length > 0 && (
         <div className="mt-6 flex justify-end gap-3">
           <button
-            onClick={() => { setSoalData([]); setFileName("") }}
+            onClick={() => { setSoalData([]); setFileName(""); setAnswerKey({}); setAnswerFileName("") }}
             className="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-6 py-2 rounded-lg text-sm font-medium"
           >
             Batal

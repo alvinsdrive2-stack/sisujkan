@@ -148,6 +148,36 @@ function extractIA06(doc: Document): SoalRow[] {
   return soals
 }
 
+export async function extractAnswersFromDocx(file: File): Promise<Record<number, string>> {
+  const arrayBuf = await file.arrayBuffer()
+  const zip = await JSZip.loadAsync(arrayBuf)
+  const docFile = zip.file('word/document.xml')
+  if (!docFile) throw new Error('Invalid DOCX: word/document.xml not found')
+
+  const xmlStr = (await docFile.async('string')).replace(/<(\/?)\w+:/g, '<$1')
+  const parser = new DOMParser()
+  const xmlDoc = parser.parseFromString(xmlStr, 'application/xml')
+
+  const tables = xmlDoc.querySelectorAll('tbl')
+  const answers: Record<number, string> = {}
+
+  for (const t of Array.from(tables)) {
+    const rows = t.querySelectorAll('tr')
+    if (rows.length < 5) continue
+
+    const c0 = getCellText(rows[0] as Element)
+    if (!c0.includes('Kunci Jawaban') && !c0.includes('Jawaban')) continue
+
+    for (let i = 2; i < rows.length; i++) {
+      const cells = getRowCells(rows[i] as Element)
+      if (cells[0]?.match(/^\d+$/)) {
+        answers[parseInt(cells[0], 10)] = (cells[1] || '').trim().toUpperCase()
+      }
+    }
+  }
+  return answers
+}
+
 function dumpTable(tbl: Element, label: string) {
   const rows = tbl.querySelectorAll('tr')
   console.log(`[docx-extractor] ${label}: ${rows.length} rows`)
