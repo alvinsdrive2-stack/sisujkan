@@ -149,15 +149,7 @@ function extractIA06(doc: Document): SoalRow[] {
 }
 
 export async function extractAnswersFromDocx(file: File): Promise<Record<number, string>> {
-  const arrayBuf = await file.arrayBuffer()
-  const zip = await JSZip.loadAsync(arrayBuf)
-  const docFile = zip.file('word/document.xml')
-  if (!docFile) throw new Error('Invalid DOCX: word/document.xml not found')
-
-  const xmlStr = (await docFile.async('string')).replace(/<(\/?)\w+:/g, '<$1')
-  const parser = new DOMParser()
-  const xmlDoc = parser.parseFromString(xmlStr, 'application/xml')
-
+  const xmlDoc = await loadXmlDoc(file)
   const tables = xmlDoc.querySelectorAll('tbl')
   const answers: Record<number, string> = {}
 
@@ -187,36 +179,43 @@ function dumpTable(tbl: Element, label: string) {
   }
 }
 
+async function loadXmlDoc(file: File): Promise<Document> {
+  const arrayBuf = await file.arrayBuffer()
+  const zip = await JSZip.loadAsync(arrayBuf)
+  const docFile = zip.file('word/document.xml')
+  if (!docFile) throw new Error('Invalid DOCX: word/document.xml not found')
+  const rawXml = await docFile.async('string')
+  const xmlStr = rawXml.replace(/<(\/?)\w+:/g, '<$1')
+  const parser = new DOMParser()
+  const xmlDoc = parser.parseFromString(xmlStr, 'application/xml')
+  const parseErr = xmlDoc.querySelector('parsererror')
+  if (parseErr) throw new Error('Failed to parse DOCX XML')
+  return xmlDoc
+}
+
+export async function extractSkemaName(file: File): Promise<string> {
+  const xmlDoc = await loadXmlDoc(file)
+  const tables = xmlDoc.querySelectorAll('tbl')
+
+  for (const t of Array.from(tables)) {
+    const rows = t.querySelectorAll('tr')
+    if (rows.length < 2) continue
+    const c0 = getCellText(rows[0] as Element)
+    if (c0.includes('Skema Sertifikasi') || c0.includes('Judul')) {
+      const cells = getRowCells(rows[0] as Element)
+      // cells[3] usually has the skema name
+      return cells[3] || cells[2] || cells[1] || ''
+    }
+  }
+  return ''
+}
+
 export async function extractFromDocx(
   file: File,
   type: string
 ): Promise<SoalRow[]> {
   console.log('[docx-extractor] Starting extract for', file.name, 'type:', type)
-
-  const arrayBuf = await file.arrayBuffer()
-  console.log('[docx-extractor] File size:', arrayBuf.byteLength)
-
-  const zip = await JSZip.loadAsync(arrayBuf)
-  const docFile = zip.file('word/document.xml')
-  if (!docFile) {
-    const files = Object.keys(zip.files).filter(f => f.endsWith('.xml'))
-    console.error('[docx-extractor] word/document.xml not found. Available XML files:', files.slice(0, 10))
-    throw new Error('Invalid DOCX: word/document.xml not found')
-  }
-
-  const rawXml = await docFile.async('string')
-  console.log('[docx-extractor] Raw XML length:', rawXml.length)
-
-  // Strip namespace prefixes (w:, r:, etc.) so CSS selectors work cross-browser
-  const xmlStr = rawXml.replace(/<(\/?)\w+:/g, '<$1')
-  const parser = new DOMParser()
-  const xmlDoc = parser.parseFromString(xmlStr, 'application/xml')
-
-  const parseErr = xmlDoc.querySelector('parsererror')
-  if (parseErr) {
-    console.error('[docx-extractor] XML parse error:', parseErr.textContent)
-    throw new Error('Failed to parse DOCX XML')
-  }
+  const xmlDoc = await loadXmlDoc(file)
 
   const tables = xmlDoc.querySelectorAll('tbl')
   console.log('[docx-extractor] Tables found:', tables.length)

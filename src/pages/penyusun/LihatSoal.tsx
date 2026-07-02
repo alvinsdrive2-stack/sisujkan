@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from "react"
-import { extractFromDocx, extractAnswersFromDocx } from "@/lib/docx-extractor"
+import { extractFromDocx, extractAnswersFromDocx, extractSkemaName } from "@/lib/docx-extractor"
 
 type SoalRow = Record<string, string | number>
 
@@ -10,6 +10,7 @@ export default function LihatSoal() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const [fileName, setFileName] = useState("")
+  const [detectedJabker, setDetectedJabker] = useState("")
   const [answerFileName, setAnswerFileName] = useState("")
   const [answerKey, setAnswerKey] = useState<Record<number, string>>({})
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -41,9 +42,20 @@ export default function LihatSoal() {
     setFileName(file.name)
 
     try {
-      const rows = await extractFromDocx(file, selectedDokumen)
+      const [rows, skemaName] = await Promise.all([
+        extractFromDocx(file, selectedDokumen),
+        extractSkemaName(file),
+      ])
       const merged = mergeAnswers(rows, answerKey)
       setSoalData(merged)
+      if (skemaName) {
+        setDetectedJabker(skemaName)
+        // Auto-select if matches existing option
+        const jbName = skemaName.toLowerCase()
+        if (jbName.includes('teknisi')) setSelectedJabker('1')
+        else if (jbName.includes('analis')) setSelectedJabker('2')
+        else if (jbName.includes('k3') || jbName.includes('keselamatan')) setSelectedJabker('3')
+      }
     } catch (err: any) {
       setError(err.message || "Gagal extract")
     }
@@ -194,8 +206,13 @@ export default function LihatSoal() {
       </div>
 
       {fileName && (
-        <div className="mb-2 text-sm text-slate-500 dark:text-slate-400">
+        <div className="mb-1 text-sm text-slate-500 dark:text-slate-400">
           File Soal: <span className="font-medium text-slate-700 dark:text-slate-300">{fileName}</span>
+        </div>
+      )}
+      {detectedJabker && (
+        <div className="mb-2 text-sm text-slate-500 dark:text-slate-400">
+          Jabatan Kerja: <span className="font-medium text-slate-700 dark:text-slate-300">{detectedJabker}</span>
         </div>
       )}
       {answerFileName && (
@@ -385,7 +402,7 @@ export default function LihatSoal() {
       {soalData.length > 0 && (
         <div className="mt-6 flex justify-end gap-3">
           <button
-            onClick={() => { setSoalData([]); setFileName(""); setAnswerKey({}); setAnswerFileName("") }}
+            onClick={() => { setSoalData([]); setFileName(""); setDetectedJabker(""); setAnswerKey({}); setAnswerFileName("") }}
             className="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-6 py-2 rounded-lg text-sm font-medium"
           >
             Batal
