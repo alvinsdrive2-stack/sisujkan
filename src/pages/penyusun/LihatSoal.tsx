@@ -1,4 +1,5 @@
 import { useState, useRef } from "react"
+import { extractFromDocx } from "@/lib/docx-extractor"
 
 type SoalRow = Record<string, string | number>
 
@@ -29,49 +30,11 @@ export default function LihatSoal() {
     setLoading(true)
     setFileName(file.name)
 
-    // Read file as base64
-    const fileBuf = await file.arrayBuffer()
-    const fileBase64 = btoa(new Uint8Array(fileBuf).reduce((data, byte) => data + String.fromCharCode(byte), ''))
-
     try {
-      const res = await fetch('/api/kan/extract', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ file_base64: fileBase64, file_name: file.name, type: selectedDokumen }),
-      })
-
-      if (!res.ok) {
-        const text = await res.text()
-        throw new Error(text.startsWith('<!') ? 'Server returned HTML — extract endpoint not available' : `HTTP ${res.status}`)
-      }
-
-      const data = await res.json()
-
-      if (data.error) {
-        setError(data.error || "Gagal extract")
-        setLoading(false)
-        return
-      }
-
-      // Normalize keys based on type
-      let rows: SoalRow[] = data
-      if (Array.isArray(data)) {
-        rows = data.map((item: Record<string, unknown>, i: number) => ({
-          no: (item.no as number) || i + 1,
-          soal: String(item.soal || ''),
-          lingkup: String((item as any).lingkup || ''),
-          kode_unit: String((item as any).kode_unit || ''),
-          kode_kuk: String((item as any).kode_kuk || ''),
-          jawab_a: String((item as any).jawab_a || ''),
-          jawab_b: String((item as any).jawab_b || ''),
-          jawab_c: String((item as any).jawab_c || ''),
-          jawab_d: String((item as any).jawab_d || ''),
-          jawaban: String((item as any).jawaban || ''),
-        }))
-      }
+      const rows = await extractFromDocx(file, selectedDokumen)
       setSoalData(rows)
     } catch (err: any) {
-      setError(err.message || "Network error")
+      setError(err.message || "Gagal extract")
     }
 
     setLoading(false)
