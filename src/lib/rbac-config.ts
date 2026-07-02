@@ -24,6 +24,10 @@ export type UserRole =
   | "Asesor"
   | "Asesi"
   | "Komtek"
+  | "Manager Mutu"
+  | "Penyusun"
+  | "Validator"
+  | "Praktisi"
 
 // Role IDs (authoritative source: backend master roles)
 // Compare via role.id, NOT role.name.
@@ -41,6 +45,9 @@ export const RoleId = {
   KETUA_TUK: 11,
   VERIFIKATOR_TUK: 12,
   MANAGER_MUTU: 13,
+  PENYUSUN: 14,
+  VALIDATOR: 15,
+  PRAKTISI: 16,
 } as const
 
 export type RoleIdValue = typeof RoleId[keyof typeof RoleId]
@@ -56,6 +63,10 @@ export const RoleIdToUserRole: Record<number, UserRole> = {
   [RoleId.DIREKTUR_LSP]: "Direktur LSP",
   [RoleId.MANAJER_SERTIFIKASI]: "Manajer Sertifikasi",
   [RoleId.ASESI]: "Asesi",
+  [RoleId.MANAGER_MUTU]: "Manager Mutu",
+  [RoleId.PENYUSUN]: "Penyusun",
+  [RoleId.VALIDATOR]: "Validator",
+  [RoleId.PRAKTISI]: "Praktisi",
 }
 
 // Customizable UI display labels keyed by role.id.
@@ -74,6 +85,9 @@ export const RoleDisplayName: Record<number, string> = {
   [RoleId.KETUA_TUK]: "Ketua TUK",
   [RoleId.VERIFIKATOR_TUK]: "Verifikator TUK",
   [RoleId.MANAGER_MUTU]: "Manager Mutu",
+  [RoleId.PENYUSUN]: "Penyusun",
+  [RoleId.VALIDATOR]: "Validator",
+  [RoleId.PRAKTISI]: "Praktisi",
 }
 
 interface RoleLike {
@@ -119,6 +133,12 @@ export type Permission =
   | "sign_document"
   | "view_signed_documents"
   | "view_unsigned_documents"
+  | "manage_soal"
+  | "view_soal"
+  | "nilai_asesi"
+  | "jawab_soal"
+  | "view_muk"
+  | "view_dokumen"
 
 // Menu Item Interface
 export interface MenuItem {
@@ -306,6 +326,83 @@ export const roleConfig: Partial<Record<UserRole, RoleConfig>> = {
         title: "Daftar Asesi",
         path: "/komtek/daftar-asesi",
         icon: Users
+      }
+    ]
+  },
+  "Penyusun": {
+    name: "Penyusun",
+    layout: "dashboard-admin",
+    defaultRoute: "/penyusun/dashboard",
+    permissions: ["manage_soal", "view_soal", "nilai_asesi", "sign_document", "view_muk", "view_dokumen"],
+    menus: [
+      {
+        title: "Dashboard",
+        path: "/penyusun/dashboard",
+        icon: LayoutDashboard
+      },
+      {
+        title: "Lihat Soal",
+        path: "/penyusun/lihat-soal",
+        icon: FileText
+      },
+      {
+        title: "Daftar Skema",
+        path: "/penyusun/daftar-skema",
+        icon: ClipboardList
+      },
+      {
+        title: "Data Dokumen",
+        path: "/penyusun/data-dokumen",
+        icon: Upload
+      }
+    ]
+  },
+  "Validator": {
+    name: "Validator",
+    layout: "dashboard-admin",
+    defaultRoute: "/validator/dashboard",
+    permissions: ["view_soal", "nilai_asesi", "sign_document"],
+    menus: [
+      {
+        title: "Dashboard",
+        path: "/validator/dashboard",
+        icon: LayoutDashboard
+      },
+      {
+        title: "Daftar Skema",
+        path: "/validator/skema",
+        icon: ClipboardList
+      }
+    ]
+  },
+  "Manager Mutu": {
+    name: "Manager Mutu",
+    layout: "dashboard-admin",
+    defaultRoute: "/manager-mutu/dashboard",
+    permissions: ["view_soal", "nilai_asesi", "sign_document"],
+    menus: [
+      {
+        title: "Dashboard",
+        path: "/manager-mutu/dashboard",
+        icon: LayoutDashboard
+      },
+      {
+        title: "Daftar Skema",
+        path: "/manager-mutu/skema",
+        icon: ClipboardList
+      }
+    ]
+  },
+  "Praktisi": {
+    name: "Praktisi",
+    layout: "dashboard-asesi",
+    defaultRoute: "/praktisi/dashboard",
+    permissions: ["jawab_soal", "sign_document"],
+    menus: [
+      {
+        title: "Dashboard",
+        path: "/praktisi/dashboard",
+        icon: LayoutDashboard
       }
     ]
   }

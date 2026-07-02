@@ -58,7 +58,11 @@ function getDefaultRouteForRole(role?: UserRole): string {
     "Admin TUK": "/admin-tuk/dashboard",
     "Asesor": "/asesor/dashboard",
     "Asesi": "/asesi/dashboard",
-    "Komtek": "/komtek/tandatangan"
+    "Komtek": "/komtek/tandatangan",
+    "Manager Mutu": "/manager-mutu/dashboard",
+    "Penyusun": "/penyusun/dashboard",
+    "Validator": "/validator/dashboard",
+    "Praktisi": "/praktisi/dashboard"
   }
 
   if (role && defaultRoutes[role]) {
@@ -216,4 +220,48 @@ export function AsesiOrAsesorRoute({ children, fallback }: { children: React.Rea
   // Show forbidden page with countdown
   const fallbackPath = fallback || getDefaultRouteForRole(userRoleName)
   return <ForbiddenPage redirectPath={fallbackPath} />
+}
+
+/**
+ * Penyusun Route - Accessible by Penyusun
+ */
+export function PenyusunRoute({ children, fallback }: { children: React.ReactNode; fallback?: string }) {
+  return (
+    <RoleRoute allowedRoles={["Penyusun"]} fallback={fallback}>
+      {children}
+    </RoleRoute>
+  )
+}
+
+/**
+ * Validator Route - Accessible by Validator
+ */
+export function ValidatorRoute({ children, fallback }: { children: React.ReactNode; fallback?: string }) {
+  return (
+    <RoleRoute allowedRoles={["Validator"]} fallback={fallback}>
+      {children}
+    </RoleRoute>
+  )
+}
+
+/**
+ * Manager Mutu Route - Accessible by Manager Mutu
+ */
+export function ManagerMutuRoute({ children, fallback }: { children: React.ReactNode; fallback?: string }) {
+  return (
+    <RoleRoute allowedRoles={["Manager Mutu"]} fallback={fallback}>
+      {children}
+    </RoleRoute>
+  )
+}
+
+/**
+ * Praktisi Route - Accessible by Praktisi
+ */
+export function PraktisiRoute({ children, fallback }: { children: React.ReactNode; fallback?: string }) {
+  return (
+    <RoleRoute allowedRoles={["Praktisi"]} fallback={fallback}>
+      {children}
+    </RoleRoute>
+  )
 }

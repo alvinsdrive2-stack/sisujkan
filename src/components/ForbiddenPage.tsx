@@ -49,7 +49,11 @@ export default function ForbiddenPage({ redirectPath }: ForbiddenPageProps) {
       "Admin TUK": "/admin-tuk/dashboard",
       "Asesor": "/asesor/dashboard",
       "Asesi": "/asesi/dashboard",
-      "Komtek": "/komtek/tandatangan"
+      "Komtek": "/komtek/tandatangan",
+      "Manager Mutu": "/manager-mutu/dashboard",
+      "Penyusun": "/penyusun/dashboard",
+      "Validator": "/validator/dashboard",
+      "Praktisi": "/praktisi/dashboard"
     }
 
     if (role && defaultRoutes[role]) {

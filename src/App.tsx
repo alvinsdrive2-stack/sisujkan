@@ -18,6 +18,10 @@ import {
   DirekturLSPRoute,
   ManajerSertifikasiRoute,
   AsesiOrAsesorRoute,
+  PenyusunRoute,
+  ValidatorRoute,
+  ManagerMutuRoute,
+  PraktisiRoute,
 } from './components/RoleRoute'
 import PublicRoute from './components/PublicRoute'
 import DefaultRoute from './components/DefaultRoute'
@@ -111,6 +115,25 @@ const PraAsesmenByUuidPage = lazy(() => import('./pages/asesi/PraAsesmenByUuidPa
 const VerifikasiTukAjjPage = lazy(() => import('./pages/asesi/VerifikasiTukAjjPage'))
 const KonfirmasiDataPage = lazy(() => import('./pages/asesi/KonfirmasiDataPage'))
 const DevSchedulePage = lazy(() => import('./pages/DevSchedulePage'))
+
+// KAN Role Pages
+const DashboardPenyusun = lazy(() => import('./pages/penyusun/DashboardPenyusun'))
+const LihatSoal = lazy(() => import('./pages/penyusun/LihatSoal'))
+const DaftarSkemaPenyusun = lazy(() => import('./pages/penyusun/DaftarSkema'))
+const DataDokumen = lazy(() => import('./pages/penyusun/DataDokumen'))
+const PenilaianPenyusun = lazy(() => import('./pages/penyusun/Penilaian'))
+const MukResult = lazy(() => import('./pages/penyusun/MukResult'))
+
+const DashboardValidator = lazy(() => import('./pages/validator/DashboardValidator'))
+const DaftarSkemaValidator = lazy(() => import('./pages/validator/DaftarSkema'))
+const PenilaianValidator = lazy(() => import('./pages/validator/Penilaian'))
+
+const DashboardManagerMutu = lazy(() => import('./pages/manager-mutu/DashboardManagerMutu'))
+const DaftarSkemaManagerMutu = lazy(() => import('./pages/manager-mutu/DaftarSkema'))
+const PenilaianManagerMutu = lazy(() => import('./pages/manager-mutu/Penilaian'))
+
+const DashboardPraktisi = lazy(() => import('./pages/praktisi/DashboardPraktisi'))
+const JawabSoal = lazy(() => import('./pages/praktisi/JawabSoal'))
 
 // Catch chunk load failures (lazy import network errors) and reload
 window.addEventListener('unhandledrejection', (event) => {
@@ -356,6 +379,84 @@ function App() {
                 </Routes>
                 </ValidatedNavigationRoute>
               </AsesiMainLayout>
+            }
+          />
+
+          {/* Protected Routes - Penyusun (KAN) */}
+          <Route
+            path="/penyusun/*"
+            element={
+              <PenyusunRoute>
+                <ValidatedNavigationRoute>
+                  <DashboardLayout>
+                    <Routes>
+                      <Route path="dashboard" element={<DashboardPenyusun />} />
+                      <Route path="lihat-soal" element={<LihatSoal />} />
+                      <Route path="daftar-skema" element={<DaftarSkemaPenyusun />} />
+                      <Route path="data-dokumen" element={<DataDokumen />} />
+                      <Route path="penilaian/:idIzin/:jenis" element={<PenilaianPenyusun />} />
+                      <Route path="muk/:idIzin" element={<MukResult />} />
+                      <Route path="" element={<Navigate to="dashboard" replace />} />
+                    </Routes>
+                  </DashboardLayout>
+                </ValidatedNavigationRoute>
+              </PenyusunRoute>
+            }
+          />
+
+          {/* Protected Routes - Validator (KAN) */}
+          <Route
+            path="/validator/*"
+            element={
+              <ValidatorRoute>
+                <ValidatedNavigationRoute>
+                  <DashboardLayout>
+                    <Routes>
+                      <Route path="dashboard" element={<DashboardValidator />} />
+                      <Route path="skema" element={<DaftarSkemaValidator />} />
+                      <Route path="penilaian/:idIzin/:jenis" element={<PenilaianValidator />} />
+                      <Route path="" element={<Navigate to="dashboard" replace />} />
+                    </Routes>
+                  </DashboardLayout>
+                </ValidatedNavigationRoute>
+              </ValidatorRoute>
+            }
+          />
+
+          {/* Protected Routes - Manager Mutu (KAN) */}
+          <Route
+            path="/manager-mutu/*"
+            element={
+              <ManagerMutuRoute>
+                <ValidatedNavigationRoute>
+                  <DashboardLayout>
+                    <Routes>
+                      <Route path="dashboard" element={<DashboardManagerMutu />} />
+                      <Route path="skema" element={<DaftarSkemaManagerMutu />} />
+                      <Route path="penilaian/:idIzin/:jenis" element={<PenilaianManagerMutu />} />
+                      <Route path="" element={<Navigate to="dashboard" replace />} />
+                    </Routes>
+                  </DashboardLayout>
+                </ValidatedNavigationRoute>
+              </ManagerMutuRoute>
+            }
+          />
+
+          {/* Protected Routes - Praktisi (KAN) */}
+          <Route
+            path="/praktisi/*"
+            element={
+              <PraktisiRoute>
+                <ValidatedNavigationRoute>
+                  <DashboardLayout>
+                    <Routes>
+                      <Route path="dashboard" element={<DashboardPraktisi />} />
+                      <Route path="jawab/:idIzin" element={<JawabSoal />} />
+                      <Route path="" element={<Navigate to="dashboard" replace />} />
+                    </Routes>
+                  </DashboardLayout>
+                </ValidatedNavigationRoute>
+              </PraktisiRoute>
             }
           />
 
