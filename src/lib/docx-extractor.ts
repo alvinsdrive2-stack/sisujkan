@@ -149,6 +149,15 @@ function extractIA06(doc: Document): SoalRow[] {
   return soals
 }
 
+function dumpTable(tbl: Element, label: string) {
+  const rows = tbl.querySelectorAll('tr')
+  console.log(`[docx-extractor] ${label}: ${rows.length} rows`)
+  for (let i = 0; i < Math.min(rows.length, 5); i++) {
+    const cells = getRowCells(rows[i] as Element)
+    console.log(`  row[${i}]:`, cells.length, 'cells', JSON.stringify(cells))
+  }
+}
+
 export async function extractFromDocx(
   file: File,
   type: string
@@ -180,13 +189,10 @@ export async function extractFromDocx(
     throw new Error('Failed to parse DOCX XML')
   }
 
-  const tableCount = xmlDoc.querySelectorAll('tbl').length
-  console.log('[docx-extractor] Tables found:', tableCount)
+  const tables = xmlDoc.querySelectorAll('tbl')
+  console.log('[docx-extractor] Tables found:', tables.length)
 
-  if (tableCount > 0) {
-    const firstRowCells = xmlDoc.querySelectorAll('tbl:first-of-type tr:first-of-type tc')
-    console.log('[docx-extractor] First table headers:', Array.from(firstRowCells).map(getCellText))
-  }
+  tables.forEach((t, i) => dumpTable(t, `Table[${i}]`))
 
   let result: SoalRow[]
   switch (type) {
