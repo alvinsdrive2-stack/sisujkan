@@ -6,7 +6,7 @@ import { tmpdir } from 'os'
 import { randomUUID } from 'crypto'
 
 /**
- * Vite plugin: /api/kan/extract — DOCX upload → Python extract → JSON response.
+ * Vite plugin: POST /api/kan/extract — JSON { file_base64, file_name, type } → Python extract → JSON.
  * Dev-only. Replace with real backend endpoint in production.
  */
 export function extractUploadPlugin(): Plugin {
@@ -14,7 +14,6 @@ export function extractUploadPlugin(): Plugin {
     name: 'extract-upload',
     configureServer(server) {
       server.middlewares.use('/api/kan/extract', async (req, res) => {
-        // Only accept POST
         if (req.method !== 'POST') {
           res.statusCode = 405
           res.setHeader('Content-Type', 'application/json')
@@ -23,92 +22,35 @@ export function extractUploadPlugin(): Plugin {
         }
 
         try {
-          // Parse multipart form
+          // Read JSON body
           const buffers: Buffer[] = []
-          for await (const chunk of req) {
-            buffers.push(chunk as Buffer)
-          }
-          const body = Buffer.concat(buffers)
+          for await (const chunk of req) buffers.push(chunk as Buffer)
+          const { file_base64, file_name, type } = JSON.parse(Buffer.concat(buffers).toString('utf-8'))
 
-          // Parse boundary
-          const contentType = req.headers['content-type'] || ''
-          const boundary = contentType.split('boundary=')[1]
-          if (!boundary) {
+          if (!file_base64 || !type || !file_name) {
             res.statusCode = 400
             res.setHeader('Content-Type', 'application/json')
-            res.end(JSON.stringify({ error: 'No boundary in content-type' }))
+            res.end(JSON.stringify({ error: 'Missing file_base64, type, or file_name' }))
             return
           }
 
-          // Extract file and type from multipart
-          const parts = body.toString('latin1').split(`--${boundary}`)
-          let fileBuffer: Buffer | null = null
-          let fileName = ''
-          let extractType = ''
-
-          for (const part of parts) {
-            if (part.includes('Content-Disposition')) {
-              const headerMatch = part.match(/name="([^"]+)"\s*(?:filename="([^"]*)")?/)
-              const name = headerMatch?.[1] || ''
-              const filename = headerMatch?.[2] || ''
-
-              // Extract content after headers (after double newline)
-              const contentStart = part.indexOf('\r\n\r\n') + 4
-              const content = part.slice(contentStart).trimEnd().replace(/\r\n--$/, '')
-
-              if (name === 'type') {
-                extractType = content.trim()
-              } else if (filename) {
-                fileName = filename
-                // Get raw bytes for the file part
-                const rawPart = body.toString('latin1').split(`--${boundary}`)
-                for (const rp of rawPart) {
-                  if (rp.includes(`filename="${filename}"`)) {
-                    const rs = rp.indexOf('\r\n\r\n') + 4
-                    let re = rp.lastIndexOf('\r\n--')
-                    if (re === -1) re = rp.length
-                    const latinContent = rp.slice(rs, re)
-                    fileBuffer = Buffer.from(latinContent, 'latin1')
-                    break
-                  }
-                }
-              }
-            }
-          }
-
-          if (!fileBuffer) {
-            res.statusCode = 400
-            res.setHeader('Content-Type', 'application/json')
-            res.end(JSON.stringify({ error: 'No file uploaded' }))
-            return
-          }
-
-          if (!extractType) {
-            res.statusCode = 400
-            res.setHeader('Content-Type', 'application/json')
-            res.end(JSON.stringify({ error: 'Missing extract type' }))
-            return
-          }
-
-          // Save to temp
+          // Decode base64 → write temp file
+          const ext = file_name.endsWith('.docx') ? '.docx' : '.bin'
           const tmpDir = join(tmpdir(), 'kan-extract')
           if (!existsSync(tmpDir)) mkdirSync(tmpDir, { recursive: true })
-          const tmpFile = join(tmpDir, `${randomUUID()}_${fileName}`)
-          writeFileSync(tmpFile, fileBuffer)
+          const tmpFile = join(tmpDir, `${randomUUID()}${ext}`)
+          writeFileSync(tmpFile, Buffer.from(file_base64, 'base64'))
 
           try {
-            // Run Python extract
             const scriptPath = join(process.cwd(), 'extract_api.py')
             const output = execSync(
-              `python "${scriptPath}" "${tmpFile}" ${extractType}`,
+              `python "${scriptPath}" "${tmpFile}" ${type}`,
               { encoding: 'utf-8', timeout: 30000 }
             )
-
             res.statusCode = 200
             res.setHeader('Content-Type', 'application/json')
             res.end(output)
           } finally {
-            // Cleanup temp file
             try { unlinkSync(tmpFile) } catch {}
           }
         } catch (err: any) {

@@ -1,9 +1,6 @@
 import { useState, useRef } from "react"
-import { API_BASE_URL } from "@/config/api"
 
 type SoalRow = Record<string, string | number>
-
-const isDev = import.meta.env.DEV
 
 export default function LihatSoal() {
   const [selectedJabker, setSelectedJabker] = useState("")
@@ -32,13 +29,16 @@ export default function LihatSoal() {
     setLoading(true)
     setFileName(file.name)
 
-    const form = new FormData()
-    form.append('file', file)
-    form.append('type', selectedDokumen)
+    // Read file as base64
+    const fileBuf = await file.arrayBuffer()
+    const fileBase64 = btoa(new Uint8Array(fileBuf).reduce((data, byte) => data + String.fromCharCode(byte), ''))
 
     try {
-      const extractUrl = isDev ? '/api/kan/extract' : `${API_BASE_URL}/kan/soal/extract`
-      const res = await fetch(extractUrl, { method: 'POST', body: form })
+      const res = await fetch('/api/kan/extract', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ file_base64: fileBase64, file_name: file.name, type: selectedDokumen }),
+      })
 
       if (!res.ok) {
         const text = await res.text()
@@ -102,22 +102,8 @@ export default function LihatSoal() {
       soals: soalData,
     }
 
-    // TODO: Replace with real backend endpoint when available
-    try {
-      const res = await fetch(`${API_BASE_URL}/kan/soal/bulk`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      })
-
-      if (!res.ok) throw new Error(`Server responded ${res.status}`)
-      alert("Soal berhasil disimpan!")
-    } catch (err: any) {
-      // Dev fallback: show what would be sent
-      console.log('Payload would be:', payload)
-      alert(`[DEV MODE] Soal siap dikirim.\nEndpoint: ${API_BASE_URL}/kan/soal/bulk\nJumlah soal: ${soalData.length}\n\nCek console untuk payload detail`)
-    }
-
+    console.log('Payload siap dikirim:', payload)
+    alert(`[MOCKUP] Soal siap disimpan.\nJumlah soal: ${soalData.length}\n\nCek console untuk payload detail.`)
     setLoading(false)
   }
 
