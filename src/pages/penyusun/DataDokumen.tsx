@@ -2,17 +2,14 @@ export default function DataDokumen() {
   const praktisiList = [
     {
       id: 1, nama: "Budi Santoso", jabker: "Teknisi Muda Listrik",
-      apl01: "Lengkap", apl02: "Lengkap", muk: "Lengkap",
       ia04b: "Terisi", ia05: "Terisi", ia06: "Belum"
     },
     {
       id: 2, nama: "Siti Rahma", jabker: "Analis Sistem Informasi",
-      apl01: "Lengkap", apl02: "Lengkap", muk: "Lengkap",
       ia04b: "Terisi", ia05: "Belum", ia06: "Belum"
     },
     {
       id: 3, nama: "Ahmad Fauzi", jabker: "Ahli K3 Muda",
-      apl01: "Lengkap", apl02: "Belum", muk: "Belum",
       ia04b: "Belum", ia05: "Belum", ia06: "Belum"
     },
   ]
@@ -37,9 +34,6 @@ export default function DataDokumen() {
             <tr>
               <th className="text-left py-3 px-3 font-semibold text-slate-600 dark:text-slate-300">Praktisi</th>
               <th className="text-left py-3 px-3 font-semibold text-slate-600 dark:text-slate-300">Jabker</th>
-              <th className="text-center py-3 px-2 font-semibold text-slate-600 dark:text-slate-300">APL.01</th>
-              <th className="text-center py-3 px-2 font-semibold text-slate-600 dark:text-slate-300">APL.02</th>
-              <th className="text-center py-3 px-2 font-semibold text-slate-600 dark:text-slate-300">MUK</th>
               <th className="text-center py-3 px-2 font-semibold text-slate-600 dark:text-slate-300">IA.04B</th>
               <th className="text-center py-3 px-2 font-semibold text-slate-600 dark:text-slate-300">IA.05</th>
               <th className="text-center py-3 px-2 font-semibold text-slate-600 dark:text-slate-300">IA.06</th>
@@ -51,9 +45,6 @@ export default function DataDokumen() {
               <tr key={p.id} className="border-t border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50">
                 <td className="py-3 px-3 text-slate-700 dark:text-slate-200 font-medium whitespace-nowrap">{p.nama}</td>
                 <td className="py-3 px-3 text-slate-600 dark:text-slate-300 text-xs">{p.jabker}</td>
-                <td className="py-3 px-2 text-center">{statusBadge(p.apl01)}</td>
-                <td className="py-3 px-2 text-center">{statusBadge(p.apl02)}</td>
-                <td className="py-3 px-2 text-center">{statusBadge(p.muk)}</td>
                 <td className="py-3 px-2 text-center">{statusBadge(p.ia04b)}</td>
                 <td className="py-3 px-2 text-center">{statusBadge(p.ia05)}</td>
                 <td className="py-3 px-2 text-center">{statusBadge(p.ia06)}</td>

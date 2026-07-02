@@ -1,9 +1,10 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
+import { extractUploadPlugin } from './vite-plugin-extract-upload'
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), extractUploadPlugin()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
