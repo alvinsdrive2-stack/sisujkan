@@ -21,19 +21,18 @@ function extractIA04B(doc: Document): SoalRow[] {
   for (const t of Array.from(tables)) {
     const rows = t.querySelectorAll('tr')
 
-    // Find header row that has "Aspek" or "Lingkup"
-    let headerIdx = -1
+    // Find header: "Aspek" title +2 or "Lingkup" header +1
+    let aspekRow = -1
+    let dataStart = -1
     for (let i = 0; i < rows.length; i++) {
       const text = getCellText(rows[i] as Element)
-      if (text.includes('Aspek') || text.includes('Lingkup')) {
-        headerIdx = i
-        break
-      }
+      if (text.includes('Lingkup')) { dataStart = i + 1; break }
+      if (text.includes('Aspek')) aspekRow = i
     }
-    if (headerIdx === -1) continue
+    if (dataStart === -1 && aspekRow >= 0) dataStart = aspekRow + 2
+    if (dataStart < 0) continue
 
-    // Data starts after header row
-    for (let i = headerIdx + 1; i < rows.length; i += 2) {
+    for (let i = dataStart; i < rows.length; i += 2) {
       const cells = getRowCells(rows[i] as Element)
       if (!cells[0] || !cells[0][0]?.match(/\d/)) continue
 
