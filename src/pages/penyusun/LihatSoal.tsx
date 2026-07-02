@@ -225,6 +225,18 @@ export default function LihatSoal() {
                   <th className="text-left py-3 px-3 font-semibold text-slate-600 dark:text-slate-300">Kode Unit</th>
                 )}
                 {selectedDokumen === 'ia05' && (
+                  <th className="text-left py-3 px-3 font-semibold text-slate-600 dark:text-slate-300 min-w-[120px]">A</th>
+                )}
+                {selectedDokumen === 'ia05' && (
+                  <th className="text-left py-3 px-3 font-semibold text-slate-600 dark:text-slate-300 min-w-[120px]">B</th>
+                )}
+                {selectedDokumen === 'ia05' && (
+                  <th className="text-left py-3 px-3 font-semibold text-slate-600 dark:text-slate-300 min-w-[120px]">C</th>
+                )}
+                {selectedDokumen === 'ia05' && (
+                  <th className="text-left py-3 px-3 font-semibold text-slate-600 dark:text-slate-300 min-w-[120px]">D</th>
+                )}
+                {selectedDokumen === 'ia05' && (
                   <th className="text-left py-3 px-3 font-semibold text-slate-600 dark:text-slate-300">KUK</th>
                 )}
                 {selectedDokumen === 'ia05' && (
@@ -263,6 +275,46 @@ export default function LihatSoal() {
                         value={row.kode_unit as string}
                         onChange={(e) => handleFieldChange(idx, 'kode_unit', e.target.value)}
                         className="w-full bg-transparent border border-dashed border-slate-300 dark:border-slate-500 rounded px-2 py-1 text-sm"
+                      />
+                    </td>
+                  )}
+                  {selectedDokumen === 'ia05' && (
+                    <td className="py-2 px-3">
+                      <textarea
+                        value={row.jawab_a as string}
+                        onChange={(e) => handleFieldChange(idx, 'jawab_a', e.target.value)}
+                        className="w-full bg-transparent border border-dashed border-slate-300 dark:border-slate-500 rounded px-2 py-1 text-xs resize-none"
+                        rows={2}
+                      />
+                    </td>
+                  )}
+                  {selectedDokumen === 'ia05' && (
+                    <td className="py-2 px-3">
+                      <textarea
+                        value={row.jawab_b as string}
+                        onChange={(e) => handleFieldChange(idx, 'jawab_b', e.target.value)}
+                        className="w-full bg-transparent border border-dashed border-slate-300 dark:border-slate-500 rounded px-2 py-1 text-xs resize-none"
+                        rows={2}
+                      />
+                    </td>
+                  )}
+                  {selectedDokumen === 'ia05' && (
+                    <td className="py-2 px-3">
+                      <textarea
+                        value={row.jawab_c as string}
+                        onChange={(e) => handleFieldChange(idx, 'jawab_c', e.target.value)}
+                        className="w-full bg-transparent border border-dashed border-slate-300 dark:border-slate-500 rounded px-2 py-1 text-xs resize-none"
+                        rows={2}
+                      />
+                    </td>
+                  )}
+                  {selectedDokumen === 'ia05' && (
+                    <td className="py-2 px-3">
+                      <textarea
+                        value={row.jawab_d as string}
+                        onChange={(e) => handleFieldChange(idx, 'jawab_d', e.target.value)}
+                        className="w-full bg-transparent border border-dashed border-slate-300 dark:border-slate-500 rounded px-2 py-1 text-xs resize-none"
+                        rows={2}
                       />
                     </td>
                   )}
