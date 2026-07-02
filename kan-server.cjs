@@ -46,8 +46,9 @@ app.post('/api/kan/extract', (req, res) => {
 // Serve static files from dist/
 app.use(express.static(DIST))
 
-// SPA fallback
-app.get('*', (req, res) => {
+// SPA fallback — catch-all for non-static, non-API routes
+app.use((req, res) => {
+  if (req.path.startsWith('/api/')) return res.status(404).json({ error: 'Not found' })
   res.sendFile(join(DIST, 'index.html'))
 })
 
