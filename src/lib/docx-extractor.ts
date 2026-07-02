@@ -20,15 +20,20 @@ function extractIA04B(doc: Document): SoalRow[] {
 
   for (const t of Array.from(tables)) {
     const rows = t.querySelectorAll('tr')
-    if (rows.length < 5) continue
 
-    const cols = rows[0].querySelectorAll('tc').length
-    if (cols < 4) continue
+    // Find header row that has "Aspek" or "Lingkup"
+    let headerIdx = -1
+    for (let i = 0; i < rows.length; i++) {
+      const text = getCellText(rows[i] as Element)
+      if (text.includes('Aspek') || text.includes('Lingkup')) {
+        headerIdx = i
+        break
+      }
+    }
+    if (headerIdx === -1) continue
 
-    const c0 = getCellText(rows[0] as Element)
-    if (!c0.includes('Aspek') && !c0.includes('Lingkup')) continue
-
-    for (let i = 2; i < rows.length; i += 2) {
+    // Data starts after header row
+    for (let i = headerIdx + 1; i < rows.length; i += 2) {
       const cells = getRowCells(rows[i] as Element)
       if (!cells[0] || !cells[0][0]?.match(/\d/)) continue
 
@@ -56,14 +61,19 @@ function extractIA05(doc: Document): SoalRow[] {
 
   for (const t of Array.from(tables)) {
     const rows = t.querySelectorAll('tr')
-    if (rows.length < 10) continue
-    const cols = rows[0].querySelectorAll('tc').length
-    if (cols < 3) continue
 
-    const c0 = getCellText(rows[0] as Element)
-    if (!c0.includes('KUK') && !c0.includes('SOAL')) continue
+    // Find header row with "KUK" or "SOAL"
+    let headerIdx = -1
+    for (let i = 0; i < rows.length; i++) {
+      const text = getCellText(rows[i] as Element)
+      if (text.includes('KUK') || text.includes('SOAL')) {
+        headerIdx = i
+        break
+      }
+    }
+    if (headerIdx === -1) continue
 
-    let r = 1
+    let r = headerIdx + 1
     while (r < rows.length) {
       const cells = getRowCells(rows[r] as Element)
       const kuk = cells[0] || ''
@@ -107,17 +117,21 @@ function extractIA06(doc: Document): SoalRow[] {
 
   for (const t of Array.from(tables)) {
     const rows = t.querySelectorAll('tr')
-    if (rows.length < 5) continue
-    const cols = rows[0].querySelectorAll('tc').length
-    if (cols < 2) continue
 
-    const firstRowCells = getRowCells(rows[0] as Element)
-    const c0 = firstRowCells[0] || ''
-    const col1 = firstRowCells[1] || ''
+    // Find header row with "KUK" + "ESAI"
+    let headerIdx = -1
+    for (let i = 0; i < rows.length; i++) {
+      const cells = getRowCells(rows[i] as Element)
+      const c0 = cells[0] || ''
+      const c1 = cells[1] || ''
+      if (c0.includes('KUK') && (c0.includes('ESAI') || c1.includes('ESAI'))) {
+        headerIdx = i
+        break
+      }
+    }
+    if (headerIdx === -1) continue
 
-    if (!c0.includes('KUK') || (!c0.includes('ESAI') && !col1.includes('ESAI'))) continue
-
-    for (let i = 1; i < rows.length; i++) {
+    for (let i = headerIdx + 1; i < rows.length; i++) {
       const cells = getRowCells(rows[i] as Element)
       const kuk = cells[0] || ''
       const number = cells[1] || ''
