@@ -139,25 +139,56 @@ export async function extractFromDocx(
   file: File,
   type: string
 ): Promise<SoalRow[]> {
-  const arrayBuf = await file.arrayBuffer()
-  const zip = await JSZip.loadAsync(arrayBuf)
+  console.log('[docx-extractor] Starting extract for', file.name, 'type:', type)
 
+  const arrayBuf = await file.arrayBuffer()
+  console.log('[docx-extractor] File size:', arrayBuf.byteLength)
+
+  const zip = await JSZip.loadAsync(arrayBuf)
   const docFile = zip.file('word/document.xml')
-  if (!docFile) throw new Error('Invalid DOCX: word/document.xml not found')
+  if (!docFile) {
+    const files = Object.keys(zip.files).filter(f => f.endsWith('.xml'))
+    console.error('[docx-extractor] word/document.xml not found. Available XML files:', files.slice(0, 10))
+    throw new Error('Invalid DOCX: word/document.xml not found')
+  }
+
+  const rawXml = await docFile.async('string')
+  console.log('[docx-extractor] Raw XML length:', rawXml.length)
 
   // Strip namespace prefixes (w:, r:, etc.) so CSS selectors work cross-browser
-  const xmlStr = (await docFile.async('string')).replace(/<(\/?)\w+:/g, '<$1')
+  const xmlStr = rawXml.replace(/<(\/?)\w+:/g, '<$1')
   const parser = new DOMParser()
   const xmlDoc = parser.parseFromString(xmlStr, 'application/xml')
 
+  const parseErr = xmlDoc.querySelector('parsererror')
+  if (parseErr) {
+    console.error('[docx-extractor] XML parse error:', parseErr.textContent)
+    throw new Error('Failed to parse DOCX XML')
+  }
+
+  const tableCount = xmlDoc.querySelectorAll('tbl').length
+  console.log('[docx-extractor] Tables found:', tableCount)
+
+  if (tableCount > 0) {
+    const firstRowCells = xmlDoc.querySelectorAll('tbl:first-of-type tr:first-of-type tc')
+    console.log('[docx-extractor] First table headers:', Array.from(firstRowCells).map(getCellText))
+  }
+
+  let result: SoalRow[]
   switch (type) {
     case 'ia04b':
-      return extractIA04B(xmlDoc)
+      result = extractIA04B(xmlDoc)
+      break
     case 'ia05':
-      return extractIA05(xmlDoc)
+      result = extractIA05(xmlDoc)
+      break
     case 'ia06':
-      return extractIA06(xmlDoc)
+      result = extractIA06(xmlDoc)
+      break
     default:
       throw new Error(`Unknown document type: ${type}`)
   }
+
+  console.log('[docx-extractor] Extracted:', result.length, 'soals')
+  return result
 }
