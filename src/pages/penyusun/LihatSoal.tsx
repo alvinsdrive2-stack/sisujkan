@@ -3,6 +3,8 @@ import { API_BASE_URL } from "@/config/api"
 
 type SoalRow = Record<string, string | number>
 
+const isDev = import.meta.env.DEV
+
 export default function LihatSoal() {
   const [selectedJabker, setSelectedJabker] = useState("")
   const [selectedDokumen, setSelectedDokumen] = useState("")
@@ -35,10 +37,17 @@ export default function LihatSoal() {
     form.append('type', selectedDokumen)
 
     try {
-      const res = await fetch('/api/kan/extract', { method: 'POST', body: form })
+      const extractUrl = isDev ? '/api/kan/extract' : `${API_BASE_URL}/kan/soal/extract`
+      const res = await fetch(extractUrl, { method: 'POST', body: form })
+
+      if (!res.ok) {
+        const text = await res.text()
+        throw new Error(text.startsWith('<!') ? 'Server returned HTML — extract endpoint not available' : `HTTP ${res.status}`)
+      }
+
       const data = await res.json()
 
-      if (!res.ok || data.error) {
+      if (data.error) {
         setError(data.error || "Gagal extract")
         setLoading(false)
         return
