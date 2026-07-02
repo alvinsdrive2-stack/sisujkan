@@ -48,16 +48,16 @@ export default function LihatSoal() {
       let rows: SoalRow[] = data
       if (Array.isArray(data)) {
         rows = data.map((item: Record<string, unknown>, i: number) => ({
-          no: item.no || i + 1,
-          soal: item.soal || '',
-          lingkup: (item as any).lingkup || '',
-          kode_unit: (item as any).kode_unit || '',
-          kode_kuk: (item as any).kode_kuk || '',
-          jawab_a: (item as any).jawab_a || '',
-          jawab_b: (item as any).jawab_b || '',
-          jawab_c: (item as any).jawab_c || '',
-          jawab_d: (item as any).jawab_d || '',
-          jawaban: (item as any).jawaban || '',
+          no: (item.no as number) || i + 1,
+          soal: String(item.soal || ''),
+          lingkup: String((item as any).lingkup || ''),
+          kode_unit: String((item as any).kode_unit || ''),
+          kode_kuk: String((item as any).kode_kuk || ''),
+          jawab_a: String((item as any).jawab_a || ''),
+          jawab_b: String((item as any).jawab_b || ''),
+          jawab_c: String((item as any).jawab_c || ''),
+          jawab_d: String((item as any).jawab_d || ''),
+          jawaban: String((item as any).jawaban || ''),
         }))
       }
       setSoalData(rows)
