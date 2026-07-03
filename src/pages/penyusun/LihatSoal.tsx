@@ -1,20 +1,52 @@
-import { useState, useRef, useCallback } from "react"
+import { useState, useRef, useCallback, useEffect } from "react"
 import { extractFromDocx, extractAnswersFromDocx, extractSkemaName } from "@/lib/docx-extractor"
+import { API_BASE_URL } from "@/config/api"
 
 type SoalRow = Record<string, string | number>
 
+interface Jabker {
+  id: number
+  nama: string
+  id_jabatan_kerja?: string
+}
+
 export default function LihatSoal() {
+  const [jabkerList, setJabkerList] = useState<Jabker[]>([])
   const [selectedJabker, setSelectedJabker] = useState("")
+  const [selectedJabkerNama, setSelectedJabkerNama] = useState("")
   const [selectedDokumen, setSelectedDokumen] = useState("")
   const [soalData, setSoalData] = useState<SoalRow[]>([])
   const [loading, setLoading] = useState(false)
+  const [fetchLoading, setFetchLoading] = useState(false)
+  const [saving, setSaving] = useState(false)
   const [error, setError] = useState("")
+  const [success, setSuccess] = useState("")
   const [fileName, setFileName] = useState("")
   const [detectedJabker, setDetectedJabker] = useState("")
   const [answerFileName, setAnswerFileName] = useState("")
   const [answerKey, setAnswerKey] = useState<Record<number, string>>({})
   const fileInputRef = useRef<HTMLInputElement>(null)
   const answerInputRef = useRef<HTMLInputElement>(null)
+
+  const getToken = () => localStorage.getItem("access_token") || ""
+
+  useEffect(() => {
+    loadJabker()
+  }, [])
+
+  const loadJabker = async () => {
+    const token = getToken()
+    try {
+      const res = await fetch(`${API_BASE_URL}/penyusun/jabker`, {
+        headers: { Accept: "application/json", Authorization: `Bearer ${token}` },
+      })
+      if (res.ok) {
+        const json = await res.json()
+        const data = json.data || json
+        setJabkerList(Array.isArray(data) ? data : [])
+      }
+    } catch { /* silent */ }
+  }
 
   const mergeAnswers = useCallback((rows: SoalRow[], answers: Record<number, string>) => {
     return rows.map(row => ({
@@ -33,11 +65,12 @@ export default function LihatSoal() {
     }
 
     if (!selectedDokumen) {
-      setError("Pilih jenis dokumen KAN dulu (IA.04B / IA.05 / IA.06)")
+      setError("Pilih jenis dokumen KAN dulu")
       return
     }
 
     setError("")
+    setSuccess("")
     setLoading(true)
     setFileName(file.name)
 
@@ -50,18 +83,12 @@ export default function LihatSoal() {
       setSoalData(merged)
       if (skemaName) {
         setDetectedJabker(skemaName)
-        // Auto-select if matches existing option
-        const jbName = skemaName.toLowerCase()
-        if (jbName.includes('teknisi')) setSelectedJabker('1')
-        else if (jbName.includes('analis')) setSelectedJabker('2')
-        else if (jbName.includes('k3') || jbName.includes('keselamatan')) setSelectedJabker('3')
       }
     } catch (err: any) {
       setError(err.message || "Gagal extract")
     }
 
     setLoading(false)
-    // Reset file input so re-uploading same file triggers onChange
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
@@ -75,14 +102,13 @@ export default function LihatSoal() {
     }
 
     setError("")
+    setSuccess("")
     setLoading(true)
     setAnswerFileName(file.name)
 
     try {
       const answers = await extractAnswersFromDocx(file)
       setAnswerKey(answers)
-
-      // Merge into existing soalData if any
       if (soalData.length > 0) {
         setSoalData(prev => mergeAnswers(prev, answers))
       }
@@ -109,19 +135,129 @@ export default function LihatSoal() {
     setSoalData(prev => prev.map((row, i) => i === idx ? { ...row, [field]: value } : row))
   }
 
-  const handleSave = async () => {
-    setLoading(true)
-    setError("")
-
-    const payload = {
-      jabker_id: selectedJabker,
-      dokumen: selectedDokumen,
-      soals: soalData,
+  const fetchExistingSoal = async () => {
+    if (!selectedJabker || !selectedDokumen) {
+      setError("Pilih jabker & dokumen dulu")
+      return
     }
 
-    console.log('Payload siap dikirim:', payload)
-    alert(`[MOCKUP] Soal siap disimpan.\nJumlah soal: ${soalData.length}\n\nCek console untuk payload detail.`)
-    setLoading(false)
+    setFetchLoading(true)
+    setError("")
+    setSuccess("")
+
+    try {
+      const jabker = jabkerList.find(j => String(j.id) === selectedJabker)
+      const idJabker = jabker?.id_jabatan_kerja || jabker?.nama || selectedJabker
+      const token = getToken()
+
+      let endpoint = ""
+      if (selectedDokumen === "ia04b") endpoint = `${API_BASE_URL}/kan/soal/ia04b/${idJabker}`
+      else if (selectedDokumen === "ia05") endpoint = `${API_BASE_URL}/kan/soal/ia05/${idJabker}`
+      else if (selectedDokumen === "ia06") endpoint = `${API_BASE_URL}/kan/soal/ia06/${idJabker}`
+
+      const res = await fetch(endpoint, {
+        headers: { Accept: "application/json", Authorization: `Bearer ${token}` },
+      })
+
+      if (!res.ok) throw new Error("Gagal fetch soal")
+
+      const json = await res.json()
+      const data = json.data?.soal || json.data || []
+      if (Array.isArray(data) && data.length > 0) {
+        setSoalData(data)
+        setSuccess(`Loaded ${data.length} soal`)
+      } else {
+        setError("Belum ada soal untuk jabker & dokumen ini")
+      }
+    } catch (err: any) {
+      setError(err.message || "Gagal load soal")
+    }
+
+    setFetchLoading(false)
+  }
+
+  const handleSave = async () => {
+    if (!selectedJabker || !selectedDokumen) {
+      setError("Pilih jabker & dokumen dulu")
+      return
+    }
+    if (soalData.length === 0) {
+      setError("Belum ada soal untuk disimpan")
+      return
+    }
+
+    setSaving(true)
+    setError("")
+    setSuccess("")
+
+    try {
+      const jabker = jabkerList.find(j => String(j.id) === selectedJabker)
+      const nama = selectedJabkerNama || jabker?.nama || jabker?.id_jabatan_kerja || selectedJabker
+      const token = getToken()
+
+      // Build payload sesuai format import endpoint
+      let payload: any = { nama, soal: [] }
+
+      if (selectedDokumen === "ia04b") {
+        payload.soal = soalData.map((row: any) => ({
+          no: row.no,
+          soal: row.soal,
+          lingkup: row.lingkup || "",
+          kode_unit: row.kode_unit || "",
+        }))
+      } else if (selectedDokumen === "ia05") {
+        payload.soal = soalData.map((row: any) => ({
+          no: row.no,
+          soal: row.soal,
+          jawab_a: row.jawab_a || "",
+          jawab_b: row.jawab_b || "",
+          jawab_c: row.jawab_c || "",
+          jawab_d: row.jawab_d || "",
+          jawaban: row.jawaban || "",
+          kode_kuk: row.kode_kuk || "",
+        }))
+      } else if (selectedDokumen === "ia06") {
+        payload.soal = soalData.map((row: any) => ({
+          no: row.no,
+          soal: row.soal,
+          kode_kuk: row.kode_kuk || "",
+        }))
+      }
+
+      const endpointMap: Record<string, string> = {
+        ia04b: `${API_BASE_URL}/kan/import/ia04b`,
+        ia05: `${API_BASE_URL}/kan/import/ia05`,
+        ia06: `${API_BASE_URL}/kan/import/ia06`,
+      }
+
+      const res = await fetch(endpointMap[selectedDokumen], {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      })
+
+      if (!res.ok) {
+        const errJson = await res.json().catch(() => ({}))
+        throw new Error(errJson.message || `Gagal simpan (status ${res.status})`)
+      }
+
+      const result = await res.json()
+      setSuccess(result.message || `Berhasil simpan ${soalData.length} soal`)
+    } catch (err: any) {
+      setError(err.message || "Gagal simpan")
+    }
+
+    setSaving(false)
+  }
+
+  const handleJabkerChange = (val: string) => {
+    setSelectedJabker(val)
+    const j = jabkerList.find(jj => String(jj.id) === val)
+    setSelectedJabkerNama(j?.nama || "")
   }
 
   return (
@@ -137,13 +273,13 @@ export default function LihatSoal() {
           <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Pilih Jabatan Kerja</label>
           <select
             value={selectedJabker}
-            onChange={(e) => setSelectedJabker(e.target.value)}
+            onChange={(e) => handleJabkerChange(e.target.value)}
             className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-700 dark:text-slate-200"
           >
             <option value="">-- Pilih Jabker --</option>
-            <option value="1">Teknisi Muda Listrik</option>
-            <option value="2">Analis Sistem Informasi</option>
-            <option value="3">Ahli K3 Muda</option>
+            {jabkerList.map((j) => (
+              <option key={j.id} value={String(j.id)}>{j.nama || j.id_jabatan_kerja || j.id}</option>
+            ))}
           </select>
         </div>
 
@@ -151,17 +287,25 @@ export default function LihatSoal() {
           <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Pilih Dokumen KAN</label>
           <select
             value={selectedDokumen}
-            onChange={(e) => { setSelectedDokumen(e.target.value); setError("") }}
+            onChange={(e) => { setSelectedDokumen(e.target.value); setError(""); setSuccess("") }}
             className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-700 dark:text-slate-200"
           >
             <option value="">-- Pilih Dokumen --</option>
-            <option value="ia04b">IA.04B — Lembar Periksa Kegiatan Terstruktur</option>
-            <option value="ia05">IA.05 — Pertanyaan Pilihan Ganda</option>
-            <option value="ia06">IA.06 — Pertanyaan Esai</option>
+            <option value="ia04b">FR.IA.04.B — Lembar Periksa Kegiatan Terstruktur</option>
+            <option value="ia05">FR.IA.05 — Pertanyaan Pilihan Ganda</option>
+            <option value="ia06">FR.IA.06 — Pertanyaan Esai</option>
           </select>
         </div>
 
         <div className="flex items-end gap-2 flex-wrap">
+          <button
+            onClick={fetchExistingSoal}
+            disabled={fetchLoading || !selectedJabker || !selectedDokumen}
+            className="bg-cyan-600 hover:bg-cyan-700 disabled:bg-cyan-400 text-white px-4 py-2 rounded-lg text-sm font-medium"
+          >
+            {fetchLoading ? "Loading..." : "Ambil dari API"}
+          </button>
+
           <input
             ref={fileInputRef}
             type="file"
@@ -174,7 +318,7 @@ export default function LihatSoal() {
             disabled={loading}
             className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-4 py-2 rounded-lg text-sm font-medium"
           >
-            {loading ? "Extracting..." : "Extract Soal dari Word"}
+            {loading ? "Extracting..." : "Extract DOCX"}
           </button>
 
           {selectedDokumen === 'ia05' && (
@@ -191,7 +335,7 @@ export default function LihatSoal() {
                 disabled={loading}
                 className="bg-purple-600 hover:bg-purple-700 disabled:bg-purple-400 text-white px-4 py-2 rounded-lg text-sm font-medium"
               >
-                {answerFileName ? "Ganti Kunci Jawaban" : "+ Kunci Jawaban (05B)"}
+                {answerFileName ? "Ganti Kunci Jawaban" : "+ Kunci Jawaban"}
               </button>
             </>
           )}
@@ -227,6 +371,12 @@ export default function LihatSoal() {
         </div>
       )}
 
+      {success && (
+        <div className="mb-4 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg text-sm text-green-600 dark:text-green-400">
+          {success}
+        </div>
+      )}
+
       {/* Preview Table */}
       {soalData.length > 0 && (
         <div className="overflow-x-auto border border-slate-200 dark:border-slate-600 rounded-lg mb-4">
@@ -257,12 +407,12 @@ export default function LihatSoal() {
                   <th className="text-left py-3 px-3 font-semibold text-slate-600 dark:text-slate-300">KUK</th>
                 )}
                 {selectedDokumen === 'ia05' && (
-                  <th className="text-left py-3 px-3 font-semibold text-slate-600 dark:text-slate-300">Jawaban</th>
+                  <th className="text-left py-3 px-3 font-semibold text-slate-600 dark:text-slate-300 w-20">Jawaban</th>
                 )}
                 {selectedDokumen === 'ia06' && (
                   <th className="text-left py-3 px-3 font-semibold text-slate-600 dark:text-slate-300">KUK</th>
                 )}
-                <th className="text-left py-3 px-3 font-semibold text-slate-600 dark:text-slate-300">Aksi</th>
+                <th className="text-left py-3 px-3 font-semibold text-slate-600 dark:text-slate-300 w-16">Aksi</th>
               </tr>
             </thead>
             <tbody>
@@ -351,7 +501,7 @@ export default function LihatSoal() {
                         onChange={(e) => handleFieldChange(idx, 'jawaban', e.target.value)}
                         className="w-full rounded border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-2 py-1 text-xs text-slate-700 dark:text-slate-200"
                       >
-                        <option value="">-- Pilih --</option>
+                        <option value="">--</option>
                         <option value="A">A</option>
                         <option value="B">B</option>
                         <option value="C">C</option>
@@ -387,7 +537,7 @@ export default function LihatSoal() {
         <div className="border border-dashed border-slate-300 dark:border-slate-600 rounded-lg p-12 text-center">
           <p className="text-slate-400 dark:text-slate-500 mb-2">Belum ada soal</p>
           <p className="text-xs text-slate-400 dark:text-slate-500">
-            Pilih jabker + dokumen KAN, lalu upload DOCX atau tambah manual
+            Pilih jabker + dokumen KAN, lalu ambil dari API, upload DOCX, atau tambah manual
           </p>
         </div>
       )}
@@ -402,17 +552,17 @@ export default function LihatSoal() {
       {soalData.length > 0 && (
         <div className="mt-6 flex justify-end gap-3">
           <button
-            onClick={() => { setSoalData([]); setFileName(""); setDetectedJabker(""); setAnswerKey({}); setAnswerFileName("") }}
+            onClick={() => { setSoalData([]); setFileName(""); setDetectedJabker(""); setAnswerKey({}); setAnswerFileName(""); setSuccess("") }}
             className="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-6 py-2 rounded-lg text-sm font-medium"
           >
             Batal
           </button>
           <button
             onClick={handleSave}
-            disabled={loading}
+            disabled={saving}
             className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-6 py-2 rounded-lg text-sm font-medium"
           >
-            {loading ? "Menyimpan..." : "Simpan ke Backend"}
+            {saving ? "Menyimpan..." : "Simpan ke Backend"}
           </button>
         </div>
       )}
