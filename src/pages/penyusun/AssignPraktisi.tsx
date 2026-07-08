@@ -25,15 +25,48 @@ interface PraktisiItem {
 
 type Page = "list" | "add"
 
+function TableSkeleton({ rows = 4 }: { rows?: number }) {
+  return (
+    <div className="overflow-x-auto border border-slate-200 dark:border-slate-600 rounded-lg">
+      <table className="w-full text-sm">
+        <thead className="bg-slate-50 dark:bg-slate-700">
+          <tr>
+            <th className="py-3 px-3 font-semibold text-slate-600 dark:text-slate-300 w-[30%]">Nama</th>
+            <th className="py-3 px-3 font-semibold text-slate-600 dark:text-slate-300 w-[35%]">Email</th>
+            <th className="py-3 px-3 font-semibold text-slate-600 dark:text-slate-300 w-[20%]">No. Registrasi</th>
+            <th className="py-3 px-3 font-semibold text-slate-600 dark:text-slate-300 w-[15%] text-center">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Array.from({ length: rows }).map((_, i) => (
+            <tr key={i} className="border-t border-slate-100 dark:border-slate-700">
+              {[30, 35, 20, 15].map((_, j) => (
+                <td key={j} className="py-3 px-3">
+                  <div
+                    className={`h-4 rounded bg-slate-200 dark:bg-slate-600 animate-pulse ${j === 3 ? "mx-auto w-12" : ""}`}
+                    style={{ maxWidth: j < 3 ? `${60 + Math.random() * 40}%` : undefined }}
+                  />
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
 export default function AssignPraktisi() {
   const [jabkerList, setJabkerList] = useState<Jabker[]>([])
+  const [jabkerLoading, setJabkerLoading] = useState(false)
   const [selectedJabker, setSelectedJabker] = useState("")
   const [praktisiList, setPraktisiList] = useState<PraktisiItem[]>([])
   const [praktisiLoading, setPraktisiLoading] = useState(false)
+  const [removingId, setRemovingId] = useState<number | null>(null)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
 
-  // Add modal state
+  // Page state
   const [page, setPage] = useState<Page>("list")
   const [newUserId, setNewUserId] = useState("")
   const [submitting, setSubmitting] = useState(false)
@@ -41,7 +74,7 @@ export default function AssignPraktisi() {
   const token = localStorage.getItem("access_token") || ""
 
   useEffect(() => {
-    setPraktisiLoading(true)
+    setJabkerLoading(true)
     fetch(`${API_BASE_URL}/penyusun/jabker`, {
       headers: { Accept: "application/json", Authorization: `Bearer ${token}` },
     })
@@ -51,7 +84,7 @@ export default function AssignPraktisi() {
         setJabkerList(Array.isArray(d) ? d : [])
       })
       .catch(() => {})
-      .finally(() => setPraktisiLoading(false))
+      .finally(() => setJabkerLoading(false))
   }, [token])
 
   const loadPraktisi = useCallback(async () => {
@@ -82,11 +115,12 @@ export default function AssignPraktisi() {
     setSubmitting(true)
     setError("")
     setSuccess("")
+    const userId = Number(newUserId)
     try {
       const res = await fetch(`${API_BASE_URL}/kan/config/assign-praktisi`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ id_jabatan_kerja: selectedJabker, id_user: Number(newUserId) }),
+        body: JSON.stringify({ id_jabatan_kerja: selectedJabker, id_user: userId }),
       })
       if (!res.ok) {
         const errJson = await res.json().catch(() => ({}))
@@ -104,6 +138,7 @@ export default function AssignPraktisi() {
 
   const handleRemove = async (idUser: number) => {
     if (!confirm("Hapus praktisi ini dari jabatan kerja?")) return
+    setRemovingId(idUser)
     setError("")
     setSuccess("")
     try {
@@ -121,6 +156,7 @@ export default function AssignPraktisi() {
     } catch (err: any) {
       setError(err.message)
     }
+    setRemovingId(null)
   }
 
   const selectedJabkerName = jabkerList.find(j => j.id_jabatan_kerja === selectedJabker)?.jabatan_kerja || selectedJabker
@@ -138,16 +174,27 @@ export default function AssignPraktisi() {
       {/* Jabker Selector */}
       <div className="mb-6 max-w-xs">
         <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Pilih Jabatan Kerja</label>
-        <select
-          value={selectedJabker}
-          onChange={(e) => { setSelectedJabker(e.target.value); setPage("list") }}
-          className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-700 dark:text-slate-200"
-        >
-          <option value="">-- Pilih Jabatan --</option>
-          {jabkerList.map((j) => (
-            <option key={j.id_jabatan_kerja} value={j.id_jabatan_kerja}>{j.jabatan_kerja}</option>
-          ))}
-        </select>
+        <div className="relative">
+          <select
+            value={selectedJabker}
+            onChange={(e) => { setSelectedJabker(e.target.value); setPage("list") }}
+            disabled={jabkerLoading}
+            className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-700 dark:text-slate-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <option value="">-- Pilih Jabatan --</option>
+            {jabkerList.map((j) => (
+              <option key={j.id_jabatan_kerja} value={j.id_jabatan_kerja}>{j.jabatan_kerja}</option>
+            ))}
+          </select>
+          {jabkerLoading && (
+            <div className="absolute right-2 top-1/2 -translate-y-1/2">
+              <svg className="animate-spin h-4 w-4 text-slate-400" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+              </svg>
+            </div>
+          )}
+        </div>
       </div>
 
       {!selectedJabker ? (
@@ -173,8 +220,14 @@ export default function AssignPraktisi() {
               <button
                 onClick={handleAssign}
                 disabled={submitting || !newUserId.trim()}
-                className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-4 py-2 rounded-lg text-sm font-medium"
+                className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-4 py-2 rounded-lg text-sm font-medium inline-flex items-center gap-2"
               >
+                {submitting && (
+                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                )}
                 {submitting ? "Menyimpan..." : "Simpan"}
               </button>
               <button
@@ -202,9 +255,7 @@ export default function AssignPraktisi() {
           </div>
 
           {praktisiLoading ? (
-            <div className="border border-dashed border-slate-300 dark:border-slate-600 rounded-lg p-12 text-center">
-              <p className="text-slate-400">Memuat data...</p>
-            </div>
+            <TableSkeleton rows={4} />
           ) : praktisiList.length === 0 ? (
             <div className="border border-dashed border-slate-300 dark:border-slate-600 rounded-lg p-12 text-center">
               <p className="text-slate-400">Belum ada praktisi untuk jabatan ini</p>
@@ -221,21 +272,31 @@ export default function AssignPraktisi() {
                   </tr>
                 </thead>
                 <tbody>
-                  {praktisiList.map((p) => (
-                    <tr key={p.id} className="border-t border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50">
-                      <td className="py-3 px-3 text-slate-700 dark:text-slate-200 font-medium">{p.user?.name || "-"}</td>
-                      <td className="py-3 px-3 text-slate-600 dark:text-slate-300 text-xs">{p.user?.email || "-"}</td>
-                      <td className="py-3 px-3 text-slate-600 dark:text-slate-300 text-xs">{p.user?.noreg || "-"}</td>
-                      <td className="py-3 px-3 text-center">
-                        <button
-                          onClick={() => handleRemove(p.id_user)}
-                          className="text-red-600 hover:text-red-800 dark:text-red-400 text-xs font-medium"
-                        >
-                          Hapus
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
+                  {praktisiList.map((p) => {
+                    const isRemoving = removingId === p.id_user
+                    return (
+                      <tr key={p.id} className={`border-t border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-opacity ${isRemoving ? "opacity-50" : ""}`}>
+                        <td className="py-3 px-3 text-slate-700 dark:text-slate-200 font-medium">{p.user?.name || "-"}</td>
+                        <td className="py-3 px-3 text-slate-600 dark:text-slate-300 text-xs">{p.user?.email || "-"}</td>
+                        <td className="py-3 px-3 text-slate-600 dark:text-slate-300 text-xs">{p.user?.noreg || "-"}</td>
+                        <td className="py-3 px-3 text-center">
+                          <button
+                            onClick={() => handleRemove(p.id_user)}
+                            disabled={isRemoving}
+                            className="text-red-600 hover:text-red-800 dark:text-red-400 text-xs font-medium disabled:opacity-50 inline-flex items-center gap-1"
+                          >
+                            {isRemoving && (
+                              <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                              </svg>
+                            )}
+                            {isRemoving ? "Menghapus..." : "Hapus"}
+                          </button>
+                        </td>
+                      </tr>
+                    )
+                  })}
                 </tbody>
               </table>
             </div>
