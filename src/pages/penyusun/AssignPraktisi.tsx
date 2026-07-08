@@ -36,13 +36,12 @@ export default function AssignPraktisi() {
   // Add modal state
   const [page, setPage] = useState<Page>("list")
   const [newUserId, setNewUserId] = useState("")
-  const [newUserName, setNewUserName] = useState("")
   const [submitting, setSubmitting] = useState(false)
 
   const token = localStorage.getItem("access_token") || ""
 
   useEffect(() => {
-    setLoading(true)
+    setPraktisiLoading(true)
     fetch(`${API_BASE_URL}/penyusun/jabker`, {
       headers: { Accept: "application/json", Authorization: `Bearer ${token}` },
     })
@@ -52,7 +51,7 @@ export default function AssignPraktisi() {
         setJabkerList(Array.isArray(d) ? d : [])
       })
       .catch(() => {})
-      .finally(() => setLoading(false))
+      .finally(() => setPraktisiLoading(false))
   }, [token])
 
   const loadPraktisi = useCallback(async () => {
@@ -95,7 +94,6 @@ export default function AssignPraktisi() {
       }
       setSuccess("Praktisi berhasil ditambahkan")
       setNewUserId("")
-      setNewUserName("")
       setPage("list")
       loadPraktisi()
     } catch (err: any) {
@@ -180,7 +178,7 @@ export default function AssignPraktisi() {
                 {submitting ? "Menyimpan..." : "Simpan"}
               </button>
               <button
-                onClick={() => { setPage("list"); setError(""); setNewUserId(""); setNewUserName("") }}
+                onClick={() => { setPage("list"); setError(""); setNewUserId("") }}
                 className="bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 px-4 py-2 rounded-lg text-sm font-medium"
               >
                 Batal
