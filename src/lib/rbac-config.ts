@@ -354,6 +354,11 @@ export const roleConfig: Partial<Record<UserRole, RoleConfig>> = {
         title: "Data Dokumen",
         path: "/penyusun/data-dokumen",
         icon: Upload
+      },
+      {
+        title: "Assign Praktisi",
+        path: "/penyusun/assign-praktisi",
+        icon: UserCheck
       }
     ]
   },

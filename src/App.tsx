@@ -123,6 +123,7 @@ const DaftarSkemaPenyusun = lazy(() => import('./pages/penyusun/DaftarSkema'))
 const DataDokumen = lazy(() => import('./pages/penyusun/DataDokumen'))
 const PenilaianPenyusun = lazy(() => import('./pages/penyusun/Penilaian'))
 const MukResult = lazy(() => import('./pages/penyusun/MukResult'))
+const AssignPraktisi = lazy(() => import('./pages/penyusun/AssignPraktisi'))
 
 const DashboardValidator = lazy(() => import('./pages/validator/DashboardValidator'))
 const DaftarSkemaValidator = lazy(() => import('./pages/validator/DaftarSkema'))
@@ -396,6 +397,7 @@ function App() {
                       <Route path="data-dokumen" element={<DataDokumen />} />
                       <Route path="penilaian/:idIzin/:jenis" element={<PenilaianPenyusun />} />
                       <Route path="muk/:idIzin" element={<MukResult />} />
+                      <Route path="assign-praktisi" element={<AssignPraktisi />} />
                       <Route path="" element={<Navigate to="dashboard" replace />} />
                     </Routes>
                   </DashboardLayout>
