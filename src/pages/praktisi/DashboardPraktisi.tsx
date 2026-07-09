@@ -50,7 +50,7 @@ export default function DashboardPraktisi() {
   const load = async () => {
     setLoading(true)
     try {
-      const res = await fetch(`${API_BASE_URL}/praktisi/jabker`, {
+      const res = await fetch(`${API_BASE_URL}/praktisi/jabatan-kerja`, {
         headers: { Accept: "application/json", Authorization: `Bearer ${token}` },
       })
       if (!res.ok) throw new Error("Gagal ambil jabker")
