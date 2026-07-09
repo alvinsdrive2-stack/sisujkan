@@ -172,7 +172,7 @@ export default function DashboardPraktisi() {
                       </div>
                     )}
                     <button
-                      onClick={() => navigate(`/praktisi/jawab/${id}`)}
+                      onClick={() => navigate(`/praktisi/kerja/${id}`)}
                       className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap"
                     >
                       {doneCount > 0 ? "Lanjutkan" : "Mulai"}

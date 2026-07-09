@@ -135,6 +135,7 @@ const PenilaianManagerMutu = lazy(() => import('./pages/manager-mutu/Penilaian')
 
 const DashboardPraktisi = lazy(() => import('./pages/praktisi/DashboardPraktisi'))
 const JawabSoal = lazy(() => import('./pages/praktisi/JawabSoal'))
+const PraktisiKerja = lazy(() => import('./pages/praktisi/PraktisiKerja'))
 
 // Catch chunk load failures (lazy import network errors) and reload
 window.addEventListener('unhandledrejection', (event) => {
@@ -454,6 +455,7 @@ function App() {
                     <Routes>
                       <Route path="dashboard" element={<DashboardPraktisi />} />
                       <Route path="jawab/:idIzin" element={<JawabSoal />} />
+                      <Route path="kerja/:id" element={<PraktisiKerja />} />
                       <Route path="" element={<Navigate to="dashboard" replace />} />
                     </Routes>
                   </DashboardLayout>
