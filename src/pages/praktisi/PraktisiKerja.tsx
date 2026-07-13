@@ -351,6 +351,12 @@ export default function PraktisiKerja() {
         const ej = await res.json().catch(() => ({}))
         throw new Error(ej.message || `Gagal simpan (${res.status})`)
       }
+      // Auto-generate QR after save
+      fetch(`${API_BASE_URL}/praktisi/jabatan/${id}/qr/${tab}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json", Authorization: `Bearer ${token}` },
+        body: "{}",
+      }).catch(() => {})
       setInfo(`${tab.toUpperCase()} tersimpan`)
       load(tab)
     } catch (e: any) {
