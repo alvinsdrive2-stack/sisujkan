@@ -73,7 +73,7 @@ function IdentitasTable({ data }: { data: IdentitasData }) {
         <tr>
           <Td>TUK</Td>
           <Td style={{ textAlign: 'center' }}>:</Td>
-          <Td colSpan={2} style={{ textTransform: 'uppercase' }}>{data.tuk || '-'}</Td>
+          <Td colSpan={2} style={{ textTransform: 'uppercase' }}>{data.tuk || 'TUK SEWAKTU GKK'}</Td>
         </tr>
         {(data.asesor_list || []).map((a, i) => (
           <tr key={i}>
