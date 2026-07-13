@@ -50,6 +50,15 @@ const hdDokB = { backgroundColor: '#d58a94', color: '#000' }
 const panduanTitle = { backgroundColor: '#c00000', color: '#fff', fontWeight: 'bold' as const, padding: '4px 8px', fontSize: '11pt' }
 const fontS = { fontFamily: '"Arial Narrow", Calibri, Candara, Segoe, Segoe UI, Optima, Arial, sans-serif', fontSize: '12pt' }
 const formatter = new Intl.DateTimeFormat('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })
+const BULAN = ['','Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember']
+const formatTgl = (t?: string) => {
+  if (!t) return ''
+  try {
+    const d = new Date(t)
+    if (isNaN(d.getTime())) return t
+    return `${d.getDate()} ${BULAN[d.getMonth()]} ${d.getFullYear()}`
+  } catch { return t }
+}
 
 function Td({ children, style, colSpan, rowSpan }: { children?: React.ReactNode; style?: React.CSSProperties; colSpan?: number; rowSpan?: number }) {
   return <td colSpan={colSpan} rowSpan={rowSpan} style={{ ...td, ...style }}>{children}</td>
@@ -132,7 +141,7 @@ function PenyusunValidatorTable({ nama_penyusun, noreg_penyusun, tanggal_penyusu
           <Td style={{ height: '70px', verticalAlign: 'middle', textAlign: 'center' }}>
             {barcode_penyusun ? (
               <><img src={barcode_penyusun} style={{ height: '65px', width: '65px', objectFit: 'contain', display: 'block', margin: '0 auto' }} alt="barcode" /><br />
-                <span style={{ fontSize: '11px' }}>{tanggal_penyusun || ''}</span></>
+                <span style={{ fontSize: '11px' }}>{formatTgl(tanggal_penyusun)}</span></>
             ) : <span style={{ color: '#999' }}>Belum ditandatangani</span>}
           </Td>
         </tr>
@@ -145,7 +154,7 @@ function PenyusunValidatorTable({ nama_penyusun, noreg_penyusun, tanggal_penyusu
           <Td style={{ height: '70px', verticalAlign: 'middle', textAlign: 'center' }}>
             {barcode_validator ? (
               <><img src={barcode_validator} style={{ height: '65px', width: '65px', objectFit: 'contain', display: 'block', margin: '0 auto' }} alt="barcode" /><br />
-                <span style={{ fontSize: '11px' }}>{tanggal_validator || ''}</span></>
+                <span style={{ fontSize: '11px' }}>{formatTgl(tanggal_validator)}</span></>
             ) : <span style={{ color: '#999' }}>Belum ditandatangani</span>}
           </Td>
         </tr>
@@ -184,7 +193,7 @@ function TTDTable({ title, nama, noReg, barcode }: {
               <>
                 <img src={barcode.url} style={{ height: '65px', width: '65px', objectFit: 'contain', display: 'block', margin: '0 auto' }} alt="barcode" /><br />
                 <span style={{ fontSize: '11px' }}>
-                  {barcode?.tanggal ? new Date(barcode.tanggal).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) : ''}
+                  {formatTgl(barcode?.tanggal)}
                 </span>
               </>
             ) : (
@@ -351,12 +360,15 @@ export default function PraktisiKerja() {
         const ej = await res.json().catch(() => ({}))
         throw new Error(ej.message || `Gagal simpan (${res.status})`)
       }
-      // Auto-generate QR after save
-      fetch(`${API_BASE_URL}/praktisi/jabatan/${id}/qr/${tab}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json", Authorization: `Bearer ${token}` },
-        body: "{}",
-      }).catch(() => {})
+      // Auto QR only if not yet TTD
+      const sudahTTD = !!(barcodes as any)?.['asesi']?.url
+      if (!sudahTTD) {
+        fetch(`${API_BASE_URL}/praktisi/jabatan/${id}/qr/${tab}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json", Authorization: `Bearer ${token}` },
+          body: "{}",
+        }).catch(() => {})
+      }
       setInfo(`${tab.toUpperCase()} tersimpan`)
       load(tab)
     } catch (e: any) {
@@ -437,7 +449,7 @@ export default function PraktisiKerja() {
                 disabled={saving}
                 style={{ background: '#2563eb', color: '#fff', border: 'none', padding: '8px 24px', cursor: saving ? 'not-allowed' : 'pointer', fontSize: '12pt' }}
               >
-                {saving ? "Menyimpan..." : `Simpan ${tab.toUpperCase()}`}
+                {saving ? "Menyimpan..." : `${(barcodes as any)?.['asesi']?.url ? 'Lanjut' : 'Simpan'} ${tab.toUpperCase()}`}
               </button>
             </div>
           )}
