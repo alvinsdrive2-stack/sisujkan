@@ -40,8 +40,8 @@ interface IdentitasData {
 }
 
 interface PenyusunData {
-  penyusun?: { nama?: string; nomor_met?: string }[]
-  validator?: { nama?: string; nomor_met?: string }[]
+  nama_penyusun?: string; noreg_penyusun?: string; tanggal_penyusun?: string; barcode_penyusun?: string
+  nama_validator?: string; noreg_validator?: string; tanggal_validator?: string; barcode_validator?: string
 }
 
 const td = { border: '0.2px solid black', padding: '4px 6px' }
@@ -113,12 +113,7 @@ function Panduan({ title, children }: { title: string; children: React.ReactNode
   )
 }
 
-function PenyusunValidatorTable({ penyusun, validator }: PenyusunData) {
-  const p = penyusun || []
-  const v = validator || []
-  const row = (item?: { nama?: string; nomor_met?: string }) => (
-    <><Td>{item?.nama || ''}</Td><Td>{item?.nomor_met || ''}</Td><Td style={{ height: '50px' }}></Td></>
-  )
+function PenyusunValidatorTable({ nama_penyusun, noreg_penyusun, tanggal_penyusun, barcode_penyusun, nama_validator, noreg_validator, tanggal_validator, barcode_validator }: PenyusunData) {
   return (
     <table style={{ border: '1px solid #000', borderCollapse: 'collapse', width: '100%' }} cellPadding="5" cellSpacing="0">
       <tbody>
@@ -130,23 +125,33 @@ function PenyusunValidatorTable({ penyusun, validator }: PenyusunData) {
           <Td style={{ width: '25%' }}>Tanda Tangan Dan Tanggal</Td>
         </tr>
         <tr style={{ fontWeight: 'bold' }}>
-          <Td rowSpan={Math.max(p.length, 1)}>PENYUSUN</Td>
-          {p.length > 0 ? p.map((item, i) => (
-            i === 0 ? <>{i + 1}{row(item)}</> : null
-          )) : <><Td style={{ textAlign: 'center' }}>1</Td>{row()}</>}
+          <Td rowSpan={3}>PENYUSUN</Td>
+          <Td style={{ textAlign: 'center' }}>1</Td>
+          <Td>{nama_penyusun || ''}</Td>
+          <Td>{noreg_penyusun || ''}</Td>
+          <Td style={{ height: '70px', verticalAlign: 'middle', textAlign: 'center' }}>
+            {barcode_penyusun ? (
+              <><img src={barcode_penyusun} style={{ height: '50px', width: '50px', objectFit: 'contain' }} alt="barcode" /><br />
+                <span style={{ fontSize: '11px' }}>{tanggal_penyusun || ''}</span></>
+            ) : <span style={{ color: '#999' }}>Belum ditandatangani</span>}
+          </Td>
         </tr>
-        {p.length > 1 && p.slice(1).map((item, i) => (
-          <tr key={i}><Td style={{ textAlign: 'center' }}>{i + 2}</Td>{row(item)}</tr>
-        ))}
+        <tr><Td style={{ textAlign: 'center' }}>2</Td><Td></Td><Td></Td><Td style={{ height: '50px' }}></Td></tr>
+        <tr><Td style={{ textAlign: 'center' }}>3</Td><Td></Td><Td></Td><Td style={{ height: '50px' }}></Td></tr>
         <tr style={{ fontWeight: 'bold' }}>
-          <Td rowSpan={Math.max(v.length, 1)}>VALIDATOR</Td>
-          {v.length > 0 ? v.map((item, i) => (
-            i === 0 ? <><Td style={{ textAlign: 'center' }}>{i + 1}</Td>{row(item)}</> : null
-          )) : <><Td style={{ textAlign: 'center' }}>1</Td>{row()}</>}
+          <Td rowSpan={3}>VALIDATOR</Td>
+          <Td style={{ textAlign: 'center' }}>1</Td>
+          <Td>{nama_validator || ''}</Td>
+          <Td>{noreg_validator || ''}</Td>
+          <Td style={{ height: '70px', verticalAlign: 'middle', textAlign: 'center' }}>
+            {barcode_validator ? (
+              <><img src={barcode_validator} style={{ height: '50px', width: '50px', objectFit: 'contain' }} alt="barcode" /><br />
+                <span style={{ fontSize: '11px' }}>{tanggal_validator || ''}</span></>
+            ) : <span style={{ color: '#999' }}>Belum ditandatangani</span>}
+          </Td>
         </tr>
-        {v.length > 1 && v.slice(1).map((item, i) => (
-          <tr key={i}><Td style={{ textAlign: 'center' }}>{i + 2}</Td>{row(item)}</tr>
-        ))}
+        <tr><Td style={{ textAlign: 'center' }}>2</Td><Td></Td><Td></Td><Td style={{ height: '50px' }}></Td></tr>
+        <tr><Td style={{ textAlign: 'center' }}>3</Td><Td></Td><Td></Td><Td style={{ height: '50px' }}></Td></tr>
       </tbody>
     </table>
   )
@@ -272,9 +277,26 @@ export default function PraktisiKerja() {
       }).then(r => r.json()).then(j2 => {
         const d2 = j2.data || j2
         setPenyusunData({
-          penyusun: d2.penyusun || [],
-          validator: d2.validator || [],
+          nama_penyusun: d2.nama_penyusun || '',
+          noreg_penyusun: d2.noreg_penyusun || '',
+          tanggal_penyusun: d2.tanggal_penyusun || '',
+          barcode_penyusun: d2.barcode_penyusun || '',
+          nama_validator: d2.nama_validator || '',
+          noreg_validator: d2.noreg_validator || '',
+          tanggal_validator: d2.tanggal_validator || '',
+          barcode_validator: d2.barcode_validator || '',
         })
+        // Update identitas from data-dokumen if richer
+        if (d2.jabatan_kerja || d2.nama_asesi) {
+          setIdentitas(prev => ({
+            ...prev,
+            jabatan_kerja: d2.jabatan_kerja || prev.jabatan_kerja,
+            nomor_skema: d2.nomor_skema || prev.nomor_skema,
+            tuk: d2.tuk || prev.tuk,
+            asesor_list: d2.asesor_list || prev.asesor_list,
+            nama_asesi: d2.nama_asesi || prev.nama_asesi,
+          }))
+        }
       }).catch(() => {})
     } catch (e: any) {
       setError(e.message)
@@ -502,7 +524,7 @@ export default function PraktisiKerja() {
         <br />
 
         <h2 style={{ fontSize: '14px', fontWeight: 'bold' }}>PENYUSUN DAN VALIDATOR</h2>
-        <PenyusunValidatorTable penyusun={penyusunData.penyusun} validator={penyusunData.validator} />
+        <PenyusunValidatorTable nama_penyusun={penyusunData.nama_penyusun} noreg_penyusun={penyusunData.noreg_penyusun} tanggal_penyusun={penyusunData.tanggal_penyusun} barcode_penyusun={penyusunData.barcode_penyusun} nama_validator={penyusunData.nama_validator} noreg_validator={penyusunData.noreg_validator} tanggal_validator={penyusunData.tanggal_validator} barcode_validator={penyusunData.barcode_validator} />
         <br />
 
         <table style={{ width: '100%', border: '1px solid #000', borderCollapse: 'collapse', textAlign: 'center' }}>
@@ -667,7 +689,7 @@ export default function PraktisiKerja() {
         <br />
 
         <h2 style={{ fontSize: '14px', fontWeight: 'bold' }}>PENYUSUN DAN VALIDATOR</h2>
-        <PenyusunValidatorTable penyusun={penyusunData.penyusun} validator={penyusunData.validator} />
+        <PenyusunValidatorTable nama_penyusun={penyusunData.nama_penyusun} noreg_penyusun={penyusunData.noreg_penyusun} tanggal_penyusun={penyusunData.tanggal_penyusun} barcode_penyusun={penyusunData.barcode_penyusun} nama_validator={penyusunData.nama_validator} noreg_validator={penyusunData.noreg_validator} tanggal_validator={penyusunData.tanggal_validator} barcode_validator={penyusunData.barcode_validator} />
         <br /><br /><br />
 
         <h2 style={{ fontSize: '16px', fontWeight: 'bold', color: '#4F81BD' }}>FR.05.C. LEMBAR JAWABAN PERTANYAAN TERTULIS PILIHAN GANDA</h2>
@@ -845,7 +867,7 @@ export default function PraktisiKerja() {
         <br />
 
         <h2 style={{ fontSize: '14px', fontWeight: 'bold' }}>PENYUSUN DAN VALIDATOR</h2>
-        <PenyusunValidatorTable penyusun={penyusunData.penyusun} validator={penyusunData.validator} />
+        <PenyusunValidatorTable nama_penyusun={penyusunData.nama_penyusun} noreg_penyusun={penyusunData.noreg_penyusun} tanggal_penyusun={penyusunData.tanggal_penyusun} barcode_penyusun={penyusunData.barcode_penyusun} nama_validator={penyusunData.nama_validator} noreg_validator={penyusunData.noreg_validator} tanggal_validator={penyusunData.tanggal_validator} barcode_validator={penyusunData.barcode_validator} />
         <br /><br /><br />
 
         <h2 style={{ fontSize: '16px', fontWeight: 'bold', color: '#4F81BD' }}>FR.IA.06C. LEMBAR JAWABAN PERTANYAAN TERTULIS ESAI</h2>
