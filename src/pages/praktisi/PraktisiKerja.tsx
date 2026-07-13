@@ -223,7 +223,6 @@ export default function PraktisiKerja() {
   const [penyusunData, setPenyusunData] = useState<PenyusunData>({})
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
-  const [qring, setQring] = useState(false)
   const [error, setError] = useState("")
   const [info, setInfo] = useState("")
 
@@ -363,41 +362,25 @@ export default function PraktisiKerja() {
       // Auto QR only if not yet TTD
       const sudahTTD = !!(barcodes as any)?.['asesi']?.url
       if (!sudahTTD) {
-        fetch(`${API_BASE_URL}/praktisi/jabatan/${id}/qr/${tab}`, {
+        await fetch(`${API_BASE_URL}/praktisi/jabatan/${id}/qr/${tab}`, {
           method: "POST",
           headers: { "Content-Type": "application/json", Accept: "application/json", Authorization: `Bearer ${token}` },
           body: "{}",
         }).catch(() => {})
+        setInfo(`${tab.toUpperCase()} tersimpan`)
+        load(tab)
+      } else {
+        // Already TTD → move to next tab
+        const idx = TABS.findIndex(t => t.key === tab)
+        const next = TABS[idx + 1]
+        if (next) setTab(next.key)
+        else setInfo(`${tab.toUpperCase()} selesai`)
+        load(next ? next.key : tab)
       }
-      setInfo(`${tab.toUpperCase()} tersimpan`)
-      load(tab)
     } catch (e: any) {
       setError(e.message)
     }
     setSaving(false)
-  }
-
-  const genQr = async () => {
-    if (!id) return
-    setQring(true)
-    setError("")
-    setInfo("")
-    try {
-      const res = await fetch(`${API_BASE_URL}/praktisi/jabatan/${id}/qr/${tab}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json", Authorization: `Bearer ${token}` },
-        body: "{}",
-      })
-      if (!res.ok) {
-        const ej = await res.json().catch(() => ({}))
-        throw new Error(ej.message || `Gagal QR (${res.status})`)
-      }
-      setInfo(`QR ${tab.toUpperCase()} berhasil`)
-      load(tab)
-    } catch (e: any) {
-      setError(e.message)
-    }
-    setQring(false)
   }
 
   if (!id) {
@@ -438,16 +421,9 @@ export default function PraktisiKerja() {
           {soalList.length > 0 && (
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', padding: '16px 0' }}>
               <button
-                onClick={genQr}
-                disabled={qring}
-                style={{ border: '1px solid #000', background: '#fff', padding: '8px 24px', cursor: qring ? 'not-allowed' : 'pointer', fontSize: '12pt' }}
-              >
-                {qring ? "Generate QR..." : `QR ${tab.toUpperCase()}`}
-              </button>
-              <button
                 onClick={save}
                 disabled={saving}
-                style={{ background: '#2563eb', color: '#fff', border: 'none', padding: '8px 24px', cursor: saving ? 'not-allowed' : 'pointer', fontSize: '12pt' }}
+                style={{ background: '#2563eb', color: '#fff', border: 'none', padding: '10px 28px', cursor: saving ? 'not-allowed' : 'pointer', fontSize: '12pt', fontWeight: 600, borderRadius: '4px' }}
               >
                 {saving ? "Menyimpan..." : `${(barcodes as any)?.['asesi']?.url ? 'Lanjut' : 'Simpan'} ${tab.toUpperCase()}`}
               </button>
