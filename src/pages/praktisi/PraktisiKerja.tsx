@@ -201,7 +201,6 @@ export default function PraktisiKerja() {
   const [soalList, setSoalList] = useState<any[]>([])
   const [barcodes, setBarcodes] = useState<any>(null)
   const [identitas, setIdentitas] = useState<IdentitasData>({})
-  const [extra, setExtra] = useState<Record<string, any>>({})
   const [jawaban, setJawaban] = useState<Record<number, string>>({})
   const [skor, setSkor] = useState<Record<number, number>>({})
   const [answers, setAnswers] = useState<Record<number, 'A' | 'B' | 'C' | 'D'>>({})
@@ -242,13 +241,6 @@ export default function PraktisiKerja() {
         asesor_list: d.asesor_list || [],
         nama_asesi: d.nama_asesi || '',
         jadwal_id: d.jadwal_id,
-      })
-
-      setExtra({
-        total_skor: d.total_skor,
-        jumlah_benar: d.jumlah_benar,
-        jumlah_salah: d.jumlah_salah,
-        unit_elemen_kuk: d.unit_elemen_kuk,
       })
 
       const jInit: Record<number, string> = {}
