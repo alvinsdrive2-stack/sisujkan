@@ -39,6 +39,11 @@ interface IdentitasData {
   nama_asesi?: string; jadwal_id?: number
 }
 
+interface PenyusunData {
+  penyusun?: { nama?: string; nomor_met?: string }[]
+  validator?: { nama?: string; nomor_met?: string }[]
+}
+
 const td = { border: '0.2px solid black', padding: '4px 6px' }
 const hdDok = { backgroundColor: '#c40000', color: '#fff' }
 const hdDokB = { backgroundColor: '#d58a94', color: '#000' }
@@ -108,7 +113,12 @@ function Panduan({ title, children }: { title: string; children: React.ReactNode
   )
 }
 
-function PenyusunValidatorTable() {
+function PenyusunValidatorTable({ penyusun, validator }: PenyusunData) {
+  const p = penyusun || []
+  const v = validator || []
+  const row = (item?: { nama?: string; nomor_met?: string }) => (
+    <><Td>{item?.nama || ''}</Td><Td>{item?.nomor_met || ''}</Td><Td style={{ height: '50px' }}></Td></>
+  )
   return (
     <table style={{ border: '1px solid #000', borderCollapse: 'collapse', width: '100%' }} cellPadding="5" cellSpacing="0">
       <tbody>
@@ -120,31 +130,23 @@ function PenyusunValidatorTable() {
           <Td style={{ width: '25%' }}>Tanda Tangan Dan Tanggal</Td>
         </tr>
         <tr style={{ fontWeight: 'bold' }}>
-          <Td rowSpan={2}>PENYUSUN</Td>
-          <Td style={{ textAlign: 'center' }}>1</Td>
-          <Td></Td>
-          <Td></Td>
-          <Td style={{ height: '50px' }}></Td>
+          <Td rowSpan={Math.max(p.length, 1)}>PENYUSUN</Td>
+          {p.length > 0 ? p.map((item, i) => (
+            i === 0 ? <>{i + 1}{row(item)}</> : null
+          )) : <><Td style={{ textAlign: 'center' }}>1</Td>{row()}</>}
         </tr>
-        <tr>
-          <Td style={{ textAlign: 'center' }}>2</Td>
-          <Td></Td>
-          <Td></Td>
-          <Td style={{ height: '50px' }}></Td>
-        </tr>
+        {p.length > 1 && p.slice(1).map((item, i) => (
+          <tr key={i}><Td style={{ textAlign: 'center' }}>{i + 2}</Td>{row(item)}</tr>
+        ))}
         <tr style={{ fontWeight: 'bold' }}>
-          <Td rowSpan={2}>VALIDATOR</Td>
-          <Td style={{ textAlign: 'center' }}>1</Td>
-          <Td></Td>
-          <Td></Td>
-          <Td style={{ height: '50px' }}></Td>
+          <Td rowSpan={Math.max(v.length, 1)}>VALIDATOR</Td>
+          {v.length > 0 ? v.map((item, i) => (
+            i === 0 ? <><Td style={{ textAlign: 'center' }}>{i + 1}</Td>{row(item)}</> : null
+          )) : <><Td style={{ textAlign: 'center' }}>1</Td>{row()}</>}
         </tr>
-        <tr>
-          <Td style={{ textAlign: 'center' }}>2</Td>
-          <Td></Td>
-          <Td></Td>
-          <Td style={{ height: '50px' }}></Td>
-        </tr>
+        {v.length > 1 && v.slice(1).map((item, i) => (
+          <tr key={i}><Td style={{ textAlign: 'center' }}>{i + 2}</Td>{row(item)}</tr>
+        ))}
       </tbody>
     </table>
   )
@@ -206,6 +208,7 @@ export default function PraktisiKerja() {
   const [answers, setAnswers] = useState<Record<number, 'A' | 'B' | 'C' | 'D'>>({})
   const [umpanBalik, setUmpanBalik] = useState("")
   const [rekomendasi, setRekomendasi] = useState<'kompeten' | 'belum_kompeten' | null>(null)
+  const [penyusunData, setPenyusunData] = useState<PenyusunData>({})
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [qring, setQring] = useState(false)
@@ -262,6 +265,17 @@ export default function PraktisiKerja() {
       setJawaban(jInit)
       setSkor(sInit)
       setAnswers(aInit)
+
+      // Fetch penyusun & validator
+      fetch(`${API_BASE_URL}/praktisi/jabatan/${id}/data-dokumen`, {
+        headers: { Accept: "application/json", Authorization: `Bearer ${token}` },
+      }).then(r => r.json()).then(j2 => {
+        const d2 = j2.data || j2
+        setPenyusunData({
+          penyusun: d2.penyusun || [],
+          validator: d2.validator || [],
+        })
+      }).catch(() => {})
     } catch (e: any) {
       setError(e.message)
     }
@@ -488,7 +502,7 @@ export default function PraktisiKerja() {
         <br />
 
         <h2 style={{ fontSize: '14px', fontWeight: 'bold' }}>PENYUSUN DAN VALIDATOR</h2>
-        <PenyusunValidatorTable />
+        <PenyusunValidatorTable penyusun={penyusunData.penyusun} validator={penyusunData.validator} />
         <br />
 
         <table style={{ width: '100%', border: '1px solid #000', borderCollapse: 'collapse', textAlign: 'center' }}>
@@ -653,7 +667,7 @@ export default function PraktisiKerja() {
         <br />
 
         <h2 style={{ fontSize: '14px', fontWeight: 'bold' }}>PENYUSUN DAN VALIDATOR</h2>
-        <PenyusunValidatorTable />
+        <PenyusunValidatorTable penyusun={penyusunData.penyusun} validator={penyusunData.validator} />
         <br /><br /><br />
 
         <h2 style={{ fontSize: '16px', fontWeight: 'bold', color: '#4F81BD' }}>FR.05.C. LEMBAR JAWABAN PERTANYAAN TERTULIS PILIHAN GANDA</h2>
@@ -831,7 +845,7 @@ export default function PraktisiKerja() {
         <br />
 
         <h2 style={{ fontSize: '14px', fontWeight: 'bold' }}>PENYUSUN DAN VALIDATOR</h2>
-        <PenyusunValidatorTable />
+        <PenyusunValidatorTable penyusun={penyusunData.penyusun} validator={penyusunData.validator} />
         <br /><br /><br />
 
         <h2 style={{ fontSize: '16px', fontWeight: 'bold', color: '#4F81BD' }}>FR.IA.06C. LEMBAR JAWABAN PERTANYAAN TERTULIS ESAI</h2>
