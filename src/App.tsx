@@ -455,7 +455,7 @@ function App() {
                     <Routes>
                       <Route path="dashboard" element={<DashboardPraktisi />} />
                       <Route path="jawab/:idIzin" element={<JawabSoal />} />
-                      <Route path="kerja/:idJabatan/:idPraktisi" element={<PraktisiKerja />} />
+                      <Route path="kerja/:id" element={<PraktisiKerja />} />
                       <Route path="" element={<Navigate to="dashboard" replace />} />
                     </Routes>
                   </DashboardLayout>

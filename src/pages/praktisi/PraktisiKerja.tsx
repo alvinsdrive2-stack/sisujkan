@@ -198,7 +198,7 @@ function TTDTable({ title, nama, noReg, barcode }: {
 }
 
 export default function PraktisiKerja() {
-  const { idJabatan, idPraktisi } = useParams<{ idJabatan: string; idPraktisi: string }>()
+  const { id } = useParams<{ id: string }>()
   const token = localStorage.getItem("access_token") || ""
 
   const [tab, setTab] = useState<DocType>("ia04b")
@@ -219,11 +219,11 @@ export default function PraktisiKerja() {
   const [info, setInfo] = useState("")
 
   const load = useCallback(async (doc: DocType) => {
-    if (!idJabatan || !idPraktisi) return
+    if (!id) return
     setLoading(true)
     setError("")
     try {
-      const res = await fetch(`${API_BASE_URL}/praktisi/jabatan/${idJabatan}/${idPraktisi}/${doc}`, {
+      const res = await fetch(`${API_BASE_URL}/praktisi/jabatan/${id}/${doc}`, {
         headers: { Accept: "application/json", Authorization: `Bearer ${token}` },
       })
       if (!res.ok) throw new Error(`Gagal load ${doc} (${res.status})`)
@@ -270,7 +270,7 @@ export default function PraktisiKerja() {
       setAnswers(aInit)
 
       // Fetch penyusun & validator
-      fetch(`${API_BASE_URL}/praktisi/jabatan/${idJabatan}/${idPraktisi}/data-dokumen`, {
+      fetch(`${API_BASE_URL}/praktisi/jabatan/${id}/data-dokumen`, {
         headers: { Accept: "application/json", Authorization: `Bearer ${token}` },
       }).then(r => r.json()).then(j2 => {
         const d2 = j2.data || j2
@@ -300,7 +300,7 @@ export default function PraktisiKerja() {
       setError(e.message)
     }
     setLoading(false)
-  }, [idJabatan, idPraktisi, token])
+  }, [id, token])
 
   useEffect(() => { load(tab) }, [tab, load])
 
@@ -316,7 +316,7 @@ export default function PraktisiKerja() {
     setAnswers(prev => ({ ...prev, [soalId]: answer }))
 
   const save = async () => {
-    if (!idJabatan || !idPraktisi) return
+    if (!id) return
     setSaving(true)
     setError("")
     setInfo("")
@@ -342,7 +342,7 @@ export default function PraktisiKerja() {
       if (tab !== "ia04b") body.umpan_balik = umpanBalik
       if (tab === "ia04b" && rekomendasi) body.rekomendasi = rekomendasi === 'kompeten'
 
-      const res = await fetch(`${API_BASE_URL}/praktisi/jabatan/${idJabatan}/${idPraktisi}/jawab`, {
+      const res = await fetch(`${API_BASE_URL}/praktisi/jabatan/${id}/jawab`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify(body),
@@ -352,7 +352,7 @@ export default function PraktisiKerja() {
         throw new Error(ej.message || `Gagal simpan (${res.status})`)
       }
       // Auto-generate QR after save
-      fetch(`${API_BASE_URL}/praktisi/jabatan/${idJabatan}/${idPraktisi}/qr/${tab}`, {
+      fetch(`${API_BASE_URL}/praktisi/jabatan/${id}/qr/${tab}`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json", Authorization: `Bearer ${token}` },
         body: "{}",
@@ -366,12 +366,12 @@ export default function PraktisiKerja() {
   }
 
   const genQr = async () => {
-    if (!idJabatan || !idPraktisi) return
+    if (!id) return
     setQring(true)
     setError("")
     setInfo("")
     try {
-      const res = await fetch(`${API_BASE_URL}/praktisi/jabatan/${idJabatan}/${idPraktisi}/qr/${tab}`, {
+      const res = await fetch(`${API_BASE_URL}/praktisi/jabatan/${id}/qr/${tab}`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json", Authorization: `Bearer ${token}` },
         body: "{}",
@@ -388,7 +388,7 @@ export default function PraktisiKerja() {
     setQring(false)
   }
 
-  if (!idJabatan || !idPraktisi) {
+  if (!id) {
     return <div className="p-12 text-center text-slate-400">ID tidak ditemukan</div>
   }
 
