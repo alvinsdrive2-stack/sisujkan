@@ -125,33 +125,31 @@ function PenyusunValidatorTable({ nama_penyusun, noreg_penyusun, tanggal_penyusu
           <Td style={{ width: '25%' }}>Tanda Tangan Dan Tanggal</Td>
         </tr>
         <tr style={{ fontWeight: 'bold' }}>
-          <Td rowSpan={3}>PENYUSUN</Td>
+          <Td rowSpan={2}>PENYUSUN</Td>
           <Td style={{ textAlign: 'center' }}>1</Td>
           <Td>{nama_penyusun || ''}</Td>
           <Td>{noreg_penyusun || ''}</Td>
           <Td style={{ height: '70px', verticalAlign: 'middle', textAlign: 'center' }}>
             {barcode_penyusun ? (
-              <><img src={barcode_penyusun} style={{ height: '50px', width: '50px', objectFit: 'contain' }} alt="barcode" /><br />
+              <><img src={barcode_penyusun} style={{ height: '65px', width: '65px', objectFit: 'contain' }} alt="barcode" /><br />
                 <span style={{ fontSize: '11px' }}>{tanggal_penyusun || ''}</span></>
             ) : <span style={{ color: '#999' }}>Belum ditandatangani</span>}
           </Td>
         </tr>
         <tr><Td style={{ textAlign: 'center' }}>2</Td><Td></Td><Td></Td><Td style={{ height: '50px' }}></Td></tr>
-        <tr><Td style={{ textAlign: 'center' }}>3</Td><Td></Td><Td></Td><Td style={{ height: '50px' }}></Td></tr>
         <tr style={{ fontWeight: 'bold' }}>
-          <Td rowSpan={3}>VALIDATOR</Td>
+          <Td rowSpan={2}>VALIDATOR</Td>
           <Td style={{ textAlign: 'center' }}>1</Td>
           <Td>{nama_validator || ''}</Td>
           <Td>{noreg_validator || ''}</Td>
           <Td style={{ height: '70px', verticalAlign: 'middle', textAlign: 'center' }}>
             {barcode_validator ? (
-              <><img src={barcode_validator} style={{ height: '50px', width: '50px', objectFit: 'contain' }} alt="barcode" /><br />
+              <><img src={barcode_validator} style={{ height: '65px', width: '65px', objectFit: 'contain' }} alt="barcode" /><br />
                 <span style={{ fontSize: '11px' }}>{tanggal_validator || ''}</span></>
             ) : <span style={{ color: '#999' }}>Belum ditandatangani</span>}
           </Td>
         </tr>
         <tr><Td style={{ textAlign: 'center' }}>2</Td><Td></Td><Td></Td><Td style={{ height: '50px' }}></Td></tr>
-        <tr><Td style={{ textAlign: 'center' }}>3</Td><Td></Td><Td></Td><Td style={{ height: '50px' }}></Td></tr>
       </tbody>
     </table>
   )
@@ -184,7 +182,7 @@ function TTDTable({ title, nama, noReg, barcode }: {
           <Td style={{ height: '70px', verticalAlign: 'middle', textAlign: 'center' }}>
             {barcode?.url ? (
               <>
-                <img src={barcode.url} style={{ height: '50px', width: '50px', objectFit: 'contain' }} alt="barcode" /><br />
+                <img src={barcode.url} style={{ height: '65px', width: '65px', objectFit: 'contain' }} alt="barcode" /><br />
                 <span style={{ fontSize: '11px' }}>
                   {barcode?.tanggal ? new Date(barcode.tanggal).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) : ''}
                 </span>
@@ -582,7 +580,7 @@ export default function PraktisiKerja() {
               <Td style={{ height: '70px', verticalAlign: 'middle', textAlign: 'center' }}>
                 {(barcodes as any)?.['asesi']?.url ? (
                   <>
-                    <img src={(barcodes as any)['asesi'].url} style={{ height: '50px', width: '50px', objectFit: 'contain' }} alt="barcode asesi" /><br />
+                    <img src={(barcodes as any)['asesi'].url} style={{ height: '65px', width: '65px', objectFit: 'contain' }} alt="barcode asesi" /><br />
                     <span style={{ fontSize: '11px' }}>
                       {(barcodes as any)['asesi']?.tanggal ? new Date((barcodes as any)['asesi'].tanggal).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) : ''}
                     </span>
@@ -781,7 +779,7 @@ export default function PraktisiKerja() {
               <Td style={{ height: '70px', verticalAlign: 'middle', textAlign: 'center' }}>
                 {(barcodes as any)?.['asesi']?.url ? (
                   <>
-                    <img src={(barcodes as any)['asesi'].url} style={{ height: '50px', width: '50px', objectFit: 'contain' }} alt="barcode" /><br />
+                    <img src={(barcodes as any)['asesi'].url} style={{ height: '65px', width: '65px', objectFit: 'contain' }} alt="barcode" /><br />
                     <span style={{ fontSize: '11px' }}>
                       {(barcodes as any)['asesi']?.tanggal ? new Date((barcodes as any)['asesi'].tanggal).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) : ''}
                     </span>
@@ -961,7 +959,7 @@ export default function PraktisiKerja() {
               <Td style={{ height: '70px', verticalAlign: 'middle', textAlign: 'center' }}>
                 {(barcodes as any)?.['asesi']?.url ? (
                   <>
-                    <img src={(barcodes as any)['asesi'].url} style={{ height: '50px', width: '50px', objectFit: 'contain' }} alt="barcode" /><br />
+                    <img src={(barcodes as any)['asesi'].url} style={{ height: '65px', width: '65px', objectFit: 'contain' }} alt="barcode" /><br />
                     <span style={{ fontSize: '11px' }}>
                       {(barcodes as any)['asesi']?.tanggal ? new Date((barcodes as any)['asesi'].tanggal).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) : ''}
                     </span>
