@@ -126,8 +126,8 @@ export default function DashboardPenyusun() {
                   </td>
                   <td className="py-3 px-4">
                     <button
-                      onClick={() => navigate("/penyusun/lihat-soal")}
-                      className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium text-xs"
+                      onClick={() => navigate(`/penyusun/detail-jabker/${j.id}`)}
+                      className="inline-flex items-center gap-1 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors"
                     >
                       Lihat Detail
                     </button>
