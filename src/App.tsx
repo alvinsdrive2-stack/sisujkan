@@ -22,6 +22,7 @@ import {
   ValidatorRoute,
   ManagerMutuRoute,
   PraktisiRoute,
+  PraktisiOrPenyusunRoute,
 } from './components/RoleRoute'
 import PublicRoute from './components/PublicRoute'
 import DefaultRoute from './components/DefaultRoute'
@@ -447,6 +448,20 @@ function App() {
             }
           />
 
+          {/* Shared Routes - Praktisi, Penyusun, Validator */}
+          <Route
+            path="/praktisi/kerja/:id"
+            element={
+              <PraktisiOrPenyusunRoute>
+                <ValidatedNavigationRoute>
+                  <DashboardLayout>
+                    <PraktisiKerja />
+                  </DashboardLayout>
+                </ValidatedNavigationRoute>
+              </PraktisiOrPenyusunRoute>
+            }
+          />
+
           {/* Protected Routes - Praktisi (KAN) */}
           <Route
             path="/praktisi/*"
@@ -457,7 +472,6 @@ function App() {
                     <Routes>
                       <Route path="dashboard" element={<DashboardPraktisi />} />
                       <Route path="jawab/:idIzin" element={<JawabSoal />} />
-                      <Route path="kerja/:id" element={<PraktisiKerja />} />
                       <Route path="" element={<Navigate to="dashboard" replace />} />
                     </Routes>
                   </DashboardLayout>

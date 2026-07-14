@@ -265,3 +265,14 @@ export function PraktisiRoute({ children, fallback }: { children: React.ReactNod
     </RoleRoute>
   )
 }
+
+/**
+ * PraktisiOrPenyusunRoute - Accessible by Praktisi, Penyusun, or Validator
+ */
+export function PraktisiOrPenyusunRoute({ children, fallback }: { children: React.ReactNode; fallback?: string }) {
+  return (
+    <RoleRoute allowedRoles={["Praktisi", "Penyusun", "Validator"]} fallback={fallback}>
+      {children}
+    </RoleRoute>
+  )
+}
