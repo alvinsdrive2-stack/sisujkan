@@ -125,7 +125,7 @@ export default function DetailSoal() {
   const handleAddManual = () => {
     setSoalData(prev => [
       ...prev,
-      { no: prev.length + 1, soal: '', lingkup: '', kode_unit: '', kode_kuk: '', jawab_a: '', jawab_b: '', jawab_c: '', jawab_d: '', jawaban: '' },
+      { no: prev.length + 1, soal: '', soal1: '', kode_unit: '', kode_kuk: '', jawab_a: '', jawab_b: '', jawab_c: '', jawab_d: '', jawaban: '' },
     ])
   }
 
@@ -150,7 +150,7 @@ export default function DetailSoal() {
 
       if (selectedDokumen === "ia04b") {
         payload.soal = soalData.map((row: any) => ({
-          no: row.no, soal: row.soal, lingkup: row.lingkup || "", kode_unit: row.kode_unit || "",
+          no: row.no, soal: row.soal, soal1: row.soal1 || "", kode_unit: row.kode_unit || "",
         }))
       } else if (selectedDokumen === "ia05") {
         payload.soal = soalData.map((row: any) => ({
@@ -336,13 +336,13 @@ export default function DetailSoal() {
                           </td>
                           {selectedDokumen === 'ia04b' && (
                             <td className="py-2 px-3">
-                              <input value={row.lingkup as string} onChange={(e) => handleFieldChange(idx, 'lingkup', e.target.value)}
+                              <input value={row.soal1 as string} onChange={(e) => handleFieldChange(idx, 'soal1', e.target.value)}
                                 className="w-full bg-transparent border border-dashed border-slate-300 dark:border-slate-500 rounded px-2 py-1 text-xs" />
                             </td>
                           )}
                           {selectedDokumen === 'ia04b' && (
                             <td className="py-2 px-3">
-                              <input value={row.kode_unit as string} onChange={(e) => handleFieldChange(idx, 'kode_unit', e.target.value)}
+                              <input value={(row as any).unit?.kode ?? row.kode_unit ?? ""} onChange={(e) => handleFieldChange(idx, 'kode_unit', e.target.value)}
                                 className="w-full bg-transparent border border-dashed border-slate-300 dark:border-slate-500 rounded px-2 py-1 text-xs" />
                             </td>
                           )}
@@ -372,7 +372,7 @@ export default function DetailSoal() {
                           )}
                           {selectedDokumen === 'ia05' && (
                             <td className="py-2 px-3">
-                              <input value={row.kode_kuk as string} onChange={(e) => handleFieldChange(idx, 'kode_kuk', e.target.value)}
+                              <input value={(row as any).kuk?.kode ?? row.kode_kuk ?? ""} onChange={(e) => handleFieldChange(idx, 'kode_kuk', e.target.value)}
                                 className="w-full bg-transparent border border-dashed border-slate-300 dark:border-slate-500 rounded px-2 py-1 text-xs" />
                             </td>
                           )}
@@ -390,7 +390,7 @@ export default function DetailSoal() {
                           )}
                           {selectedDokumen === 'ia06' && (
                             <td className="py-2 px-3">
-                              <input value={row.kode_kuk as string} onChange={(e) => handleFieldChange(idx, 'kode_kuk', e.target.value)}
+                              <input value={(row as any).kuk?.kode ?? row.kode_kuk ?? ""} onChange={(e) => handleFieldChange(idx, 'kode_kuk', e.target.value)}
                                 className="w-full bg-transparent border border-dashed border-slate-300 dark:border-slate-500 rounded px-2 py-1 text-xs" />
                             </td>
                           )}
