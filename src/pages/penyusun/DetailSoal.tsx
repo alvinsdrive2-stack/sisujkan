@@ -11,9 +11,9 @@ type SoalRow = Record<string, string | number>
 type DocType = "ia04b" | "ia05" | "ia06"
 
 const DOKEMEN_OPTIONS: { value: DocType; label: string }[] = [
-  { value: "ia04b", label: "FR.IA.04.B â€” Lembar Periksa Kegiatan Terstruktur" },
-  { value: "ia05", label: "FR.IA.05 â€” Pertanyaan Pilihan Ganda" },
-  { value: "ia06", label: "FR.IA.06 â€” Pertanyaan Esai" },
+  { value: "ia04b", label: "FR.IA.04.B — Lembar Periksa Kegiatan Terstruktur" },
+  { value: "ia05", label: "FR.IA.05 — Pertanyaan Pilihan Ganda" },
+  { value: "ia06", label: "FR.IA.06 — Pertanyaan Esai" },
 ]
 
 export default function DetailSoal() {
