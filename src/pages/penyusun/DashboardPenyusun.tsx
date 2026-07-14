@@ -3,9 +3,12 @@ import { useNavigate } from "react-router-dom"
 import { API_BASE_URL } from "@/config/api"
 
 interface Jabker {
-  id: number
-  nama: string
+  id?: number
+  id_jabatan_kerja?: string
+  nama?: string
+  jabatan_kerja?: string
   jumlah_skema?: number
+  skema_count?: number
   status?: string
 }
 
@@ -111,8 +114,10 @@ export default function DashboardPenyusun() {
               </tr>
             </thead>
             <tbody>
-              {jabkerList.map((j: any) => (
-                <tr key={j.id} className="border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50">
+              {jabkerList.map((j: any) => {
+                const jabkerId = j.id_jabatan_kerja || j.id
+                return (
+                <tr key={jabkerId} className="border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50">
                   <td className="py-3 px-4 text-slate-700 dark:text-slate-200">{j.nama || j.jabatan_kerja || j.name}</td>
                   <td className="py-3 px-4 text-slate-600 dark:text-slate-300">{j.jumlah_skema ?? j.skema_count ?? "-"}</td>
                   <td className="py-3 px-4">
@@ -126,14 +131,15 @@ export default function DashboardPenyusun() {
                   </td>
                   <td className="py-3 px-4">
                     <button
-                      onClick={() => navigate(`/penyusun/detail-jabker/${j.id}`)}
+                      onClick={() => navigate(`/penyusun/detail-jabker/${jabkerId}`)}
                       className="inline-flex items-center gap-1 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors"
                     >
                       Lihat Detail
                     </button>
                   </td>
                 </tr>
-              ))}
+                )
+              })}
             </tbody>
           </table>
         </div>
