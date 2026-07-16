@@ -4,7 +4,7 @@ import { API_BASE_URL } from "@/config/api"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, Users, Phone, Mail, Hash, UserPlus, Briefcase } from "lucide-react"
+import { ArrowLeft, Users, Phone, Mail, Hash, UserPlus, Briefcase, FileSignature } from "lucide-react"
 
 interface PraktisiItem {
   id: number
@@ -184,6 +184,26 @@ export default function DetailJabker() {
                         <Hash className="w-3.5 h-3.5" />
                         ID: {p.id}
                       </span>
+                    </div>
+                    <div className="mt-3 flex flex-wrap gap-2 pt-3 border-t border-slate-100 dark:border-slate-700">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={(e) => { e.stopPropagation(); navigate(`/penyusun/mapa-ttd/mapa01/${id}/${p.id}`) }}
+                        className="text-xs"
+                      >
+                        <FileSignature className="w-3.5 h-3.5 mr-1" />
+                        MAPA 01
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={(e) => { e.stopPropagation(); navigate(`/penyusun/mapa-ttd/mapa02/${id}/${p.id}`) }}
+                        className="text-xs"
+                      >
+                        <FileSignature className="w-3.5 h-3.5 mr-1" />
+                        MAPA 02
+                      </Button>
                     </div>
                   </div>
                 ))}

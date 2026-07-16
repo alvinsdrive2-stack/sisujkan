@@ -127,6 +127,7 @@ const MukResult = lazy(() => import('./pages/penyusun/MukResult'))
 const AssignPraktisi = lazy(() => import('./pages/penyusun/AssignPraktisi'))
 const DetailJabker = lazy(() => import('./pages/penyusun/DetailJabker'))
 const DetailSoal = lazy(() => import('./pages/penyusun/DetailSoal'))
+const PenyusunMapaTtd = lazy(() => import('./pages/penyusun/PenyusunMapaTtd'))
 
 const DashboardValidator = lazy(() => import('./pages/validator/DashboardValidator'))
 const DaftarSkemaValidator = lazy(() => import('./pages/validator/DaftarSkema'))
@@ -404,6 +405,7 @@ function App() {
                       <Route path="muk/:idIzin" element={<MukResult />} />
                       <Route path="assign-praktisi" element={<AssignPraktisi />} />
                       <Route path="detail-jabker/:id" element={<DetailJabker />} />
+                      <Route path="mapa-ttd/:jenis/:jabkerId/:praktisiId" element={<PenyusunMapaTtd />} />
                       <Route path="" element={<Navigate to="dashboard" replace />} />
                     </Routes>
                   </DashboardLayout>
