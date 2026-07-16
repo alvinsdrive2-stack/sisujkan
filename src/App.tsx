@@ -405,7 +405,7 @@ function App() {
                       <Route path="muk/:idIzin" element={<MukResult />} />
                       <Route path="assign-praktisi" element={<AssignPraktisi />} />
                       <Route path="detail-jabker/:id" element={<DetailJabker />} />
-                      <Route path="mapa-ttd/:jenis/:jabkerId/:praktisiId" element={<PenyusunMapaTtd />} />
+                      <Route path="mapa-ttd/:jenis/:jabkerId" element={<PenyusunMapaTtd />} />
                       <Route path="" element={<Navigate to="dashboard" replace />} />
                     </Routes>
                   </DashboardLayout>

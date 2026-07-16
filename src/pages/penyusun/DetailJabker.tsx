@@ -185,26 +185,6 @@ export default function DetailJabker() {
                         ID: {p.id}
                       </span>
                     </div>
-                    <div className="mt-3 flex flex-wrap gap-2 pt-3 border-t border-slate-100 dark:border-slate-700">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={(e) => { e.stopPropagation(); navigate(`/penyusun/mapa-ttd/mapa01/${id}/${p.id}`) }}
-                        className="text-xs"
-                      >
-                        <FileSignature className="w-3.5 h-3.5 mr-1" />
-                        MAPA 01
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={(e) => { e.stopPropagation(); navigate(`/penyusun/mapa-ttd/mapa02/${id}/${p.id}`) }}
-                        className="text-xs"
-                      >
-                        <FileSignature className="w-3.5 h-3.5 mr-1" />
-                        MAPA 02
-                      </Button>
-                    </div>
                   </div>
                 ))}
               </div>
@@ -247,19 +227,22 @@ export default function DetailJabker() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              <Button
-                variant="default"
-                className="w-full"
-                onClick={() => navigate("/penyusun/assign-praktisi")}
-              >
+              <Button variant="default" className="w-full" onClick={() => navigate("/penyusun/assign-praktisi")}>
                 <UserPlus className="w-4 h-4 mr-2" />
                 Assign Praktisi
               </Button>
-              <Button
-                variant="outline"
-                className="w-full"
-                onClick={() => navigate("/penyusun/dashboard")}
-              >
+              <div className="border-t border-slate-200 dark:border-slate-700 pt-3">
+                <p className="text-xs font-medium text-slate-500 mb-2">Dokumen Jabker</p>
+                <Button variant="outline" className="w-full mb-2" onClick={() => navigate(`/penyusun/mapa-ttd/mapa01/${id}`)}>
+                  <FileSignature className="w-4 h-4 mr-2" />
+                  MAPA 01
+                </Button>
+                <Button variant="outline" className="w-full" onClick={() => navigate(`/penyusun/mapa-ttd/mapa02/${id}`)}>
+                  <FileSignature className="w-4 h-4 mr-2" />
+                  MAPA 02
+                </Button>
+              </div>
+              <Button variant="outline" className="w-full" onClick={() => navigate("/penyusun/dashboard")}>
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Kembali
               </Button>
