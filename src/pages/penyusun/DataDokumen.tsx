@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react"
 import { useNavigate } from "react-router-dom"
-import { Search, ChevronLeft, ChevronRight, ExternalLink, CheckCircle2, Clock, FileText } from "lucide-react"
+import { Search, ChevronLeft, ChevronRight, ExternalLink, FileText } from "lucide-react"
 import { API_BASE_URL } from "@/config/api"
 
 const PAGE_SIZE = 8
@@ -17,6 +17,7 @@ export default function DataDokumen() {
 
   const token = localStorage.getItem("access_token") || ""
 
+  // Load skema buat dropdown
   useEffect(() => {
     fetch(`${API_BASE_URL}/penyusun/skema`, {
       headers: { Accept: "application/json", Authorization: `Bearer ${token}` },
@@ -29,16 +30,17 @@ export default function DataDokumen() {
       .catch(() => {})
   }, [token])
 
+  // Load praktisi pake endpoint KAN yg udah work
   useEffect(() => {
     if (!selectedSkema) { setPesertaList([]); return }
     setPesertaLoading(true)
     setError("")
-    fetch(`${API_BASE_URL}/penyusun/skema/${selectedSkema}/peserta`, {
+    fetch(`${API_BASE_URL}/kan/config/praktisi-by-jabatan/${selectedSkema}?all=true`, {
       headers: { Accept: "application/json", Authorization: `Bearer ${token}` },
     })
       .then(r => { if (!r.ok) throw new Error("Gagal ambil peserta"); return r.json() })
       .then(j => {
-        const d = j.data?.peserta || j.data || j
+        const d = j.data || j
         setPesertaList(Array.isArray(d) ? d : [])
       })
       .catch((err: any) => setError(err.message))
@@ -50,9 +52,9 @@ export default function DataDokumen() {
   const filtered = useMemo(() => {
     if (!search.trim()) return pesertaList
     const q = search.toLowerCase()
-    return pesertaList.filter(p =>
-      (p.nama || "").toLowerCase().includes(q) ||
-      (p.id_izin || "").toLowerCase().includes(q)
+    return pesertaList.filter((p: any) =>
+      (p.user?.name || "").toLowerCase().includes(q) ||
+      (p.user?.email || "").toLowerCase().includes(q)
     )
   }, [pesertaList, search])
 
@@ -62,28 +64,13 @@ export default function DataDokumen() {
     return filtered.slice(start, start + PAGE_SIZE)
   }, [filtered, page])
 
-  const statusBadge = (status: string) => {
-    const v = status === "Terisi"
-    return (
-      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium ${
-        v
-          ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
-          : "bg-slate-100 text-slate-400 dark:bg-slate-700 dark:text-slate-500"
-      }`}>
-        {v ? <CheckCircle2 className="w-3 h-3" /> : <Clock className="w-3 h-3" />}
-        {v ? "Terisi" : "Belum"}
-      </span>
-    )
-  }
-
   return (
     <div>
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Data Dokumen</h1>
-        <p className="text-slate-500 dark:text-slate-400 mt-1">Status dokumen TTD per peserta per skema</p>
+        <p className="text-slate-500 dark:text-slate-400 mt-1">Daftar praktisi per skema</p>
       </div>
 
-      {/* Skema Selector + Search */}
       <div className="flex flex-wrap items-end gap-4 mb-6">
         <div className="w-72">
           <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Pilih Skema</label>
@@ -91,7 +78,7 @@ export default function DataDokumen() {
             className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-700 dark:text-slate-200">
             <option value="">-- Pilih Skema --</option>
             {skemaList.map((s: any) => (
-              <option key={s.id} value={s.id}>{s.nama || s.jabatan_kerja}</option>
+              <option key={s.id} value={s.id}>{s.jabatan_kerja || s.nama}</option>
             ))}
           </select>
         </div>
@@ -99,7 +86,7 @@ export default function DataDokumen() {
           <div className="relative flex-1 max-w-xs">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <input type="text" value={search} onChange={e => setSearch(e.target.value)}
-              placeholder="Cari peserta..." disabled={pesertaLoading}
+              placeholder="Cari praktisi..." disabled={pesertaLoading}
               className="w-full pl-9 pr-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-blue-500" />
           </div>
         )}
@@ -116,11 +103,11 @@ export default function DataDokumen() {
       ) : !selectedSkema ? (
         <div className="border border-dashed border-slate-300 dark:border-slate-600 rounded-lg p-12 text-center">
           <FileText className="w-12 h-12 mx-auto mb-3 text-slate-300 dark:text-slate-600" />
-          <p className="text-slate-500 dark:text-slate-400">Pilih skema untuk lihat status dokumen peserta</p>
+          <p className="text-slate-500 dark:text-slate-400">Pilih skema buat lihat praktisi</p>
         </div>
       ) : filtered.length === 0 ? (
         <div className="border border-dashed border-slate-300 dark:border-slate-600 rounded-lg p-12 text-center">
-          <p className="text-slate-400 dark:text-slate-500">{search ? "Tidak ada peserta cocok" : "Belum ada peserta"}</p>
+          <p className="text-slate-400 dark:text-slate-500">{search ? "Tidak ada praktisi cocok" : "Belum ada praktisi"}</p>
         </div>
       ) : (
         <>
@@ -129,34 +116,19 @@ export default function DataDokumen() {
               <thead className="bg-slate-50 dark:bg-slate-700">
                 <tr>
                   <th className="text-left py-3 px-3 font-semibold text-slate-600 dark:text-slate-300">Praktisi</th>
-                  <th className="text-left py-3 px-3 font-semibold text-slate-600 dark:text-slate-300 hidden sm:table-cell">Jabker</th>
-                  <th className="text-center py-3 px-2 font-semibold text-slate-600 dark:text-slate-300">IA.04B</th>
-                  <th className="text-center py-3 px-2 font-semibold text-slate-600 dark:text-slate-300">IA.05</th>
-                  <th className="text-center py-3 px-2 font-semibold text-slate-600 dark:text-slate-300">IA.06</th>
+                  <th className="text-left py-3 px-3 font-semibold text-slate-600 dark:text-slate-300 hidden sm:table-cell">Email</th>
                   <th className="text-center py-3 px-3 font-semibold text-slate-600 dark:text-slate-300">Aksi</th>
                 </tr>
               </thead>
               <tbody>
                 {paginated.map((p: any) => (
-                  <tr key={p.id_izin} className="border-t border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50">
+                  <tr key={p.id} className="border-t border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50">
                     <td className="py-3 px-3">
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium text-slate-700 dark:text-slate-200">{p.nama || "-"}</span>
-                        {p.selesai && <CheckCircle2 className="w-3.5 h-3.5 text-green-500 shrink-0" />}
-                      </div>
-                      <p className="text-xs text-slate-400 mt-0.5 sm:hidden">{p.jabker || "-"}</p>
+                      <span className="font-medium text-slate-700 dark:text-slate-200">{p.user?.name || "-"}</span>
                     </td>
-                    <td className="py-3 px-3 text-slate-600 dark:text-slate-300 text-xs hidden sm:table-cell">{p.jabker || "-"}</td>
-                    <td className="py-3 px-2 text-center">{statusBadge(p.ia04b_status)}</td>
-                    <td className="py-3 px-2 text-center">{statusBadge(p.ia05_status)}</td>
-                    <td className="py-3 px-2 text-center">
-                      {p.ia06_status === "Terisi"
-                        ? <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"><CheckCircle2 className="w-3 h-3" />Terisi</span>
-                        : <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-400 dark:bg-slate-700 dark:text-slate-500"><Clock className="w-3 h-3" />Belum</span>
-                      }
-                    </td>
+                    <td className="py-3 px-3 text-slate-600 dark:text-slate-300 text-xs hidden sm:table-cell">{p.user?.email || "-"}</td>
                     <td className="py-3 px-3 text-center">
-                      <button onClick={() => navigate(p.id ? `/praktisi/kerja/${p.id}` : `/praktisi/jawab/${p.id_izin}`)}
+                      <button onClick={() => navigate(`/praktisi/kerja/${p.id}`)}
                         className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 dark:text-blue-400 text-xs font-medium whitespace-nowrap">
                         <ExternalLink className="w-3.5 h-3.5" /> Detail
                       </button>
@@ -167,7 +139,6 @@ export default function DataDokumen() {
             </table>
           </div>
 
-          {/* Pagination */}
           {totalPages > 1 && (
             <div className="flex items-center justify-between mt-4 text-sm text-slate-500">
               <span>{filtered.length} peserta</span>
