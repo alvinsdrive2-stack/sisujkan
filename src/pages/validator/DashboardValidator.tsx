@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 import { API_BASE_URL } from "@/config/api"
 
 export default function DashboardValidator() {
+  const navigate = useNavigate()
   const [jabkerList, setJabkerList] = useState<any[]>([])
   const [skemaCount, setSkemaCount] = useState(0)
   const [loading, setLoading] = useState(true)
@@ -80,7 +82,7 @@ export default function DashboardValidator() {
                     <span className="inline-block px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">Aktif</span>
                   </td>
                   <td className="py-3 px-4">
-                    <button className="text-blue-600 hover:text-blue-800 dark:text-blue-400 text-xs font-medium">Lihat Detail</button>
+                    <button onClick={() => navigate(`/validator/skema`)} className="text-blue-600 hover:text-blue-800 dark:text-blue-400 text-xs font-medium">Lihat Detail</button>
                   </td>
                 </tr>
               ))}

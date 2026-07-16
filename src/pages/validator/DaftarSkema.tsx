@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 import { API_BASE_URL } from "@/config/api"
 
 export default function DaftarSkemaValidator() {
+  const navigate = useNavigate()
   const [skemaList, setSkemaList] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
@@ -47,8 +49,8 @@ export default function DaftarSkemaValidator() {
                 <span className="text-xs text-slate-400">{skema.reviewed || 0}/{skema.soal || skema.total_soal || 0} soal</span>
               </div>
               <div className="flex gap-2 mt-3">
-                <button className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded text-xs font-medium">Lihat Soal</button>
-                <button className="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded text-xs font-medium">Lihat Penilaian Penyusun</button>
+                <button onClick={() => navigate(`/penyusun/lihat-soal/${skema.id}`)} className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded text-xs font-medium">Lihat Soal</button>
+                <button onClick={() => navigate(`/validator/penilaian/${skema.id}/ia04b`)} className="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded text-xs font-medium">Lihat Penilaian Penyusun</button>
               </div>
             </div>
           ))}

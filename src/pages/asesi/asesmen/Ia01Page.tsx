@@ -13,6 +13,7 @@ import { useAbsenCheck } from "@/hooks/useAbsenCheck"
 import { useSigningState, BarcodeState } from "@/hooks/useSigningState"
 import { getAsesmenSteps } from "@/lib/asesmen-steps"
 import { CustomCheckbox } from "@/components/ui/Checkbox"
+import { RoleId } from "@/lib/rbac-config"
 import { ActionButton } from "@/components/ui/ActionButton"
 import { WebcamModal } from "@/components/ui/WebcamModal"
 import { FullPageLoader } from "@/components/ui/loading-spinner"
@@ -97,7 +98,7 @@ export default function Ia01Page() {
   const asesmenSteps = useMemo(() => getAsesmenSteps(jenjang, isAsesor, asesorRole, asesorList.length, metode, tahap), [jenjang, isAsesor, asesorRole, asesorList.length, metode, tahap])
 
   // All asesor can fill (removed restriction to asesor_1 only)
-  const isFormDisabledBase = !isAsesor
+  const isFormDisabledBase = user?.role?.id === RoleId.ASESI
 
   // Absen check
   const {

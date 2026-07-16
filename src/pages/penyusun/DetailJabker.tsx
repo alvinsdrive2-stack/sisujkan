@@ -21,6 +21,13 @@ interface PraktisiItem {
     id_jabatan_kerja: string
     jabatan_kerja: string
   }
+  ttd_status?: {
+    IA04B: boolean
+    IA05: boolean
+    IA06: boolean
+    AK02: boolean
+    selesai: boolean
+  }
 }
 
 function TableSkeleton({ rows = 4 }: { rows?: number }) {
@@ -149,9 +156,19 @@ export default function DetailJabker() {
                           <p className="text-xs text-slate-500">ID User: {p.id_user}</p>
                         </div>
                       </div>
-                      <Badge variant="secondary" className="text-xs">
-                        {p.user?.noreg || "N/A"}
-                      </Badge>
+                      {p.ttd_status?.selesai ? (
+                        <Badge className="text-xs bg-green-100 text-green-700 hover:bg-green-200 border-green-300 whitespace-nowrap">
+                          Selesai
+                        </Badge>
+                      ) : p.ttd_status ? (
+                        <Badge variant="secondary" className="text-xs whitespace-nowrap">
+                          {[p.ttd_status.IA04B, p.ttd_status.IA05, p.ttd_status.IA06].filter(Boolean).length}/3 TTD
+                        </Badge>
+                      ) : (
+                        <Badge variant="secondary" className="text-xs">
+                          {p.user?.noreg || "N/A"}
+                        </Badge>
+                      )}
                     </div>
 
                     <div className="mt-3 flex flex-wrap gap-4 text-xs text-slate-500">

@@ -16,6 +16,17 @@ export default function JawabSoal() {
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
 
+  // TTD state
+  const [ttdLoading, setTtdLoading] = useState(false)
+  const [ttdSaving, setTtdSaving] = useState<string | null>(null)
+  const [ttdBarcodes, setTtdBarcodes] = useState<Record<string, string>>({})
+  const ttdDocs = [
+    { key: "ia04b", label: "IA.04B — Penilaian Asesmen" },
+    { key: "ia05", label: "IA.05 — Ujian Pilihan Ganda" },
+    { key: "ia06", label: "IA.06 — Ujian Esai" },
+    { key: "ak02", label: "AK.02 — Rekomendasi Keputusan" },
+  ]
+
   const token = localStorage.getItem("access_token") || ""
 
   useEffect(() => {
@@ -35,6 +46,44 @@ export default function JawabSoal() {
       }
     } catch { /* silent */ }
     setLoading(false)
+  }
+
+  const loadTtdStatus = async () => {
+    setTtdLoading(true)
+    try {
+      const results: Record<string, string> = {}
+      for (const doc of ttdDocs) {
+        const res = await fetch(`${API_BASE_URL}/praktisi/${idIzin}/${doc.key}`, {
+          headers: { Accept: "application/json", Authorization: `Bearer ${token}` },
+        })
+        if (res.ok) {
+          const j = await res.json()
+          const d = j.data || j
+          const bc = d.barcodes || {}
+          if (bc?.asesi?.url) results[doc.key] = bc.asesi.url
+        }
+      }
+      setTtdBarcodes(results)
+    } catch { /* silent */ }
+    setTtdLoading(false)
+  }
+
+  const handleTtd = async (jenis: string) => {
+    setTtdSaving(jenis)
+    setError("")
+    try {
+      const res = await fetch(`${API_BASE_URL}/praktisi/${idIzin}/qr/${jenis}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json", Authorization: `Bearer ${token}` },
+        body: "{}",
+      })
+      if (!res.ok) throw new Error(`Gagal TTD ${jenis}`)
+      const j = await res.json()
+      const url = j.data?.url_image || j.url_image || ""
+      if (url) setTtdBarcodes(prev => ({ ...prev, [jenis]: url }))
+      setSuccess(`${ttdDocs.find(d => d.key === jenis)?.label || jenis} berhasil ditandatangani`)
+    } catch (err: any) { setError(err.message) }
+    setTtdSaving(null)
   }
 
   const loadSoal = async (jenis: string) => {
@@ -80,7 +129,11 @@ export default function JawabSoal() {
     setSuccess("")
     const stepMap = ["apl01", "ia04b", "ia05", "ia06", "ak02", "ttd"]
     const jenis = stepMap[idx]
-    if (jenis !== "ttd") loadSoal(jenis)
+    if (jenis === "ttd") {
+      loadTtdStatus()
+    } else {
+      loadSoal(jenis)
+    }
   }
 
   const handleSubmitAll = async () => {
@@ -283,9 +336,52 @@ export default function JawabSoal() {
       )}
 
       {activeStep === 5 && (
-        <div className="border border-slate-200 dark:border-slate-600 rounded-lg p-6">
-          <h3 className="font-semibold text-slate-700 dark:text-slate-200 mb-4">Tanda Tangan Digital</h3>
-          <p className="text-xs text-slate-500">TTD belum tersedia di halaman ini. Gunakan menu QR TTD.</p>
+        <div className="space-y-4">
+          <div className="border border-slate-200 dark:border-slate-600 rounded-lg p-6">
+            <h3 className="font-semibold text-slate-700 dark:text-slate-200 mb-4">Tanda Tangan Digital</h3>
+            <p className="text-xs text-slate-500 mb-4">TTD dokumen asesmen. Klik tombol TTD untuk membubuhkan tanda tangan.</p>
+
+            {ttdLoading ? (
+              <div className="text-center text-slate-400 py-8">Memuat status TTD...</div>
+            ) : (
+              <div className="space-y-3">
+                {ttdDocs.map((doc) => {
+                  const signed = !!ttdBarcodes[doc.key]
+                  return (
+                    <div key={doc.key} className="flex items-center justify-between p-3 rounded-lg border border-slate-200 dark:border-slate-600">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-2 h-2 rounded-full ${signed ? 'bg-green-500' : 'bg-slate-300'}`} />
+                        <span className="text-sm font-medium text-slate-700 dark:text-slate-200">{doc.label}</span>
+                        {signed && <span className="text-xs text-green-600">Sudah TTD</span>}
+                      </div>
+                      <div className="flex items-center gap-3">
+                        {ttdBarcodes[doc.key] && (
+                          <img src={ttdBarcodes[doc.key]} alt="barcode" className="h-10 w-10 object-contain" />
+                        )}
+                        <button
+                          onClick={() => handleTtd(doc.key)}
+                          disabled={ttdSaving === doc.key}
+                          className={`px-4 py-1.5 rounded text-xs font-medium ${
+                            signed
+                              ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                              : 'bg-blue-600 hover:bg-blue-700 text-white'
+                          }`}
+                        >
+                          {ttdSaving === doc.key ? "Memproses..." : signed ? "TTD Ulang" : "TTD"}
+                        </button>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            )}
+          </div>
+
+          <div className="border border-slate-200 dark:border-slate-600 rounded-lg p-4 bg-slate-50 dark:bg-slate-800">
+            <p className="text-xs text-slate-500">
+              TTD digital menggunakan QR code yang terverifikasi. Setelah TTD, dokumen PDF akan digenerate secara otomatis.
+            </p>
+          </div>
         </div>
       )}
 
