@@ -86,7 +86,7 @@ export default function Ia03Page() {
   const { id } = useParams<{ id?: string }>()
   const { jenjang, metode, jabatanKerja, nomorSkema, tuk, asesorList, namaAsesi, tanggalUji, namaPenyusun, namaValidator, tanggalPenyusun, tanggalValidator, barcodePenyusun, barcodeValidator, noregPenyusun, noregValidator, jadwalId } = useDataDokumenAsesmen(id)
   const { tahap } = useDataDokumenPraAsesmen(id)
-  const { role: asesorRole, isAsesor1, isAsesor2 } = useAsesorRole(id)
+  const { role: asesorRole } = useAsesorRole(id)
   const { showSuccess, showWarning, showError } = useToast()
   const { kegiatan: _kegiatan, isAsesor } = useKegiatanByRole()
 

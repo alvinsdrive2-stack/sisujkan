@@ -34,7 +34,6 @@ interface PraktisiItem {
   }
 }
 
-type Page = "list" | "add"
 
 function TableSkeleton({ rows = 4 }: { rows?: number }) {
   return (
@@ -166,8 +165,6 @@ export default function AssignPraktisi() {
     } catch (err: any) { setError(err.message) }
     setRemovingId(null)
   }
-
-  const selectedJabkerName = jabkerList.find(j => j.id_jabatan_kerja === selectedJabker)?.jabatan_kerja || selectedJabker
 
   const statusBadge = (p: PraktisiItem) => {
     const s = p.ttd_status

@@ -76,7 +76,7 @@ export default function DashboardPenyusun() {
     if (!search.trim()) return jabkerList
     const q = search.toLowerCase()
     return jabkerList.filter(j =>
-      (j.jabatan_kerja || j.nama || j.name || "").toLowerCase().includes(q) ||
+      (j.jabatan_kerja || j.nama || "").toLowerCase().includes(q) ||
       (j.id_jabatan_kerja || "").toLowerCase().includes(q)
     )
   }, [jabkerList, search])
