@@ -657,15 +657,25 @@ export default function PraktisiKerja() {
                 { key: 'C' as const, label: soal.jawab_c },
                 { key: 'D' as const, label: soal.jawab_d },
               ]
-              const optionRows = cols.map(({ key, label }) => (
-                <tr key={`${soal.id}-${key}`}>
-                  <Td></Td>
-                  <Td style={{ textAlign: 'center' }}>
-                    <CustomRadio name={`soal-${soal.id}`} value={key} checked={answers[soal.id] === key} onChange={() => handleAnswerChange(soal.id, key)} disabled={isPenyusun} />
-                  </Td>
-                  <Td>&nbsp; {key.toLowerCase()}. {label}</Td>
-                </tr>
-              ))
+              const showKunci = !isPraktisi || !!answers[soal.id]
+              const optionRows = cols.map(({ key, label }) => {
+                const isKunci = showKunci && key === soal.kunci_jawaban
+                const isSalah = answers[soal.id] && key === answers[soal.id] && answers[soal.id] !== soal.kunci_jawaban
+                return (
+                  <tr key={`${soal.id}-${key}`}>
+                    <Td style={{ width: '30px', textAlign: 'center', backgroundColor: isKunci ? '#d4edda' : isSalah ? '#f8d7da' : undefined }}>
+                      {isKunci && <span style={{ color: 'green' }}>✓</span>}
+                    </Td>
+                    <Td style={{ textAlign: 'center' }}>
+                      <CustomRadio name={`soal-${soal.id}`} value={key} checked={answers[soal.id] === key} onChange={() => handleAnswerChange(soal.id, key)} disabled={isPenyusun} />
+                    </Td>
+                    <Td style={{ backgroundColor: isKunci ? '#d4edda' : isSalah ? '#f8d7da' : undefined }}>
+                      &nbsp; {key.toLowerCase()}. {label}
+                      {isKunci && <span style={{ color: 'green', marginLeft: '8px', fontWeight: 'bold' }}>(Kunci Jawaban)</span>}
+                    </Td>
+                  </tr>
+                )
+              })
               return [
                 <tr key={soal.id}>
                   <Td style={{ textAlign: 'center', fontWeight: 'bold', backgroundColor: '#d58a94' }}>
