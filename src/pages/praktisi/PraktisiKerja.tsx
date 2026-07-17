@@ -227,6 +227,18 @@ export default function PraktisiKerja() {
   const [umpanBalik, setUmpanBalik] = useState("")
   const [rekomendasi, setRekomendasi] = useState<'kompeten' | 'belum_kompeten' | null>(null)
   const [penyusunData, setPenyusunData] = useState<PenyusunData>({})
+
+  // Auto-resize textareas after jawaban changes
+  useEffect(() => {
+    // Small delay to ensure DOM is painted
+    const id = setTimeout(() => {
+      document.querySelectorAll<HTMLTextAreaElement>('textarea[data-autoresize]').forEach(el => {
+        el.style.height = 'auto'
+        el.style.height = el.scrollHeight + 'px'
+      })
+    }, 0)
+    return () => clearTimeout(id)
+  }, [jawaban, soalList])
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState("")
@@ -502,6 +514,7 @@ export default function PraktisiKerja() {
                     value={jawaban[soal.id] || ""}
                     onChange={e => setJawaban(prev => ({ ...prev, [soal.id]: e.target.value }))}
                     disabled={isPenyusun}
+                    data-autoresize
                     onInput={e => { e.currentTarget.style.height = 'auto'; e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px' }}
                     style={{ width: '100%', minHeight: '50px', border: '1px solid #ccc', padding: '6px', fontSize: '12px', background: isPenyusun ? '#e9e9e9' : '#f9f9f9', resize: 'none', overflow: 'hidden' }}
                   />
@@ -539,6 +552,35 @@ export default function PraktisiKerja() {
             <tr>
               <Td style={{ fontWeight: 'bold', width: '50%' }}>Total Skor Penilaian</Td>
               <Td style={{ fontWeight: 'bold', width: '50%', fontSize: '14pt' }}>{totalSkor}</Td>
+            </tr>
+          </tbody>
+        </table>
+        <br />
+
+        {/* TTD Asesi */}
+        <table style={{ border: '1px solid #000', borderCollapse: 'collapse', width: '100%' }} cellPadding="5" cellSpacing="0">
+          <tbody>
+            <tr style={{ fontWeight: 'bold' }}><Td colSpan={3}>Asesi :</Td></tr>
+            <tr>
+              <Td style={{ width: '20%' }}>Nama</Td>
+              <Td style={{ width: '5%' }}>:</Td>
+              <Td>{identitas.nama_asesi || '-'}</Td>
+            </tr>
+            <tr>
+              <Td>Tanda tangan/ Tanggal</Td>
+              <Td style={{ textAlign: 'center' }}>:</Td>
+              <Td style={{ height: '70px', verticalAlign: 'middle', textAlign: 'center' }}>
+                {(barcodes as any)?.['asesi']?.url ? (
+                  <>
+                    <img src={(barcodes as any)['asesi'].url} style={{ height: '65px', width: '65px', objectFit: 'contain' }} alt="barcode asesi" /><br />
+                    <span style={{ fontSize: '11px' }}>
+                      {(barcodes as any)['asesi']?.tanggal ? new Date((barcodes as any)['asesi'].tanggal).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) : ''}
+                    </span>
+                  </>
+                ) : (
+                  <span style={{ color: '#999' }}>Belum ditandatangani</span>
+                )}
+              </Td>
             </tr>
           </tbody>
         </table>
@@ -703,6 +745,35 @@ export default function PraktisiKerja() {
         </table>
         <br /><br />
 
+        {/* TTD Asesi */}
+        <table style={{ border: '1px solid #000', borderCollapse: 'collapse', width: '100%' }} cellPadding="5" cellSpacing="0">
+          <tbody>
+            <tr style={{ fontWeight: 'bold' }}><Td colSpan={3}>Asesi :</Td></tr>
+            <tr>
+              <Td style={{ width: '20%' }}>Nama</Td>
+              <Td style={{ width: '5%' }}>:</Td>
+              <Td>{identitas.nama_asesi || '-'}</Td>
+            </tr>
+            <tr>
+              <Td>Tanda tangan/ Tanggal</Td>
+              <Td style={{ textAlign: 'center' }}>:</Td>
+              <Td style={{ height: '70px', verticalAlign: 'middle', textAlign: 'center' }}>
+                {(barcodes as any)?.['asesi']?.url ? (
+                  <>
+                    <img src={(barcodes as any)['asesi'].url} style={{ height: '65px', width: '65px', objectFit: 'contain', display: 'block', margin: '0 auto' }} alt="barcode" /><br />
+                    <span style={{ fontSize: '11px' }}>
+                      {(barcodes as any)['asesi']?.tanggal ? new Date((barcodes as any)['asesi'].tanggal).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) : ''}
+                    </span>
+                  </>
+                ) : (
+                  <span style={{ color: '#999' }}>Belum ditandatangani</span>
+                )}
+              </Td>
+            </tr>
+          </tbody>
+        </table>
+        <br /><br />
+
         {asesorList.map((a: any, idx: number) => (
           <div key={idx}>
             <TTDTable
@@ -809,6 +880,7 @@ export default function PraktisiKerja() {
                     value={jawaban[soal.id] || ""}
                     onChange={e => setJawaban(prev => ({ ...prev, [soal.id]: e.target.value }))}
                     disabled={isPenyusun}
+                    data-autoresize
                     onInput={e => { e.currentTarget.style.height = 'auto'; e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px' }}
                     placeholder="Tulis jawaban Anda di sini..."
                   />
@@ -841,6 +913,35 @@ export default function PraktisiKerja() {
             <tr>
               <Td style={{ textAlign: 'center', fontWeight: 'bold', width: '50%' }}>Total Skor Penilaian</Td>
               <Td style={{ textAlign: 'center', width: '50%', fontSize: '14pt' }}>{totalSkor}</Td>
+            </tr>
+          </tbody>
+        </table>
+        <br /><br />
+
+        {/* TTD Asesi */}
+        <table style={{ border: '1px solid #000', borderCollapse: 'collapse', width: '100%' }} cellPadding="5" cellSpacing="0">
+          <tbody>
+            <tr style={{ fontWeight: 'bold' }}><Td colSpan={3}>Asesi :</Td></tr>
+            <tr>
+              <Td style={{ width: '20%' }}>Nama</Td>
+              <Td style={{ width: '5%' }}>:</Td>
+              <Td>{identitas.nama_asesi || '-'}</Td>
+            </tr>
+            <tr>
+              <Td>Tanda tangan/ Tanggal</Td>
+              <Td style={{ textAlign: 'center' }}>:</Td>
+              <Td style={{ height: '70px', verticalAlign: 'middle', textAlign: 'center' }}>
+                {(barcodes as any)?.['asesi']?.url ? (
+                  <>
+                    <img src={(barcodes as any)['asesi'].url} style={{ height: '65px', width: '65px', objectFit: 'contain', display: 'block', margin: '0 auto' }} alt="barcode" /><br />
+                    <span style={{ fontSize: '11px' }}>
+                      {(barcodes as any)['asesi']?.tanggal ? new Date((barcodes as any)['asesi'].tanggal).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) : ''}
+                    </span>
+                  </>
+                ) : (
+                  <span style={{ color: '#999' }}>Belum ditandatangani</span>
+                )}
+              </Td>
             </tr>
           </tbody>
         </table>
