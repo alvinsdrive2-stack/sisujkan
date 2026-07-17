@@ -23,6 +23,7 @@ import {
   ManagerMutuRoute,
   PraktisiRoute,
   PraktisiOrPenyusunRoute,
+  PenyusunOrValidatorRoute,
 } from './components/RoleRoute'
 import PublicRoute from './components/PublicRoute'
 import DefaultRoute from './components/DefaultRoute'
@@ -392,7 +393,7 @@ function App() {
           <Route
             path="/penyusun/*"
             element={
-              <PenyusunRoute>
+              <PenyusunOrValidatorRoute>
                 <ValidatedNavigationRoute>
                   <DashboardLayout>
                     <Routes>
@@ -410,7 +411,7 @@ function App() {
                     </Routes>
                   </DashboardLayout>
                 </ValidatedNavigationRoute>
-              </PenyusunRoute>
+              </PenyusunOrValidatorRoute>
             }
           />
 

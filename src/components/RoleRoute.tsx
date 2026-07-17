@@ -256,6 +256,17 @@ export function ManagerMutuRoute({ children, fallback }: { children: React.React
 }
 
 /**
+ * PenyusunOrValidatorRoute - Accessible by Penyusun or Validator
+ */
+export function PenyusunOrValidatorRoute({ children, fallback }: { children: React.ReactNode; fallback?: string }) {
+  return (
+    <RoleRoute allowedRoles={["Penyusun", "Validator"]} fallback={fallback}>
+      {children}
+    </RoleRoute>
+  )
+}
+
+/**
  * Praktisi Route - Accessible by Praktisi
  */
 export function PraktisiRoute({ children, fallback }: { children: React.ReactNode; fallback?: string }) {
