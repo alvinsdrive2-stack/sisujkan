@@ -211,7 +211,10 @@ export function Mapa01TandaTangan({
 
           {/* Dynamic rows from API */}
           {konfirmasiReferences.map((ref) => {
+            // Match by exact name OR fallback: if ref is "Manajer sertifikasi" use first item from konfirmasiList
             const konfirmasiData = konfirmasiList?.find(k => k.nama === ref.nama)
+              || (ref.nama.toLowerCase().includes('manajer sertifikasi') && konfirmasiList?.[0]
+                ? konfirmasiList[0] : undefined)
             return (
             <tr key={ref.id} style={{ height: '46pt' }}>
               <td style={{
