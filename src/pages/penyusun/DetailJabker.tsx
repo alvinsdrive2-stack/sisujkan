@@ -143,7 +143,7 @@ export default function DetailJabker() {
                 {praktisiList.map((p, idx) => (
                   <div
                     key={p.id}
-                    onClick={() => navigate(`/praktisi/kerja/${p.id}`)}
+                    onClick={() => navigate(`/praktisi/kerja/${p.id}`, { state: { fromJabker: id } })}
                     className="p-4 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 transition-all hover:shadow-md hover:border-primary/30 cursor-pointer"
                   >
                     <div className="flex items-center justify-between">

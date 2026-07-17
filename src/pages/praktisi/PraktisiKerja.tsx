@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback, useMemo } from "react"
-import { useParams } from "react-router-dom"
+import { useParams, useNavigate, useLocation } from "react-router-dom"
 import { API_BASE_URL } from "@/config/api"
+import { useAuth } from "@/contexts/auth-context"
+import { RoleId } from "@/lib/rbac-config"
 import { CustomCheckbox } from "@/components/ui/Checkbox"
 import { CustomRadio } from "@/components/ui/Radio"
 
@@ -208,7 +210,11 @@ function TTDTable({ title, nama, noReg, barcode }: {
 
 export default function PraktisiKerja() {
   const { id } = useParams<{ id: string }>()
+  const navigate = useNavigate()
+  const location = useLocation()
+  const { user } = useAuth()
   const token = localStorage.getItem("access_token") || ""
+  const isPenyusun = user?.role?.id === RoleId.PENYUSUN
 
   const [tab, setTab] = useState<DocType>("ia04b")
   const [dokumen, setDokumen] = useState<DokumenRef | null>(null)
@@ -374,7 +380,7 @@ export default function PraktisiKerja() {
         const idx = TABS.findIndex(t => t.key === tab)
         const next = TABS[idx + 1]
         if (next) setTab(next.key)
-        else setInfo(`${tab.toUpperCase()} selesai`)
+        else navigate(fromJabker ? `/penyusun/detail-jabker/${fromJabker}` : '/login')
         load(next ? next.key : tab)
       }
     } catch (e: any) {
@@ -388,6 +394,7 @@ export default function PraktisiKerja() {
   }
 
   const asesorList = identitas.asesor_list || []
+  const fromJabker = (location.state as any)?.fromJabker
 
   return (
     <div>
@@ -494,7 +501,9 @@ export default function PraktisiKerja() {
                   <textarea
                     value={jawaban[soal.id] || ""}
                     onChange={e => setJawaban(prev => ({ ...prev, [soal.id]: e.target.value }))}
-                    style={{ width: '100%', minHeight: '50px', border: '1px solid #ccc', padding: '6px', fontSize: '12px', background: '#f9f9f9' }}
+                    disabled={isPenyusun}
+                    onInput={e => { e.currentTarget.style.height = 'auto'; e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px' }}
+                    style={{ width: '100%', minHeight: '50px', border: '1px solid #ccc', padding: '6px', fontSize: '12px', background: isPenyusun ? '#e9e9e9' : '#f9f9f9', resize: 'none', overflow: 'hidden' }}
                   />
                 </Td>
                 <Td style={{ verticalAlign: 'top' }}>Kode Unit : {soal.soal2 || soal.unit_kode || ''}</Td>
@@ -534,58 +543,6 @@ export default function PraktisiKerja() {
           </tbody>
         </table>
         <br />
-
-        <table style={{ border: '1px solid #000', borderCollapse: 'collapse', width: '100%' }} cellPadding="5" cellSpacing="0">
-          <tbody>
-            <tr>
-              <Td style={{ fontWeight: 'bold', width: '30%' }}>Rekomendasi:</Td>
-              <Td>
-                <div onClick={() => setRekomendasi('kompeten')} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px', cursor: 'pointer' }}>
-                  <CustomCheckbox checked={rekomendasi === 'kompeten'} onChange={() => {}} />
-                  Kompeten
-                </div>
-                <div onClick={() => setRekomendasi('belum_kompeten')} style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
-                  <CustomCheckbox checked={rekomendasi === 'belum_kompeten'} onChange={() => {}} />
-                  Belum Kompeten
-                </div>
-              </Td>
-            </tr>
-          </tbody>
-        </table>
-        <br />
-
-        {/* Umpan Balik + TTD Asesi */}
-        <table style={{ border: '1px solid #000', borderCollapse: 'collapse', width: '100%' }} cellPadding="5" cellSpacing="0">
-          <tbody>
-            <tr>
-              <Td style={{ fontWeight: 'bold' }}>Umpan balik untuk asesi:</Td>
-              <Td style={{ width: '5%' }}>:</Td>
-              <Td>Aspek pengetahuan seluruh unit kompetensi yang diujikan (tercapai / belum tercapai)* <br /><br />Tuliskan unit/elemen/KUK jika belum tercapai: …</Td>
-            </tr>
-            <tr style={{ fontWeight: 'bold' }}><Td colSpan={3}>Asesi :</Td></tr>
-            <tr>
-              <Td style={{ width: '20%' }}>Nama</Td>
-              <Td style={{ width: '5%' }}>:</Td>
-              <Td>{identitas.nama_asesi || '-'}</Td>
-            </tr>
-            <tr>
-              <Td>Tanda tangan/ Tanggal</Td>
-              <Td style={{ textAlign: 'center' }}>:</Td>
-              <Td style={{ height: '70px', verticalAlign: 'middle', textAlign: 'center' }}>
-                {(barcodes as any)?.['asesi']?.url ? (
-                  <>
-                    <img src={(barcodes as any)['asesi'].url} style={{ height: '65px', width: '65px', objectFit: 'contain' }} alt="barcode asesi" /><br />
-                    <span style={{ fontSize: '11px' }}>
-                      {(barcodes as any)['asesi']?.tanggal ? new Date((barcodes as any)['asesi'].tanggal).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) : ''}
-                    </span>
-                  </>
-                ) : (
-                  <span style={{ color: '#999' }}>Belum ditandatangani</span>
-                )}
-              </Td>
-            </tr>
-          </tbody>
-        </table>
 
         {asesorList.map((a: any, i: number) => (
           <div key={i}>
@@ -660,7 +617,7 @@ export default function PraktisiKerja() {
                 <tr key={`${soal.id}-${key}`}>
                   <Td></Td>
                   <Td style={{ textAlign: 'center' }}>
-                    <CustomRadio name={`soal-${soal.id}`} value={key} checked={answers[soal.id] === key} onChange={() => handleAnswerChange(soal.id, key)} />
+                    <CustomRadio name={`soal-${soal.id}`} value={key} checked={answers[soal.id] === key} onChange={() => handleAnswerChange(soal.id, key)} disabled={isPenyusun} />
                   </Td>
                   <Td>&nbsp; {key.toLowerCase()}. {label}</Td>
                 </tr>
@@ -746,45 +703,6 @@ export default function PraktisiKerja() {
         </table>
         <br /><br />
 
-        <table style={{ border: '1px solid #000', borderCollapse: 'collapse', width: '100%' }} cellPadding="5" cellSpacing="0">
-          <tbody>
-            <tr>
-              <Td style={{ fontWeight: 'bold', width: '20%' }}>Umpan balik untuk asesi:</Td>
-              <Td style={{ width: '5%' }}>:</Td>
-              <Td>
-                Aspek pengetahuan seluruh unit kompetensi yang diujikan (tercapai / belum tercapai)* <br /><br />Tuliskan unit/elemen/KUK jika belum tercapai: …
-                <textarea
-                  style={{ width: '100%', border: '1px solid #000', padding: '8px', minHeight: '60px', fontSize: '12pt', marginTop: '8px' }}
-                  value={umpanBalik}
-                  onChange={e => setUmpanBalik(e.target.value)}
-                  placeholder="Tulis umpan balik..."
-                />
-              </Td>
-            </tr>
-            <tr style={{ fontWeight: 'bold' }}><Td colSpan={3}>Asesi :</Td></tr>
-            <tr>
-              <Td style={{ width: '20%' }}>Nama</Td>
-              <Td style={{ width: '5%' }}>:</Td>
-              <Td>{identitas.nama_asesi || '-'}</Td>
-            </tr>
-            <tr>
-              <Td>Tanda tangan/ Tanggal</Td>
-              <Td style={{ textAlign: 'center' }}>:</Td>
-              <Td style={{ height: '70px', verticalAlign: 'middle', textAlign: 'center' }}>
-                {(barcodes as any)?.['asesi']?.url ? (
-                  <>
-                    <img src={(barcodes as any)['asesi'].url} style={{ height: '65px', width: '65px', objectFit: 'contain', display: 'block', margin: '0 auto' }} alt="barcode" /><br />
-                    <span style={{ fontSize: '11px' }}>
-                      {(barcodes as any)['asesi']?.tanggal ? new Date((barcodes as any)['asesi'].tanggal).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) : ''}
-                    </span>
-                  </>
-                ) : (
-                  <span style={{ color: '#999' }}>Belum ditandatangani</span>
-                )}
-              </Td>
-            </tr>
-          </tbody>
-        </table>
         {asesorList.map((a: any, idx: number) => (
           <div key={idx}>
             <TTDTable
@@ -887,9 +805,11 @@ export default function PraktisiKerja() {
                 <Td style={{ width: '5%', textAlign: 'center', backgroundColor: '#d58a94' }}>{idx + 1}</Td>
                 <td style={{ ...td, textAlign: 'left' }}>
                   <textarea
-                    style={{ width: '100%', border: '1px solid #000', padding: '4px', marginTop: '4px', minHeight: '60px', fontSize: '11pt' }}
+                    style={{ width: '100%', border: '1px solid #000', padding: '4px', marginTop: '4px', minHeight: '60px', fontSize: '11pt', background: isPenyusun ? '#e9e9e9' : '#fff', resize: 'none', overflow: 'hidden' }}
                     value={jawaban[soal.id] || ""}
                     onChange={e => setJawaban(prev => ({ ...prev, [soal.id]: e.target.value }))}
+                    disabled={isPenyusun}
+                    onInput={e => { e.currentTarget.style.height = 'auto'; e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px' }}
                     placeholder="Tulis jawaban Anda di sini..."
                   />
                 </td>
@@ -926,45 +846,6 @@ export default function PraktisiKerja() {
         </table>
         <br /><br />
 
-        <table style={{ border: '1px solid #000', borderCollapse: 'collapse', width: '100%' }} cellPadding="5" cellSpacing="0">
-          <tbody>
-            <tr>
-              <Td style={{ fontWeight: 'bold', width: '20%' }}>Umpan balik untuk asesi:</Td>
-              <Td style={{ width: '5%' }}>:</Td>
-              <Td>
-                Aspek pengetahuan seluruh unit kompetensi yang diujikan (tercapai / belum tercapai)* <br /><br />Tuliskan unit/elemen/KUK jika belum tercapai: …
-                <textarea
-                  style={{ width: '100%', border: '1px solid #000', padding: '8px', minHeight: '60px', fontSize: '12pt', marginTop: '8px' }}
-                  value={umpanBalik}
-                  onChange={e => setUmpanBalik(e.target.value)}
-                  placeholder="Tulis umpan balik..."
-                />
-              </Td>
-            </tr>
-            <tr style={{ fontWeight: 'bold' }}><Td colSpan={3}>Asesi :</Td></tr>
-            <tr>
-              <Td style={{ width: '20%' }}>Nama</Td>
-              <Td style={{ width: '5%' }}>:</Td>
-              <Td>{identitas.nama_asesi || '-'}</Td>
-            </tr>
-            <tr>
-              <Td>Tanda tangan/ Tanggal</Td>
-              <Td style={{ textAlign: 'center' }}>:</Td>
-              <Td style={{ height: '70px', verticalAlign: 'middle', textAlign: 'center' }}>
-                {(barcodes as any)?.['asesi']?.url ? (
-                  <>
-                    <img src={(barcodes as any)['asesi'].url} style={{ height: '65px', width: '65px', objectFit: 'contain', display: 'block', margin: '0 auto' }} alt="barcode" /><br />
-                    <span style={{ fontSize: '11px' }}>
-                      {(barcodes as any)['asesi']?.tanggal ? new Date((barcodes as any)['asesi'].tanggal).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) : ''}
-                    </span>
-                  </>
-                ) : (
-                  <span style={{ color: '#999' }}>Belum ditandatangani</span>
-                )}
-              </Td>
-            </tr>
-          </tbody>
-        </table>
         {asesorList.map((a: any, idx: number) => (
           <div key={idx}>
             <TTDTable
