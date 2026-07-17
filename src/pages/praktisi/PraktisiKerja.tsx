@@ -332,12 +332,11 @@ export default function PraktisiKerja() {
   useEffect(() => { load(tab) }, [tab, load])
 
   const totalSkor = useMemo(() => Object.values(skor).reduce((a, b) => a + b, 0), [skor])
-  const jumlahSoal = soalList.length || 0
   const jumlahBenar = useMemo(
     () => soalList.filter((s: SoalIA05) => answers[s.id] === s.kunci_jawaban).length || 0,
     [soalList, answers]
   )
-  const jumlahSalah = jumlahSoal - jumlahBenar
+
 
   const handleAnswerChange = (soalId: number, answer: 'A' | 'B' | 'C' | 'D') =>
     setAnswers(prev => ({ ...prev, [soalId]: answer }))

@@ -82,12 +82,9 @@ export default function Ia05KANPage() {
 
   useEffect(() => { fetchData() }, [fetchData])
 
-  const jumlahSoal = soalList.length || 0
   const jumlahBenar = useMemo(() =>
     soalList.filter(s => answers[s.id] === s.kunci_jawaban).length || 0,
     [soalList, answers])
-  const jumlahSalah = jumlahSoal - jumlahBenar
-
   const handleAnswerChange = (soalId: number, answer: 'A' | 'B' | 'C' | 'D') =>
     setAnswers(prev => ({ ...prev, [soalId]: answer }))
 
