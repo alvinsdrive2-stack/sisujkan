@@ -215,6 +215,7 @@ export default function PraktisiKerja() {
   const { user } = useAuth()
   const token = localStorage.getItem("access_token") || ""
   const isPenyusun = user?.role?.id === RoleId.PENYUSUN
+  const isPraktisi = user?.role?.id === RoleId.PRAKTISI
 
   const [tab, setTab] = useState<DocType>("ia04b")
   const [dokumen, setDokumen] = useState<DokumenRef | null>(null)
@@ -524,6 +525,7 @@ export default function PraktisiKerja() {
                   <td key={n} style={{ ...td, textAlign: 'center', verticalAlign: 'middle' }}>
                     <CustomCheckbox
                       checked={skor[soal.id] === n}
+                      disabled={isPraktisi}
                       onChange={() => setSkor(prev => {
                         if (prev[soal.id] === n) { const { [soal.id]: _, ...rest } = prev; return rest }
                         return { ...prev, [soal.id]: n }
@@ -560,19 +562,19 @@ export default function PraktisiKerja() {
         {/* TTD Asesi */}
         <table style={{ border: '1px solid #000', borderCollapse: 'collapse', width: '100%' }} cellPadding="5" cellSpacing="0">
           <tbody>
-            <tr style={{ fontWeight: 'bold' }}><Td colSpan={3}>Asesi :</Td></tr>
+            <tr style={{ fontWeight: 'bold', textAlign: 'center' }}><Td colSpan={3}>Asesi</Td></tr>
             <tr>
-              <Td style={{ width: '20%' }}>Nama</Td>
-              <Td style={{ width: '5%' }}>:</Td>
-              <Td>{identitas.nama_asesi || '-'}</Td>
+              <Td style={{ width: '20%', textAlign: 'center' }}>Nama</Td>
+              <Td style={{ width: '5%', textAlign: 'center' }}>:</Td>
+              <Td style={{ textAlign: 'center' }}>{identitas.nama_asesi || '-'}</Td>
             </tr>
             <tr>
-              <Td>Tanda tangan/ Tanggal</Td>
+              <Td style={{ textAlign: 'center' }}>Tanda Tangan / Tanggal</Td>
               <Td style={{ textAlign: 'center' }}>:</Td>
               <Td style={{ height: '70px', verticalAlign: 'middle', textAlign: 'center' }}>
                 {(barcodes as any)?.['asesi']?.url ? (
                   <>
-                    <img src={(barcodes as any)['asesi'].url} style={{ height: '65px', width: '65px', objectFit: 'contain' }} alt="barcode asesi" /><br />
+                    <img src={(barcodes as any)['asesi'].url} style={{ height: '65px', width: '65px', objectFit: 'contain', display: 'block', margin: '0 auto' }} alt="barcode asesi" /><br />
                     <span style={{ fontSize: '11px' }}>
                       {(barcodes as any)['asesi']?.tanggal ? new Date((barcodes as any)['asesi'].tanggal).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) : ''}
                     </span>
@@ -889,6 +891,7 @@ export default function PraktisiKerja() {
                   <td key={n} style={{ ...td, textAlign: 'center', verticalAlign: 'middle' }}>
                     <CustomCheckbox
                       checked={skor[soal.id] === n}
+                      disabled={isPraktisi}
                       onChange={() => setSkor(prev => {
                         if (prev[soal.id] === n) { const { [soal.id]: _, ...rest } = prev; return rest }
                         return { ...prev, [soal.id]: n }
