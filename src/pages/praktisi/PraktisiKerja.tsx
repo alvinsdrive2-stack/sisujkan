@@ -520,7 +520,7 @@ export default function PraktisiKerja() {
                     style={{ width: '100%', minHeight: '50px', border: '1px solid #ccc', padding: '6px', fontSize: '12px', background: isPenyusun ? '#e9e9e9' : '#f9f9f9', resize: 'none', overflow: 'hidden' }}
                   />
                 </Td>
-                <Td style={{ verticalAlign: 'top' }}>Kode Unit : {soal.soal2 || soal.unit_kode || ''}</Td>
+                <Td style={{ verticalAlign: 'top' }}>{soal.soal2 || soal.unit_kode || ''}</Td>
                 {[0, 1, 2, 3].map(n => (
                   <td key={n} style={{ ...td, textAlign: 'center', verticalAlign: 'middle' }}>
                     <CustomCheckbox
