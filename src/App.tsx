@@ -18,7 +18,6 @@ import {
   DirekturLSPRoute,
   ManajerSertifikasiRoute,
   AsesiOrAsesorRoute,
-  PenyusunRoute,
   ValidatorRoute,
   ManagerMutuRoute,
   PraktisiRoute,
