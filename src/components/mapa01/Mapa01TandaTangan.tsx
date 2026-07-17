@@ -49,9 +49,7 @@ interface Mapa01TandaTanganProps {
   barcodeValidator?: string | null
   noregPenyusun?: string | null
   noregValidator?: string | null
-  namaManajer?: string | null
-  tanggalManajer?: string | null
-  barcodeManajer?: string | null
+  konfirmasiList?: { nama: string; tanggal: string; barcode: string }[]
   referensiForm?: ReferensiFormItem[]
   isAsesor?: boolean
 }
@@ -97,9 +95,7 @@ export function Mapa01TandaTangan({
   barcodeValidator,
   noregPenyusun,
   noregValidator,
-  namaManajer,
-  tanggalManajer,
-  barcodeManajer,
+  konfirmasiList,
   referensiForm,
   isAsesor = false
 }: Mapa01TandaTanganProps) {
@@ -215,13 +211,12 @@ export function Mapa01TandaTangan({
 
           {/* Dynamic rows from API */}
           {konfirmasiReferences.map((ref) => {
-            const isManajer = ref.nama === "Manajer sertifikasi LSP Gatensi Karya Konstruksi"
+            const konfirmasiData = konfirmasiList?.find(k => k.nama === ref.nama)
             return (
-            <tr key={ref.id} style={{ height: ref.id === 104 ? '46pt' : '54pt' }}>
+            <tr key={ref.id} style={{ height: '46pt' }}>
               <td style={{
                 ...contentCellStyle,
-                padding: ref.id === 104 ? '7px 20px' : (ref.id === 102 || ref.id === 103 ? '6px 20px' : '11px 20px'),
-                lineHeight: ref.id === 102 || ref.id === 103 ? '12px' : undefined
+                padding: '7px 20px',
               }}>
                 <div
                   onClick={() => isAsesor && toggleCheckbox(ref.id)}
@@ -244,15 +239,15 @@ export function Mapa01TandaTangan({
                 </div>
               </td>
               <td style={{ ...contentCellStyle, padding: '12px 8px', fontSize: '12px' }}>
-                {isManajer && namaManajer ? namaManajer : ''}
+                {konfirmasiData?.nama || ''}
               </td>
               <td style={{ ...contentCellStyle, padding: '8px', textAlign: 'center' }}>
-                {isManajer && barcodeManajer ? (
+                {konfirmasiData?.barcode ? (
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
-                    <img src={barcodeManajer} alt="QR Manajer" style={{ width: '50px', height: '50px', objectFit: 'contain' }} />
-                    {tanggalManajer && <span style={{ fontSize: '10px' }}>{new Date(tanggalManajer).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</span>}
+                    <img src={konfirmasiData.barcode} alt="QR" style={{ width: '50px', height: '50px', objectFit: 'contain' }} />
+                    {konfirmasiData.tanggal && <span style={{ fontSize: '10px' }}>{new Date(konfirmasiData.tanggal).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</span>}
                   </div>
-                ) : (isManajer && tanggalManajer ? new Date(tanggalManajer).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '')}
+                ) : (konfirmasiData?.tanggal ? new Date(konfirmasiData.tanggal).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '')}
               </td>
             </tr>
             )

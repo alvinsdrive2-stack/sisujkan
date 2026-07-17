@@ -323,9 +323,7 @@ export default function Mapa01Page() {
             barcodeValidator={barcodeValidator}
             noregPenyusun={noregPenyusun}
             noregValidator={noregValidator}
-            namaManajer={namaManajer}
-            tanggalManajer={tanggalManajer}
-            barcodeManajer={barcodeManajer}
+            konfirmasiList={namaManajer ? [{ nama: namaManajer, tanggal: tanggalManajer || '', barcode: barcodeManajer || '' }] : []}
             referensiForm={mapaData?.referensi_form}
             isAsesor={isAsesor}
           />

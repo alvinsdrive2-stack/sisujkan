@@ -26,6 +26,7 @@ interface MapaData {
   nomor: string
   penyusun_info: { nama: string|null; noreg: string|null; tanggal: string|null; barcode: string|null } | null
   validator_info: { nama: string|null; noreg: string|null; tanggal: string|null; barcode: string|null } | null
+  konfirmasi?: { nama: string; tanggal: string; barcode: string }[]
 }
 
 export default function PenyusunMapaTtd() {
@@ -334,6 +335,7 @@ export default function PenyusunMapaTtd() {
           noregValidator={mapaData.validator_info?.noreg}
           tanggalValidator={mapaData.validator_info?.tanggal}
           barcodeValidator={mapaData.validator_info?.barcode}
+          konfirmasiList={mapaData.konfirmasi}
           referensiForm={mapaData.referensi_form}
           isAsesor={false}
         />
