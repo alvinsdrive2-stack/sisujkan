@@ -2,8 +2,7 @@ import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { API_BASE_URL } from "@/config/api"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { ArrowLeft, FileSignature, CheckCircle2, Clock } from "lucide-react"
+import { ArrowLeft, CheckCircle2 } from "lucide-react"
 import { Mapa01Layout, Mapa01Header, Mapa01Section1, Mapa01Section2, Mapa01Section3, Mapa01TandaTangan } from "@/components/mapa01"
 import { CustomCheckbox } from "@/components/ui/Checkbox"
 
@@ -37,11 +36,8 @@ export default function PenyusunMapaTtd() {
   const docLabel = jenis === "mapa01" ? "MAPA 01" : "MAPA 02"
 
   const [mapaData, setMapaData] = useState<MapaData | null>(null)
-  const [ttdStatus, setTtdStatus] = useState<{ sudah: boolean; url_image?: string; tanggal?: string } | null>(null)
   const [loading, setLoading] = useState(true)
-  const [ttdLoading, setTtdLoading] = useState(false)
   const [error, setError] = useState("")
-  const [success, setSuccess] = useState(false)
 
   useEffect(() => {
     if (!jabkerId) return
@@ -51,25 +47,14 @@ export default function PenyusunMapaTtd() {
   const loadAll = async () => {
     setLoading(true)
     try {
-      const [dataRes, ttdRes] = await Promise.all([
-        fetch(`${API_BASE_URL}/penyusun/jabker/${jabkerId}/${jenis}/data`, {
-          headers: { Accept: "application/json", Authorization: `Bearer ${token}` },
-        }),
-        fetch(`${API_BASE_URL}/penyusun/jabker/${jabkerId}/${jenis}/status`, {
-          headers: { Accept: "application/json", Authorization: `Bearer ${token}` },
-        }),
-      ])
-
-      if (dataRes.ok) {
-        const d = await dataRes.json()
+      const res = await fetch(`${API_BASE_URL}/penyusun/jabker/${jabkerId}/${jenis}/data`, {
+        headers: { Accept: "application/json", Authorization: `Bearer ${token}` },
+      })
+      if (res.ok) {
+        const d = await res.json()
         setMapaData(d.data || null)
       } else {
         setError("Gagal load data dokumen")
-      }
-
-      if (ttdRes.ok) {
-        const t = await ttdRes.json()
-        if (t.data) setTtdStatus(t.data)
       }
     } catch {
       setError("Gagal load data")
@@ -77,60 +62,52 @@ export default function PenyusunMapaTtd() {
     setLoading(false)
   }
 
-  const sudahTtd = ttdStatus?.sudah || success
+  // ── All Signed Section ──
+  const renderAllSigned = () => {
+    const penyusunSigned = !!mapaData?.penyusun_info?.barcode
+    const validatorSigned = !!mapaData?.validator_info?.barcode
 
-  const handleTtd = async () => {
-    setTtdLoading(true)
-    setError("")
-    try {
-      const res = await fetch(`${API_BASE_URL}/penyusun/jabker/${jabkerId}/${jenis}/ttd`, {
-        method: "POST",
-        headers: { Accept: "application/json", Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-        body: JSON.stringify({}),
-      })
-      if (!res.ok) throw new Error("Gagal TTD")
-      const json = await res.json()
-      if (json.message === "Success") {
-        setSuccess(true)
-        setTtdStatus({ sudah: true, url_image: json.data?.url_image, tanggal: json.data?.tanggal })
-      } else {
-        throw new Error(json.message || "Gagal")
-      }
-    } catch (err: any) {
-      setError(err.message || "Gagal TTD")
-    }
-    setTtdLoading(false)
+    return (
+      <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '24px', marginTop: '24px' }}>
+        <h3 style={{ fontSize: '14px', fontWeight: 600, marginBottom: '16px' }}>Status Tanda Tangan</h3>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '20px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 14px', background: penyusunSigned ? '#f0fdf4' : '#fef2f2', borderRadius: '6px', border: `1px solid ${penyusunSigned ? '#bbf7d0' : '#fecaca'}` }}>
+            <CheckCircle2 style={{ width: '18px', height: '18px', color: penyusunSigned ? '#16a34a' : '#dc2626', flexShrink: 0 }} />
+            <span style={{ fontSize: '13px', color: '#1e293b' }}>
+              <strong>Penyusun</strong> {penyusunSigned ? `Sudah TTD${mapaData.penyusun_info?.tanggal ? ` (${formatDate(mapaData.penyusun_info.tanggal)})` : ''}` : 'Belum TTD'}
+            </span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 14px', background: validatorSigned ? '#f0fdf4' : '#fef2f2', borderRadius: '6px', border: `1px solid ${validatorSigned ? '#bbf7d0' : '#fecaca'}` }}>
+            <CheckCircle2 style={{ width: '18px', height: '18px', color: validatorSigned ? '#16a34a' : '#dc2626', flexShrink: 0 }} />
+            <span style={{ fontSize: '13px', color: '#1e293b' }}>
+              <strong>Validator</strong> {validatorSigned ? `Sudah TTD${mapaData.validator_info?.tanggal ? ` (${formatDate(mapaData.validator_info.tanggal)})` : ''}` : 'Belum TTD'}
+            </span>
+          </div>
+        </div>
+        {penyusunSigned && validatorSigned && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 16px', background: '#f0fdf4', borderRadius: '8px', border: '1px solid #bbf7d0', marginBottom: '20px' }}>
+            <CheckCircle2 style={{ width: '20px', height: '20px', color: '#16a34a', flexShrink: 0 }} />
+            <span style={{ fontSize: '14px', fontWeight: 600, color: '#15803d' }}>Semua sudah TTD</span>
+          </div>
+        )}
+        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+          <Button variant="outline" onClick={() => navigate(`/penyusun/detail-jabker/${jabkerId}`)}>
+            <ArrowLeft style={{ width: '16px', height: '16px', marginRight: '8px' }} />
+            Kembali ke Detail Jabker
+          </Button>
+          <Button onClick={() => navigate('/penyusun/dashboard')}>
+            Lanjut ke Dashboard
+          </Button>
+        </div>
+      </div>
+    )
   }
 
-  // ── TTD Section (shared) ──
-  const renderTtdSection = () => (
-    <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '24px', marginTop: '24px' }}>
-      <h3 style={{ fontSize: '14px', fontWeight: 600, marginBottom: '12px' }}>Tanda Tangan Penyusun</h3>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-        {sudahTtd && ttdStatus?.url_image ? (
-          <div style={{ textAlign: 'center' }}>
-            <img src={ttdStatus.url_image} alt="QR TTD" style={{ width: '96px', height: '96px', border: '1px solid #e2e8f0', borderRadius: '4px' }} />
-            <p style={{ fontSize: '12px', color: '#16a34a', marginTop: '4px' }}>
-              <CheckCircle2 style={{ width: '12px', height: '12px', display: 'inline', marginRight: '4px' }} />
-              Sudah TTD{ttdStatus.tanggal ? ` (${ttdStatus.tanggal})` : ""}
-            </p>
-          </div>
-        ) : (
-          <Badge variant="secondary" style={{ fontSize: '13px', padding: '6px 12px' }}>
-            <Clock style={{ width: '16px', height: '16px', marginRight: '6px' }} />
-            Belum TTD
-          </Badge>
-        )}
-      </div>
-      <Button onClick={handleTtd} disabled={ttdLoading || sudahTtd} size="lg">
-        {ttdLoading ? "Memproses..." : sudahTtd ? (
-          <><CheckCircle2 style={{ width: '16px', height: '16px', marginRight: '8px' }} />Sudah TTD</>
-        ) : (
-          <><FileSignature style={{ width: '16px', height: '16px', marginRight: '8px' }} />TTD {docLabel}</>
-        )}
-      </Button>
-    </div>
-  )
+  const formatDate = (t: string) => {
+    try {
+      return new Date(t).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
+    } catch { return t }
+  }
 
   // ── MAPA02 inline render ──
   const renderMapa02 = () => {
@@ -401,8 +378,8 @@ export default function PenyusunMapaTtd() {
             {jenis === "mapa01" ? renderMapa01() : renderMapa02()}
           </div>
 
-          {/* TTD Section */}
-          {renderTtdSection()}
+          {/* Status TTD */}
+          {renderAllSigned()}
         </>
       ) : (
         <div style={{ textAlign: 'center', padding: '40px', color: '#64748b' }}>
