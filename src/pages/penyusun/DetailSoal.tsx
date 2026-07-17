@@ -2,10 +2,12 @@
 import { useParams, useNavigate } from "react-router-dom"
 import { extractFromDocx, extractAnswersFromDocx } from "@/lib/docx-extractor"
 import { API_BASE_URL } from "@/config/api"
+import { useAuth } from "@/contexts/auth-context"
+import { RoleId } from "@/lib/rbac-config"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, FileText, Upload, Plus, Save, X, BookOpen } from "lucide-react"
+import { ArrowLeft, FileText, Upload, Plus, Save, X, BookOpen, Eye } from "lucide-react"
 
 type SoalRow = Record<string, string | number>
 type DocType = "ia04b" | "ia05" | "ia06"
@@ -33,6 +35,8 @@ export default function DetailSoal() {
   const answerInputRef = useRef<HTMLInputElement>(null)
 
   const token = localStorage.getItem("access_token") || ""
+  const { user } = useAuth()
+  const isValidator = user?.role?.id === RoleId.VALIDATOR
 
   // Load jabker name
   useEffect(() => {
@@ -196,6 +200,11 @@ export default function DetailSoal() {
           <p className="text-slate-500 dark:text-slate-400 mt-1 flex items-center gap-2">
             <Badge variant="outline" className="font-mono text-xs">{id}</Badge>
             {jabkerName && <span className="font-medium text-slate-700 dark:text-slate-300">{jabkerName}</span>}
+            {isValidator && (
+              <Badge variant="secondary" className="text-xs flex items-center gap-1">
+                <Eye className="w-3 h-3" /> View Only
+              </Badge>
+            )}
           </p>
         </div>
       </div>
@@ -236,7 +245,8 @@ export default function DetailSoal() {
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <input ref={fileInputRef} type="file" accept=".docx" className="hidden" onChange={handleFileUpload} />
+                  {!isValidator && (
+                    <><input ref={fileInputRef} type="file" accept=".docx" className="hidden" onChange={handleFileUpload} />
                   <Button
                     variant="outline"
                     size="sm"
@@ -265,7 +275,8 @@ export default function DetailSoal() {
                   <Button variant="default" size="sm" onClick={handleAddManual}>
                     <Plus className="w-4 h-4 mr-1.5" />
                     Tambah Manual
-                  </Button>
+                  </Button></>
+                  )}
                 </div>
               </div>
 
@@ -332,53 +343,53 @@ export default function DetailSoal() {
                           <td className="py-2 px-3 text-slate-500 dark:text-slate-400 text-xs">{row.no}</td>
                           <td className="py-2 px-3">
                             <textarea value={row.soal as string} onChange={(e) => handleFieldChange(idx, 'soal', e.target.value)}
-                              className="w-full bg-transparent border border-dashed border-slate-300 dark:border-slate-500 rounded px-2 py-1 text-xs resize-none" rows={2} />
+                              className="w-full bg-transparent border border-dashed border-slate-300 dark:border-slate-500 rounded px-2 py-1 text-xs resize-none" rows={2} readOnly={isValidator} />
                           </td>
                           {selectedDokumen === 'ia04b' && (
                             <td className="py-2 px-3">
                               <input value={row.soal1 as string} onChange={(e) => handleFieldChange(idx, 'soal1', e.target.value)}
-                                className="w-full bg-transparent border border-dashed border-slate-300 dark:border-slate-500 rounded px-2 py-1 text-xs" />
+                                className="w-full bg-transparent border border-dashed border-slate-300 dark:border-slate-500 rounded px-2 py-1 text-xs" readOnly={isValidator} />
                             </td>
                           )}
                           {selectedDokumen === 'ia04b' && (
                             <td className="py-2 px-3">
                               <input value={(row as any).unit?.kode ?? row.kode_unit ?? ""} onChange={(e) => handleFieldChange(idx, 'kode_unit', e.target.value)}
-                                className="w-full bg-transparent border border-dashed border-slate-300 dark:border-slate-500 rounded px-2 py-1 text-xs" />
+                                className="w-full bg-transparent border border-dashed border-slate-300 dark:border-slate-500 rounded px-2 py-1 text-xs" readOnly={isValidator} />
                             </td>
                           )}
                           {selectedDokumen === 'ia05' && (
                             <td className="py-2 px-3">
                               <textarea value={row.jawab_a as string} onChange={(e) => handleFieldChange(idx, 'jawab_a', e.target.value)}
-                                className="w-full bg-transparent border border-dashed border-slate-300 dark:border-slate-500 rounded px-2 py-1 text-xs resize-none" rows={2} />
+                                className="w-full bg-transparent border border-dashed border-slate-300 dark:border-slate-500 rounded px-2 py-1 text-xs resize-none" rows={2} readOnly={isValidator} />
                             </td>
                           )}
                           {selectedDokumen === 'ia05' && (
                             <td className="py-2 px-3">
                               <textarea value={row.jawab_b as string} onChange={(e) => handleFieldChange(idx, 'jawab_b', e.target.value)}
-                                className="w-full bg-transparent border border-dashed border-slate-300 dark:border-slate-500 rounded px-2 py-1 text-xs resize-none" rows={2} />
+                                className="w-full bg-transparent border border-dashed border-slate-300 dark:border-slate-500 rounded px-2 py-1 text-xs resize-none" rows={2} readOnly={isValidator} />
                             </td>
                           )}
                           {selectedDokumen === 'ia05' && (
                             <td className="py-2 px-3">
                               <textarea value={row.jawab_c as string} onChange={(e) => handleFieldChange(idx, 'jawab_c', e.target.value)}
-                                className="w-full bg-transparent border border-dashed border-slate-300 dark:border-slate-500 rounded px-2 py-1 text-xs resize-none" rows={2} />
+                                className="w-full bg-transparent border border-dashed border-slate-300 dark:border-slate-500 rounded px-2 py-1 text-xs resize-none" rows={2} readOnly={isValidator} />
                             </td>
                           )}
                           {selectedDokumen === 'ia05' && (
                             <td className="py-2 px-3">
                               <textarea value={row.jawab_d as string} onChange={(e) => handleFieldChange(idx, 'jawab_d', e.target.value)}
-                                className="w-full bg-transparent border border-dashed border-slate-300 dark:border-slate-500 rounded px-2 py-1 text-xs resize-none" rows={2} />
+                                className="w-full bg-transparent border border-dashed border-slate-300 dark:border-slate-500 rounded px-2 py-1 text-xs resize-none" rows={2} readOnly={isValidator} />
                             </td>
                           )}
                           {selectedDokumen === 'ia05' && (
                             <td className="py-2 px-3">
                               <input value={(row as any).kuk?.kode ?? row.kode_kuk ?? ""} onChange={(e) => handleFieldChange(idx, 'kode_kuk', e.target.value)}
-                                className="w-full bg-transparent border border-dashed border-slate-300 dark:border-slate-500 rounded px-2 py-1 text-xs" />
+                                className="w-full bg-transparent border border-dashed border-slate-300 dark:border-slate-500 rounded px-2 py-1 text-xs" readOnly={isValidator} />
                             </td>
                           )}
                           {selectedDokumen === 'ia05' && (
                             <td className="py-2 px-3">
-                              <select value={row.jawaban as string} onChange={(e) => handleFieldChange(idx, 'jawaban', e.target.value)}
+                              <select value={row.jawaban as string} onChange={(e) => handleFieldChange(idx, 'jawaban', e.target.value)} disabled={isValidator}
                                 className="w-full rounded border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-2 py-1 text-xs text-slate-700 dark:text-slate-200">
                                 <option value="">--</option>
                                 <option value="A">A</option>
@@ -391,13 +402,15 @@ export default function DetailSoal() {
                           {selectedDokumen === 'ia06' && (
                             <td className="py-2 px-3">
                               <input value={(row as any).kuk?.kode ?? row.kode_kuk ?? ""} onChange={(e) => handleFieldChange(idx, 'kode_kuk', e.target.value)}
-                                className="w-full bg-transparent border border-dashed border-slate-300 dark:border-slate-500 rounded px-2 py-1 text-xs" />
+                                className="w-full bg-transparent border border-dashed border-slate-300 dark:border-slate-500 rounded px-2 py-1 text-xs" readOnly={isValidator} />
                             </td>
                           )}
                           <td className="py-2 px-3">
-                            <button onClick={() => handleDeleteRow(idx)} className="text-red-500 hover:text-red-700 text-xs font-medium">
-                              <X className="w-3.5 h-3.5" />
-                            </button>
+                            {!isValidator && (
+                              <button onClick={() => handleDeleteRow(idx)} className="text-red-500 hover:text-red-700 text-xs font-medium">
+                                <X className="w-3.5 h-3.5" />
+                              </button>
+                            )}
                           </td>
                         </tr>
                       ))}
@@ -409,7 +422,7 @@ export default function DetailSoal() {
           </Card>
 
           {/* Save button */}
-          {soalData.length > 0 && (
+          {!isValidator && soalData.length > 0 && (
             <div className="flex justify-end">
               <Button onClick={handleSave} disabled={saving}>
                 <Save className="w-4 h-4 mr-2" />
@@ -458,11 +471,17 @@ export default function DetailSoal() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2 text-xs text-slate-500">
-              <p>1. Pilih jenis dokumen KAN</p>
-              <p>2. Upload file DOCX atau tambah manual</p>
-              <p>3. Edit soal langsung di tabel</p>
-              <p>4. Simpan ke backend</p>
-              <p className="text-slate-400 mt-2 italic">Untuk IA.05 bisa upload kunci jawaban terpisah</p>
+              {isValidator ? (
+                <p>Mode lihat saja. Tidak bisa mengubah soal.</p>
+              ) : (
+                <>
+                  <p>1. Pilih jenis dokumen KAN</p>
+                  <p>2. Upload file DOCX atau tambah manual</p>
+                  <p>3. Edit soal langsung di tabel</p>
+                  <p>4. Simpan ke backend</p>
+                  <p className="text-slate-400 mt-2 italic">Untuk IA.05 bisa upload kunci jawaban terpisah</p>
+                </>
+              )}
             </CardContent>
           </Card>
         </div>
