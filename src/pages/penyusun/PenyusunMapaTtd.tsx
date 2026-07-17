@@ -92,13 +92,21 @@ export default function PenyusunMapaTtd() {
           </div>
         )}
         <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-          <Button variant="outline" onClick={() => navigate(`/penyusun/detail-jabker/${jabkerId}`)}>
-            <ArrowLeft style={{ width: '16px', height: '16px', marginRight: '8px' }} />
-            Kembali ke Detail Jabker
-          </Button>
-          <Button onClick={() => navigate('/penyusun/dashboard')}>
-            Lanjut ke Dashboard
-          </Button>
+          {jenis === "mapa01" ? (
+            <>
+              <Button variant="outline" onClick={() => navigate(`/penyusun/detail-jabker/${jabkerId}`)}>
+                <ArrowLeft style={{ width: '16px', height: '16px', marginRight: '8px' }} />
+                Kembali ke Detail Jabker
+              </Button>
+              <Button onClick={() => navigate(`/penyusun/mapa-ttd/mapa02/${jabkerId}`)}>
+                Lanjut ke MAPA 02
+              </Button>
+            </>
+          ) : (
+            <Button variant="default" onClick={() => navigate(`/penyusun/detail-jabker/${jabkerId}`)}>
+              Kembali ke Detail Jabker
+            </Button>
+          )}
         </div>
       </div>
     )
