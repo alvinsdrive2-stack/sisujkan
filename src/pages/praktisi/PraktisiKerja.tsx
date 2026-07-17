@@ -38,7 +38,7 @@ interface DokumenRef {
 interface IdentitasData {
   jabatan_kerja?: string; nomor_skema?: string; tuk?: string
   asesor_list?: { nama?: string; no_reg?: string }[]
-  nama_asesi?: string; jadwal_id?: number
+  nama_asesi?: string; jadwal_id?: number; tanggal?: string
 }
 
 interface PenyusunData {
@@ -101,7 +101,7 @@ function IdentitasTable({ data }: { data: IdentitasData }) {
         <tr>
           <Td>Tanggal</Td>
           <Td style={{ textAlign: 'center' }}>:</Td>
-          <Td colSpan={2}>{formatter.format(new Date())}</Td>
+          <Td colSpan={2}>{data.tanggal || formatter.format(new Date())}</Td>
         </tr>
       </tbody>
     </table>
@@ -320,6 +320,7 @@ export default function PraktisiKerja() {
             tuk: d2.tuk || prev.tuk,
             asesor_list: d2.asesor_list || prev.asesor_list,
             nama_asesi: d2.nama_asesi || prev.nama_asesi,
+            tanggal: d2.tanggal || prev.tanggal,
           }))
         }
       }).catch(() => {})
