@@ -71,11 +71,13 @@ export default function DaftarSkemaValidator() {
                     <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
                       {skema.jabker || skema.jabatan_kerja || "-"}
                     </p>
-                    <div className="flex items-center gap-2 mt-2">
-                      <Badge variant="secondary" className="text-xs">
-                        {skema.reviewed || 0}/{skema.soal || skema.total_soal || 0} Soal
-                      </Badge>
-                    </div>
+                    {!!(skema.soal || skema.total_soal) && (
+                      <div className="flex items-center gap-2 mt-2">
+                        <Badge variant="secondary" className="text-xs">
+                          {skema.reviewed || 0}/{skema.soal || skema.total_soal} Soal
+                        </Badge>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
