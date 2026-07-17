@@ -115,19 +115,35 @@ export default function PenyusunMapaTtd() {
     const data = mapaData as any
     const kelompokKerja = data?.kelompok_kerja?.kelompok_kerja || []
 
-    // Flatten referensi from nested structure for MAPA02
+    // Flatten referensi from API for MAPA02 (flat structure: {kategori, referensis[]})
     const flattenM2Refs = () => {
       const refs: { id: number; nama: string; isdefault: number | null; potensi_asesi_index: number }[] = []
       data?.referensi_form?.forEach((item: any) => {
-        item.kelompok?.kategoris?.forEach((kat: any) => {
-          if (kat.kategori === "MAPA02_1") {
-            kat.subkategoris?.forEach((sub: any) => {
-              sub.referensis?.forEach((ref: any) => {
-                refs.push({ id: ref.id, nama: ref.nama, isdefault: ref.value ? 1 : 0, potensi_asesi_index: 0 })
+        // Flat structure: item.kategori + item.referensis[]
+        if (item.referensis && Array.isArray(item.referensis)) {
+          if (item.kategori === "MAPA02_1") {
+            item.referensis.forEach((ref: any) => {
+              refs.push({
+                id: ref.id,
+                nama: ref.nama,
+                isdefault: ref.isdefault ?? (ref.value ? 1 : 0),
+                potensi_asesi_index: ref.potensi_asesi_index ?? 0,
               })
             })
           }
-        })
+        }
+        // Nested structure (MAPA01-style fallback): item.kelompok.kategoris[].subkategoris[].referensis[]
+        else if (item.kelompok?.kategoris) {
+          item.kelompok.kategoris.forEach((kat: any) => {
+            if (kat.kategori === "MAPA02_1") {
+              kat.subkategoris?.forEach((sub: any) => {
+                sub.referensis?.forEach((ref: any) => {
+                  refs.push({ id: ref.id, nama: ref.nama, isdefault: ref.value ? 1 : 0, potensi_asesi_index: 0 })
+                })
+              })
+            }
+          })
+        }
       })
       return refs
     }
@@ -135,15 +151,24 @@ export default function PenyusunMapaTtd() {
     const getKeteranganNama = () => {
       let nama = ""
       data?.referensi_form?.forEach((item: any) => {
-        item.kelompok?.kategoris?.forEach((kat: any) => {
-          if (kat.kategori === "MAPA02-1") {
-            kat.subkategoris?.forEach((sub: any) => {
-              sub.referensis?.forEach((ref: any) => {
-                nama = ref.nama
-              })
-            })
+        // Flat structure
+        if (item.referensis && Array.isArray(item.referensis)) {
+          if (item.kategori === "MAPA02-1" && item.referensis[0]?.nama) {
+            nama = item.referensis[0].nama
           }
-        })
+        }
+        // Nested fallback
+        else if (item.kelompok?.kategoris) {
+          item.kelompok.kategoris.forEach((kat: any) => {
+            if (kat.kategori === "MAPA02-1") {
+              kat.subkategoris?.forEach((sub: any) => {
+                sub.referensis?.forEach((ref: any) => {
+                  nama = ref.nama
+                })
+              })
+            }
+          })
+        }
       })
       return nama
     }
