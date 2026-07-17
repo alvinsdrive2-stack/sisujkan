@@ -250,7 +250,12 @@ export default function PenyusunMapaTtd() {
                       <td style={{ border: '1px solid #000', padding: '6px 8px' }}>{ref.nama}</td>
                       {[1, 2, 3, 4, 5].map((potensi) => (
                         <td key={potensi} style={{ border: '1px solid #000', padding: '6px 8px', textAlign: 'center', background: '#f5f5f5' }}>
-                          <CustomCheckbox checked={false} onChange={() => {}} disabled style={{ pointerEvents: 'none' }} />
+                          <CustomCheckbox
+                            checked={ref.isdefault === 1 && ref.potensi_asesi_index === potensi}
+                            onChange={() => {}}
+                            disabled
+                            style={{ pointerEvents: 'none' }}
+                          />
                         </td>
                       ))}
                     </tr>
