@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react"
-import { Search, ChevronLeft, ChevronRight, Download, FileText } from "lucide-react"
+import { Search, ChevronLeft, ChevronRight, Download, FileText, CheckSquare, Square } from "lucide-react"
 import { API_BASE_URL } from "@/config/api"
 
 const PER_PAGE = 20
@@ -14,10 +14,11 @@ export default function DataDokumen() {
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
   const [lastPage, setLastPage] = useState(1)
+  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set())
+  const [bulkLoading, setBulkLoading] = useState(false)
 
   const token = localStorage.getItem("access_token") || ""
 
-  // Load skema buat dropdown
   useEffect(() => {
     fetch(`${API_BASE_URL}/penyusun/skema`, {
       headers: { Accept: "application/json", Authorization: `Bearer ${token}` },
@@ -30,10 +31,9 @@ export default function DataDokumen() {
       .catch(() => {})
   }, [token])
 
-  // Reset page when skema or search changes
   useEffect(() => { setPage(1) }, [selectedSkema, search])
+  useEffect(() => { setSelectedIds(new Set()) }, [pesertaList])
 
-  // Load praktisi via endpoint dengan server-side search & pagination
   const fetchPeserta = useCallback(async () => {
     if (!selectedSkema) { setPesertaList([]); setTotal(0); return }
     setPesertaLoading(true)
@@ -50,13 +50,11 @@ export default function DataDokumen() {
       .then(r => { if (!r.ok) throw new Error("Gagal ambil peserta"); return r.json() })
       .then(j => {
         const d = j.data || j
-        // Paginated response: d.data[], d.total, d.last_page, d.current_page
         if (d.data && Array.isArray(d.data)) {
           setPesertaList(d.data)
           setTotal(d.total || 0)
           setLastPage(d.last_page || 1)
         } else if (Array.isArray(d)) {
-          // Fallback: flat array
           setPesertaList(d)
           setTotal(d.length)
           setLastPage(1)
@@ -71,10 +69,26 @@ export default function DataDokumen() {
   }, [selectedSkema, search, page, token])
 
   useEffect(() => {
-    // debounce: tunggu 300ms setelah search berhenti ngetik
     const timer = setTimeout(fetchPeserta, 300)
     return () => clearTimeout(timer)
   }, [fetchPeserta])
+
+  const toggleSelect = (id: number) => {
+    setSelectedIds(prev => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
+
+  const toggleSelectAll = () => {
+    if (selectedIds.size === pesertaList.length) {
+      setSelectedIds(new Set())
+    } else {
+      setSelectedIds(new Set(pesertaList.map(p => p.id)))
+    }
+  }
 
   const handleDownload = async (id: number) => {
     try {
@@ -82,18 +96,51 @@ export default function DataDokumen() {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
       })
-      if (!res.ok) throw new Error("Gagal download PDF")
+      if (!res.ok) throw new Error("Gagal download")
       const blob = await res.blob()
       const url = URL.createObjectURL(blob)
       const a = document.createElement("a")
       a.href = url
-      a.download = `dokumen-${id}.pdf`
+      a.download = `dokumen-kan-${id}.zip`
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)
       URL.revokeObjectURL(url)
     } catch (err: any) {
       setError(err.message)
+    }
+  }
+
+  const handleBulkDownload = async () => {
+    if (selectedIds.size === 0) return
+    setBulkLoading(true)
+    setError("")
+    try {
+      const res = await fetch(`${API_BASE_URL}/kan/asesmen/bulk-generate-pdf`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ids: Array.from(selectedIds) }),
+      })
+      if (!res.ok) {
+        const msg = (await res.json().catch(() => null))?.message || "Gagal download bulk"
+        throw new Error(msg)
+      }
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = "dokumen-kan-bulk.zip"
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+    } catch (err: any) {
+      setError(err.message)
+    } finally {
+      setBulkLoading(false)
     }
   }
 
@@ -144,10 +191,29 @@ export default function DataDokumen() {
         </div>
       ) : (
         <>
+          {selectedIds.size > 0 && (
+            <div className="mb-3 flex items-center gap-3">
+              <span className="text-sm text-slate-600 dark:text-slate-400">{selectedIds.size} terpilih</span>
+              <button onClick={handleBulkDownload} disabled={bulkLoading}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white text-sm font-medium rounded-lg transition-colors">
+                <Download className="w-4 h-4" />
+                {bulkLoading ? "Memproses..." : `Download ${selectedIds.size} Praktisi`}
+              </button>
+            </div>
+          )}
+
           <div className="overflow-x-auto border border-slate-200 dark:border-slate-600 rounded-lg">
             <table className="w-full text-sm">
               <thead className="bg-slate-50 dark:bg-slate-700">
                 <tr>
+                  <th className="w-10 py-3 px-2 text-center">
+                    <button onClick={toggleSelectAll} className="text-slate-500 hover:text-slate-700 dark:hover:text-slate-300">
+                      {selectedIds.size === pesertaList.length
+                        ? <CheckSquare className="w-4 h-4" />
+                        : <Square className="w-4 h-4" />
+                      }
+                    </button>
+                  </th>
                   <th className="text-left py-3 px-3 font-semibold text-slate-600 dark:text-slate-300">Praktisi</th>
                   <th className="text-left py-3 px-3 font-semibold text-slate-600 dark:text-slate-300 hidden sm:table-cell">Email</th>
                   <th className="text-center py-3 px-3 font-semibold text-slate-600 dark:text-slate-300">Aksi</th>
@@ -156,6 +222,14 @@ export default function DataDokumen() {
               <tbody>
                 {pesertaList.map((p: any) => (
                   <tr key={p.id} className="border-t border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50">
+                    <td className="py-3 px-2 text-center">
+                      <button onClick={() => toggleSelect(p.id)} className="text-slate-500 hover:text-slate-700 dark:hover:text-slate-300">
+                        {selectedIds.has(p.id)
+                          ? <CheckSquare className="w-4 h-4 text-blue-600" />
+                          : <Square className="w-4 h-4" />
+                        }
+                      </button>
+                    </td>
                     <td className="py-3 px-3">
                       <span className="font-medium text-slate-700 dark:text-slate-200">{p.user?.name || "-"}</span>
                     </td>
