@@ -103,9 +103,15 @@ export default function PenyusunMapaTtd() {
               </Button>
             </>
           ) : (
-            <Button variant="default" onClick={() => navigate(`/penyusun/detail-jabker/${jabkerId}`)}>
-              Kembali ke Detail Jabker
-            </Button>
+            <>
+              <Button variant="outline" onClick={() => navigate(`/penyusun/mapa-ttd/mapa01/${jabkerId}`)}>
+                <ArrowLeft style={{ width: '16px', height: '16px', marginRight: '8px' }} />
+                Kembali ke MAPA 01
+              </Button>
+              <Button variant="default" onClick={() => navigate(`/penyusun/detail-jabker/${jabkerId}`)}>
+                Kembali ke Detail Jabker
+              </Button>
+            </>
           )}
         </div>
       </div>
