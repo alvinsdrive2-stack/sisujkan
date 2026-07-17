@@ -740,21 +740,15 @@ export default function PraktisiKerja() {
         </table>
         <br />
 
-        <table style={{ width: '100%', border: '1px solid #000', borderCollapse: 'collapse', textAlign: 'center' }}>
-          <tbody>
-            <tr style={{ fontWeight: 'bold', backgroundColor: '#c40000', color: '#fff' }}>
-              <Td colSpan={2} style={{ textAlign: 'center' }}>Rekapitulasi Penilaian Pertanyaan Pilihan Ganda</Td>
+        <table width="100%" cellPadding="5" style={{ borderCollapse: 'collapse', border: '1px solid #000', background: '#fff' }}>
+            <tr style={{ fontWeight: 'bold', textAlign: 'center', background: '#c40000', color: '#fff' }}>
+              <td colSpan={2} style={{ border: '1px solid #000', padding: '6px' }}>Rekapitulasi Skor Penilaian Pertanyaan IA04B <span style={{ fontWeight: 'normal' }}><br/>(Penilaian = Jumlah skor seluruh butir soal)</span></td>
             </tr>
-            <tr>
-              <Td style={{ fontWeight: 'bold', backgroundColor: '#c40000', color: '#fff' }}>Benar</Td>
-              <Td style={{ fontWeight: 'bold', backgroundColor: '#c40000', color: '#fff' }}>Salah</Td>
+            <tr style={{ textAlign: 'center' }}>
+              <td style={{ fontWeight: 'bold', border: '1px solid #000', padding: '6px' }}>Total Skor Penilaian</td>
+              <td style={{ fontWeight: 'bold', height: '50px', border: '1px solid #000', padding: '6px', fontSize: '18px' }}>{jumlahBenar}</td>
             </tr>
-            <tr>
-              <Td style={{ textAlign: 'center', fontSize: '14pt' }}>{jumlahBenar}</Td>
-              <Td style={{ textAlign: 'center', fontSize: '14pt' }}>{jumlahSalah}</Td>
-            </tr>
-          </tbody>
-        </table>
+          </table>
         <br /><br />
 
         {/* TTD Asesi */}
