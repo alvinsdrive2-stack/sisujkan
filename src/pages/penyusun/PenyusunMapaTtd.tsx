@@ -91,7 +91,7 @@ export default function PenyusunMapaTtd() {
             <span style={{ fontSize: '14px', fontWeight: 600, color: '#15803d' }}>Semua sudah TTD</span>
           </div>
         )}
-        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap' }}>
           {jenis === "mapa01" ? (
             <>
               <Button variant="outline" onClick={() => navigate(`/penyusun/detail-jabker/${jabkerId}`)}>
