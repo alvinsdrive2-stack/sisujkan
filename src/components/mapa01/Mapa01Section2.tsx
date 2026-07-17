@@ -52,11 +52,14 @@ interface Mapa01Section2Props {
 
 // Derive column flags from jenjang + metode
 function deriveMetodeFlags(jenjang?: string, metode?: string) {
-  const j = 10
-  const m = "observasi"
+  const j = parseInt(jenjang || '7', 10)
+  const m = (metode || 'observasi').toLowerCase()
 
   if (j >= 1 && j <= 3) {
     return { L: true, TL: false, T: true, CL: true, DIT: false, DPT: true, PW: false, VP: false, VPK: false }
+  }
+  if (j > 3 && m === 'portofolio') {
+    return { L: false, TL: true, T: true, CL: false, DIT: false, DPT: false, PW: true, VP: true, VPK: true }
   }
   if (j > 3 && m === 'observasi') {
     return { L: true, TL: false, T: true, CL: false, DIT: true, DPT: true, PW: false, VP: false, VPK: false }
