@@ -30,7 +30,6 @@ interface SoalItem {
 interface ApiResponse {
   message: string
   data: {
-    tuk: string
     skema: string
     dokumen: { id: number; kode: string; nama_dokumen: string }
     soal_list: SoalItem[]
@@ -42,13 +41,12 @@ const hdDok = { backgroundColor: '#c40000', color: '#fff' }
 const hdDokB = { backgroundColor: '#d58a94', color: '#000' }
 const panduanTitle: React.CSSProperties = { backgroundColor: '#c00000', color: '#fff', fontWeight: 'bold', padding: '4px 8px', fontSize: '11pt' }
 const fontS: React.CSSProperties = { fontFamily: '"Arial Narrow", Calibri, Candara, Segoe, Segoe UI, Optima, Arial, sans-serif', fontSize: '12pt' }
-const formatter = new Intl.DateTimeFormat('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })
 
 function Td({ children, style, colSpan, rowSpan }: { children?: React.ReactNode; style?: React.CSSProperties; colSpan?: number; rowSpan?: number }) {
   return <td colSpan={colSpan} rowSpan={rowSpan} style={{ ...td, ...style }}>{children}</td>
 }
 
-function IdentitasTable({ skema, tuk }: { skema: string; tuk: string }) {
+function IdentitasTable({ skema }: { skema: string }) {
   return (
     <table style={{ border: '2px solid #000', borderCollapse: 'collapse', width: '100%' }} cellPadding="5" cellSpacing="0">
       <tbody>
@@ -63,13 +61,6 @@ function IdentitasTable({ skema, tuk }: { skema: string; tuk: string }) {
           <Td style={{ textAlign: 'center' }}>:</Td>
           <Td style={{ textTransform: 'uppercase' }}>-</Td>
         </tr>
-        <tr>
-          <Td>TUK</Td>
-          <Td style={{ textAlign: 'center' }}>:</Td>
-          <Td colSpan={2} style={{ textTransform: 'uppercase' }}>{tuk || '-'}</Td>
-        </tr>
-        <tr><Td>Nama Asesi</Td><Td style={{ textAlign: 'center' }}>:</Td><Td colSpan={2} style={{ textTransform: 'uppercase' }}>-</Td></tr>
-        <tr><Td>Tanggal</Td><Td style={{ textAlign: 'center' }}>:</Td><Td colSpan={2}>{formatter.format(new Date())}</Td></tr>
       </tbody>
     </table>
   )
@@ -147,7 +138,6 @@ export function SoalKosongPreview({ jabkerId }: SoalKosongPreviewProps) {
   const [tab, setTab] = useState<DocType>("ia04b")
   const [dokumen, setDokumen] = useState<{ id: number; nama_dokumen: string } | null>(null)
   const [skema, setSkema] = useState("")
-  const [tuk, setTuk] = useState("")
   const [soalList, setSoalList] = useState<SoalItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
@@ -168,7 +158,6 @@ export function SoalKosongPreview({ jabkerId }: SoalKosongPreviewProps) {
       if (!res.ok) throw new Error(`Gagal load ${tab} (${res.status})`)
       const json: ApiResponse = await res.json()
       setSkema(json.data?.skema || "")
-      setTuk(json.data?.tuk || "")
       setDokumen(json.data?.dokumen || null)
       setSoalList(json.data?.soal_list || [])
     } catch (err: any) {
@@ -225,7 +214,7 @@ export function SoalKosongPreview({ jabkerId }: SoalKosongPreviewProps) {
           FR.IA.04.B {dokumen?.nama_dokumen || 'LEMBAR PERIKSA KEGIATAN TERSTRUKTUR'}
         </div>
 
-        <IdentitasTable skema={skema} tuk={tuk} />
+        <IdentitasTable skema={skema}  />
         <p style={{ fontSize: '12px', margin: '4px 0' }}>*Coret yang tidak perlu</p>
 
         <Panduan title="PANDUAN BAGI ASESOR">
@@ -323,7 +312,7 @@ export function SoalKosongPreview({ jabkerId }: SoalKosongPreviewProps) {
           FR.IA.05. PERTANYAAN TERTULIS PILIHAN GANDA
         </div>
 
-        <IdentitasTable skema={skema} tuk={tuk} />
+        <IdentitasTable skema={skema}  />
         <p style={{ fontSize: '12px', margin: '4px 0' }}>*Coret yang tidak perlu</p>
 
         <Panduan title="PANDUAN BAGI ASESOR">
@@ -409,7 +398,7 @@ export function SoalKosongPreview({ jabkerId }: SoalKosongPreviewProps) {
 
         <h2 style={{ fontSize: '16px', fontWeight: 'bold', color: '#4F81BD' }}>FR.05.C. LEMBAR JAWABAN PERTANYAAN TERTULIS PILIHAN GANDA</h2>
         <br />
-        <IdentitasTable skema={skema} tuk={tuk} />
+        <IdentitasTable skema={skema}  />
         <p style={{ fontSize: '12px', margin: '4px 0' }}>*Coret yang tidak perlu</p>
 
         <table style={{ border: '1px solid #000', borderCollapse: 'collapse', width: '100%' }} cellPadding="5" cellSpacing="0">
@@ -465,7 +454,7 @@ export function SoalKosongPreview({ jabkerId }: SoalKosongPreviewProps) {
           FR.IA.06C. LEMBAR JAWABAN PERTANYAAN TERTULIS ESAI
         </div>
 
-        <IdentitasTable skema={skema} tuk={tuk} />
+        <IdentitasTable skema={skema}  />
         <p style={{ fontSize: '12px', margin: '4px 0' }}>*Coret yang tidak perlu</p>
 
         <Panduan title="PANDUAN BAGI ASESOR">
@@ -520,7 +509,7 @@ export function SoalKosongPreview({ jabkerId }: SoalKosongPreviewProps) {
         <br /><br /><br />
 
         <h2 style={{ fontSize: '16px', fontWeight: 'bold', color: '#4F81BD' }}>FR.IA.06C. LEMBAR JAWABAN PERTANYAAN TERTULIS ESAI</h2>
-        <IdentitasTable skema={skema} tuk={tuk} />
+        <IdentitasTable skema={skema}  />
         <p style={{ fontSize: '12px', margin: '4px 0' }}>*Coret yang tidak perlu</p>
 
         <table style={{ border: '1px solid #000', borderCollapse: 'collapse', width: '100%' }} cellPadding="5" cellSpacing="0">
