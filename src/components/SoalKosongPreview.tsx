@@ -174,6 +174,7 @@ export function SoalKosongPreview({ jabkerId }: SoalKosongPreviewProps) {
   const [nomorSkema, setNomorSkema] = useState("")
   const [penyusunData, setPenyusunData] = useState<any>({})
   const [soalList, setSoalList] = useState<SoalItem[]>([])
+  const [counts, setCounts] = useState<Record<string, number>>({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
 
@@ -182,6 +183,22 @@ export function SoalKosongPreview({ jabkerId }: SoalKosongPreviewProps) {
   useEffect(() => {
     fetchSoal()
   }, [tab, jabkerId])
+
+  // Fetch counts for all tabs on mount
+  useEffect(() => {
+    const allTabs: DocType[] = ["ia04b", "ia05", "ia06"]
+    allTabs.forEach(async (t) => {
+      if (t === tab) return // already fetching via fetchSoal
+      try {
+        const res = await fetch(`${API_BASE_URL}/kan/config/soal-kosong/${jabkerId}/${t}`, {
+          headers: { Accept: "application/json", Authorization: `Bearer ${token}` },
+        })
+        if (!res.ok) return
+        const json: ApiResponse = await res.json()
+        setCounts(prev => ({ ...prev, [t]: (json.data?.soal_list || []).length }))
+      } catch {}
+    })
+  }, [jabkerId]) // only on mount / jabkerId change
 
   const fetchSoal = async () => {
     setLoading(true)
@@ -196,6 +213,7 @@ export function SoalKosongPreview({ jabkerId }: SoalKosongPreviewProps) {
       setNomorSkema(json.data?.nomor_skema || "")
       setDokumen(json.data?.dokumen || null)
       setSoalList(json.data?.soal_list || [])
+      setCounts(prev => ({ ...prev, [tab]: (json.data?.soal_list || []).length }))
       setPenyusunData({
         nama_penyusun: json.data?.nama_penyusun,
         noreg_penyusun: json.data?.noreg_penyusun,
@@ -229,7 +247,7 @@ export function SoalKosongPreview({ jabkerId }: SoalKosongPreviewProps) {
             <Eye className="w-4 h-4" />
             {t.label}
             <Badge variant={tab === t.key ? "default" : "outline"} className="text-xs ml-1">
-              {tab === t.key ? soalList.length : 0}
+              {counts[t.key] ?? 0}
             </Badge>
           </button>
         ))}
