@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { API_BASE_URL } from "@/config/api"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { CustomCheckbox } from "@/components/ui/Checkbox"
 import { Loader2, Eye } from "lucide-react"
 
 type DocType = "ia04b" | "ia05" | "ia06"
@@ -135,7 +136,9 @@ function Ia04bPreview({ skema, tuk, soalList }: { skema: string; tuk: string; so
               <td style={{ verticalAlign: 'top', border: '1px solid #000', padding: '6px' }}>{soal.soal}</td>
               <td style={{ verticalAlign: 'top', border: '1px solid #000', padding: '6px' }}>Kode Unit : </td>
               {[0, 1, 2, 3].map(n => (
-                <td key={n} style={{ textAlign: 'center', verticalAlign: 'middle', border: '1px solid #000', padding: '6px' }}></td>
+                <td key={n} style={{ textAlign: 'center', verticalAlign: 'middle', border: '1px solid #000', padding: '6px' }}>
+                  <CustomCheckbox checked={false} onChange={() => {}} disabled />
+                </td>
               ))}
             </tr>
           ))}
@@ -310,8 +313,12 @@ function Ia05Preview({ skema, tuk, soalList }: { skema: string; tuk: string; soa
             <tr key={soal.id}>
               <td style={{ ...tdStyle, textAlign: 'center' }}>{soal.no}</td>
               <td style={tdStyle}><span style={{ color: '#999', fontStyle: 'italic' }}>Belum dijawab</span></td>
-              <td style={{ ...tdStyle, textAlign: 'center' }}></td>
-              <td style={{ ...tdStyle, textAlign: 'center' }}></td>
+              <td style={{ ...tdStyle, textAlign: 'center' }}>
+                <CustomCheckbox checked={false} onChange={() => {}} disabled />
+              </td>
+              <td style={{ ...tdStyle, textAlign: 'center' }}>
+                <CustomCheckbox checked={false} onChange={() => {}} disabled />
+              </td>
             </tr>
           ))}
         </tbody>
@@ -427,7 +434,9 @@ function Ia06Preview({ skema, tuk, soalList }: { skema: string; tuk: string; soa
               <Td style={{ width: '5%' }}></Td>
               <td style={tdStyle}></td>
               {[0, 1, 2, 3].map(n => (
-                <td key={n} style={{ ...tdStyle, textAlign: 'center', verticalAlign: 'middle' }}></td>
+                <td key={n} style={{ ...tdStyle, textAlign: 'center', verticalAlign: 'middle' }}>
+                  <CustomCheckbox checked={false} onChange={() => {}} disabled />
+                </td>
               ))}
             </tr>
           ))}
