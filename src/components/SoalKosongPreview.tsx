@@ -31,8 +31,17 @@ interface ApiResponse {
   message: string
   data: {
     skema: string
+    nomor_skema?: string
     dokumen: { id: number; kode: string; nama_dokumen: string }
     soal_list: SoalItem[]
+    nama_penyusun?: string | null
+    noreg_penyusun?: string | null
+    tanggal_penyusun?: string | null
+    barcode_penyusun?: string | null
+    nama_validator?: string | null
+    noreg_validator?: string | null
+    tanggal_validator?: string | null
+    barcode_validator?: string | null
   }
 }
 
@@ -46,7 +55,7 @@ function Td({ children, style, colSpan, rowSpan }: { children?: React.ReactNode;
   return <td colSpan={colSpan} rowSpan={rowSpan} style={{ ...td, ...style }}>{children}</td>
 }
 
-function IdentitasTable({ skema }: { skema: string }) {
+function IdentitasTable({ skema, nomorSkema }: { skema: string; nomorSkema?: string }) {
   return (
     <table style={{ border: '2px solid #000', borderCollapse: 'collapse', width: '100%' }} cellPadding="5" cellSpacing="0">
       <tbody>
@@ -59,7 +68,7 @@ function IdentitasTable({ skema }: { skema: string }) {
         <tr>
           <Td>Nomor</Td>
           <Td style={{ textAlign: 'center' }}>:</Td>
-          <Td style={{ textTransform: 'uppercase' }}>-</Td>
+          <Td style={{ textTransform: 'uppercase' }}>{nomorSkema || '-'}</Td>
         </tr>
       </tbody>
     </table>
@@ -82,7 +91,17 @@ function Panduan({ title, children }: { title: string; children: React.ReactNode
   )
 }
 
-function PenyusunValidatorTable() {
+const BULAN = ['','Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember']
+const formatTgl = (t?: string | null) => {
+  if (!t) return ''
+  try { const d = new Date(t); if (isNaN(d.getTime())) return t; return `${d.getDate()} ${BULAN[d.getMonth()]} ${d.getFullYear()}` }
+  catch { return t }
+}
+
+function PenyusunValidatorTable({ nama_penyusun, noreg_penyusun, tanggal_penyusun, barcode_penyusun, nama_validator, noreg_validator, tanggal_validator, barcode_validator }: {
+  nama_penyusun?: string | null; noreg_penyusun?: string | null; tanggal_penyusun?: string | null; barcode_penyusun?: string | null
+  nama_validator?: string | null; noreg_validator?: string | null; tanggal_validator?: string | null; barcode_validator?: string | null
+}) {
   return (
     <table style={{ border: '1px solid #000', borderCollapse: 'collapse', width: '100%' }} cellPadding="5" cellSpacing="0">
       <tbody>
@@ -95,14 +114,28 @@ function PenyusunValidatorTable() {
         </tr>
         <tr style={{ fontWeight: 'bold' }}>
           <Td rowSpan={2}>PENYUSUN</Td>
-          <Td style={{ textAlign: 'center' }}>1</Td><Td></Td><Td></Td>
-          <Td style={{ height: '50px', textAlign: 'center' }}><span style={{ color: '#999' }}>Belum ditandatangani</span></Td>
+          <Td style={{ textAlign: 'center' }}>1</Td>
+          <Td>{nama_penyusun || ''}</Td>
+          <Td>{noreg_penyusun || ''}</Td>
+          <Td style={{ height: '70px', verticalAlign: 'middle', textAlign: 'center' }}>
+            {barcode_penyusun ? (
+              <><img src={barcode_penyusun} style={{ height: '65px', width: '65px', objectFit: 'contain', display: 'block', margin: '0 auto' }} alt="barcode" /><br />
+                <span style={{ fontSize: '11px' }}>{formatTgl(tanggal_penyusun)}</span></>
+            ) : <span style={{ color: '#999' }}>Belum ditandatangani</span>}
+          </Td>
         </tr>
         <tr><Td style={{ textAlign: 'center' }}>2</Td><Td></Td><Td></Td><Td style={{ height: '50px' }}></Td></tr>
         <tr style={{ fontWeight: 'bold' }}>
           <Td rowSpan={2}>VALIDATOR</Td>
-          <Td style={{ textAlign: 'center' }}>1</Td><Td></Td><Td></Td>
-          <Td style={{ height: '50px', textAlign: 'center' }}><span style={{ color: '#999' }}>Belum ditandatangani</span></Td>
+          <Td style={{ textAlign: 'center' }}>1</Td>
+          <Td>{nama_validator || ''}</Td>
+          <Td>{noreg_validator || ''}</Td>
+          <Td style={{ height: '70px', verticalAlign: 'middle', textAlign: 'center' }}>
+            {barcode_validator ? (
+              <><img src={barcode_validator} style={{ height: '65px', width: '65px', objectFit: 'contain', display: 'block', margin: '0 auto' }} alt="barcode" /><br />
+                <span style={{ fontSize: '11px' }}>{formatTgl(tanggal_validator)}</span></>
+            ) : <span style={{ color: '#999' }}>Belum ditandatangani</span>}
+          </Td>
         </tr>
         <tr><Td style={{ textAlign: 'center' }}>2</Td><Td></Td><Td></Td><Td style={{ height: '50px' }}></Td></tr>
       </tbody>
@@ -138,6 +171,8 @@ export function SoalKosongPreview({ jabkerId }: SoalKosongPreviewProps) {
   const [tab, setTab] = useState<DocType>("ia04b")
   const [dokumen, setDokumen] = useState<{ id: number; nama_dokumen: string } | null>(null)
   const [skema, setSkema] = useState("")
+  const [nomorSkema, setNomorSkema] = useState("")
+  const [penyusunData, setPenyusunData] = useState<any>({})
   const [soalList, setSoalList] = useState<SoalItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
@@ -158,8 +193,19 @@ export function SoalKosongPreview({ jabkerId }: SoalKosongPreviewProps) {
       if (!res.ok) throw new Error(`Gagal load ${tab} (${res.status})`)
       const json: ApiResponse = await res.json()
       setSkema(json.data?.skema || "")
+      setNomorSkema(json.data?.nomor_skema || "")
       setDokumen(json.data?.dokumen || null)
       setSoalList(json.data?.soal_list || [])
+      setPenyusunData({
+        nama_penyusun: json.data?.nama_penyusun,
+        noreg_penyusun: json.data?.noreg_penyusun,
+        tanggal_penyusun: json.data?.tanggal_penyusun,
+        barcode_penyusun: json.data?.barcode_penyusun,
+        nama_validator: json.data?.nama_validator,
+        noreg_validator: json.data?.noreg_validator,
+        tanggal_validator: json.data?.tanggal_validator,
+        barcode_validator: json.data?.barcode_validator,
+      })
     } catch (err: any) {
       setError(err.message || "Gagal fetch")
     }
@@ -214,7 +260,7 @@ export function SoalKosongPreview({ jabkerId }: SoalKosongPreviewProps) {
           FR.IA.04.B {dokumen?.nama_dokumen || 'LEMBAR PERIKSA KEGIATAN TERSTRUKTUR'}
         </div>
 
-        <IdentitasTable skema={skema}  />
+        <IdentitasTable skema={skema} nomorSkema={nomorSkema} />
         <p style={{ fontSize: '12px', margin: '4px 0' }}>*Coret yang tidak perlu</p>
 
         <Panduan title="PANDUAN BAGI ASESOR">
@@ -279,7 +325,7 @@ export function SoalKosongPreview({ jabkerId }: SoalKosongPreviewProps) {
         <br />
 
         <h2 style={{ fontSize: '14px', fontWeight: 'bold' }}>PENYUSUN DAN VALIDATOR</h2>
-        <PenyusunValidatorTable />
+        <PenyusunValidatorTable {...penyusunData} />
         <br />
 
         <table style={{ width: '100%', border: '1px solid #000', borderCollapse: 'collapse', textAlign: 'center' }}>
@@ -312,7 +358,7 @@ export function SoalKosongPreview({ jabkerId }: SoalKosongPreviewProps) {
           FR.IA.05. PERTANYAAN TERTULIS PILIHAN GANDA
         </div>
 
-        <IdentitasTable skema={skema}  />
+        <IdentitasTable skema={skema} nomorSkema={nomorSkema} />
         <p style={{ fontSize: '12px', margin: '4px 0' }}>*Coret yang tidak perlu</p>
 
         <Panduan title="PANDUAN BAGI ASESOR">
@@ -393,12 +439,12 @@ export function SoalKosongPreview({ jabkerId }: SoalKosongPreviewProps) {
         <br />
 
         <h2 style={{ fontSize: '14px', fontWeight: 'bold' }}>PENYUSUN DAN VALIDATOR</h2>
-        <PenyusunValidatorTable />
+        <PenyusunValidatorTable {...penyusunData} />
         <br /><br /><br />
 
         <h2 style={{ fontSize: '16px', fontWeight: 'bold', color: '#4F81BD' }}>FR.05.C. LEMBAR JAWABAN PERTANYAAN TERTULIS PILIHAN GANDA</h2>
         <br />
-        <IdentitasTable skema={skema}  />
+        <IdentitasTable skema={skema} nomorSkema={nomorSkema} />
         <p style={{ fontSize: '12px', margin: '4px 0' }}>*Coret yang tidak perlu</p>
 
         <table style={{ border: '1px solid #000', borderCollapse: 'collapse', width: '100%' }} cellPadding="5" cellSpacing="0">
@@ -454,7 +500,7 @@ export function SoalKosongPreview({ jabkerId }: SoalKosongPreviewProps) {
           FR.IA.06C. LEMBAR JAWABAN PERTANYAAN TERTULIS ESAI
         </div>
 
-        <IdentitasTable skema={skema}  />
+        <IdentitasTable skema={skema} nomorSkema={nomorSkema} />
         <p style={{ fontSize: '12px', margin: '4px 0' }}>*Coret yang tidak perlu</p>
 
         <Panduan title="PANDUAN BAGI ASESOR">
@@ -505,11 +551,11 @@ export function SoalKosongPreview({ jabkerId }: SoalKosongPreviewProps) {
         <br />
 
         <h2 style={{ fontSize: '14px', fontWeight: 'bold' }}>PENYUSUN DAN VALIDATOR</h2>
-        <PenyusunValidatorTable />
+        <PenyusunValidatorTable {...penyusunData} />
         <br /><br /><br />
 
         <h2 style={{ fontSize: '16px', fontWeight: 'bold', color: '#4F81BD' }}>FR.IA.06C. LEMBAR JAWABAN PERTANYAAN TERTULIS ESAI</h2>
-        <IdentitasTable skema={skema}  />
+        <IdentitasTable skema={skema} nomorSkema={nomorSkema} />
         <p style={{ fontSize: '12px', margin: '4px 0' }}>*Coret yang tidak perlu</p>
 
         <table style={{ border: '1px solid #000', borderCollapse: 'collapse', width: '100%' }} cellPadding="5" cellSpacing="0">
