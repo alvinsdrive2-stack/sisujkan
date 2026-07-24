@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { API_BASE_URL } from "@/config/api"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, CheckCircle2 } from "lucide-react"
+import { ArrowLeft, CheckCircle2, Clock, FileSignature } from "lucide-react"
 import { Mapa01Layout, Mapa01Header, Mapa01Section1, Mapa01Section2, Mapa01Section3, Mapa01TandaTangan } from "@/components/mapa01"
 import { CustomCheckbox } from "@/components/ui/Checkbox"
 
@@ -68,43 +68,53 @@ export default function PenyusunMapaTtd() {
     const manajerSigned = !!mapaData?.manajer_info?.barcode
     const penyusunSigned = !!mapaData?.penyusun_info?.barcode
     const validatorSigned = !!mapaData?.validator_info?.barcode
+    const signedCount = [manajerSigned, penyusunSigned, validatorSigned].filter(Boolean).length
+    const allSigned = manajerSigned && penyusunSigned && validatorSigned
+
+    const signatures = [
+      { key: "manajer", label: "Manajer Sertifikasi", signed: manajerSigned, nama: mapaData?.manajer_info?.nama, tanggal: mapaData?.manajer_info?.tanggal },
+      { key: "penyusun", label: "Penyusun", signed: penyusunSigned, nama: mapaData?.penyusun_info?.nama, tanggal: mapaData?.penyusun_info?.tanggal },
+      { key: "validator", label: "Validator", signed: validatorSigned, nama: mapaData?.validator_info?.nama, tanggal: mapaData?.validator_info?.tanggal },
+    ]
 
     return (
-      <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '24px', marginTop: '24px' }}>
-        <h3 style={{ fontSize: '14px', fontWeight: 600, marginBottom: '16px' }}>Status Tanda Tangan</h3>
-        {manajerSigned && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 16px', background: '#f0fdf4', borderRadius: '8px', border: '1px solid #bbf7d0', marginBottom: '16px' }}>
-            <CheckCircle2 style={{ width: '20px', height: '20px', color: '#16a34a', flexShrink: 0 }} />
-            <span style={{ fontSize: '14px', fontWeight: 600, color: '#15803d' }}>
-              Manajer Sertifikasi Sudah TTD{mapaData?.manajer_info?.tanggal ? ` (${formatDate(mapaData.manajer_info.tanggal)})` : ''}
-            </span>
+      <div className="mt-6 rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+        <div className="px-6 py-4 border-b border-slate-200 bg-gradient-to-r from-slate-50 to-slate-100/60 flex items-center justify-between gap-4 flex-wrap">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <FileSignature className="w-5 h-5 text-primary" />
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-slate-800">Status Tanda Tangan</h3>
+              <p className="text-xs text-slate-500">{signedCount} dari 3 telah menandatangani</p>
+            </div>
           </div>
-        )}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '20px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 14px', background: penyusunSigned ? '#f0fdf4' : '#fef2f2', borderRadius: '6px', border: `1px solid ${penyusunSigned ? '#bbf7d0' : '#fecaca'}` }}>
-            <CheckCircle2 style={{ width: '18px', height: '18px', color: penyusunSigned ? '#16a34a' : '#dc2626', flexShrink: 0 }} />
-            <span style={{ fontSize: '13px', color: '#1e293b' }}>
-              <strong>Penyusun</strong> {penyusunSigned ? `Sudah TTD${mapaData.penyusun_info?.tanggal ? ` (${formatDate(mapaData.penyusun_info.tanggal)})` : ''}` : 'Belum TTD'}
-            </span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 14px', background: validatorSigned ? '#f0fdf4' : '#fef2f2', borderRadius: '6px', border: `1px solid ${validatorSigned ? '#bbf7d0' : '#fecaca'}` }}>
-            <CheckCircle2 style={{ width: '18px', height: '18px', color: validatorSigned ? '#16a34a' : '#dc2626', flexShrink: 0 }} />
-            <span style={{ fontSize: '13px', color: '#1e293b' }}>
-              <strong>Validator</strong> {validatorSigned ? `Sudah TTD${mapaData.validator_info?.tanggal ? ` (${formatDate(mapaData.validator_info.tanggal)})` : ''}` : 'Belum TTD'}
-            </span>
-          </div>
+          <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${allSigned ? "bg-green-100 text-green-700" : "bg-amber-100 text-amber-700"}`}>
+            {allSigned ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Clock className="w-3.5 h-3.5" />}
+            {allSigned ? "Lengkap" : "Belum Lengkap"}
+          </span>
         </div>
-        {penyusunSigned && validatorSigned && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 16px', background: '#f0fdf4', borderRadius: '8px', border: '1px solid #bbf7d0', marginBottom: '20px' }}>
-            <CheckCircle2 style={{ width: '20px', height: '20px', color: '#16a34a', flexShrink: 0 }} />
-            <span style={{ fontSize: '14px', fontWeight: 600, color: '#15803d' }}>Semua sudah TTD</span>
-          </div>
-        )}
-        <div style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap' }}>
+        <div className="p-5 grid grid-cols-1 md:grid-cols-3 gap-3">
+          {signatures.map((s) => (
+            <div key={s.key} className={`rounded-lg border p-4 transition-colors ${s.signed ? "border-green-200 bg-green-50/40" : "border-slate-200 bg-slate-50/60"}`}>
+              <div className="flex items-start justify-between mb-2 gap-2">
+                <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">{s.label}</span>
+                {s.signed
+                  ? <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0" />
+                  : <Clock className="w-4 h-4 text-slate-400 flex-shrink-0" />}
+              </div>
+              <p className="text-sm font-semibold text-slate-800 truncate">{s.nama || "—"}</p>
+              <p className="text-xs text-slate-500 mt-1">
+                {s.signed ? (s.tanggal ? formatDate(s.tanggal) : "Sudah TTD") : "Belum TTD"}
+              </p>
+            </div>
+          ))}
+        </div>
+        <div className="px-5 py-4 border-t border-slate-200 bg-slate-50/50 flex flex-wrap items-center justify-between gap-3">
           {jenis === "mapa01" ? (
             <>
               <Button variant="outline" onClick={() => navigate(`/manager-mutu/detail-jabker/${jabkerId}`)}>
-                <ArrowLeft style={{ width: '16px', height: '16px', marginRight: '8px' }} />
+                <ArrowLeft className="w-4 h-4 mr-2" />
                 Kembali ke Detail Jabker
               </Button>
               <Button onClick={() => navigate(`/manager-mutu/mapa-ttd/mapa02/${jabkerId}`)}>
@@ -114,7 +124,7 @@ export default function PenyusunMapaTtd() {
           ) : (
             <>
               <Button variant="outline" onClick={() => navigate(`/manager-mutu/mapa-ttd/mapa01/${jabkerId}`)}>
-                <ArrowLeft style={{ width: '16px', height: '16px', marginRight: '8px' }} />
+                <ArrowLeft className="w-4 h-4 mr-2" />
                 Kembali ke MAPA 01
               </Button>
               <Button variant="default" onClick={() => navigate(`/manager-mutu/detail-jabker/${jabkerId}`)}>

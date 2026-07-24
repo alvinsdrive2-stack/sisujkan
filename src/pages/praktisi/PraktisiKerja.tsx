@@ -217,6 +217,15 @@ export default function PraktisiKerja() {
   const isPenyusun = user?.role?.id === RoleId.PENYUSUN
   const isPraktisi = user?.role?.id === RoleId.PRAKTISI
 
+  const baseDetailPath = (() => {
+    switch (user?.role?.id) {
+      case RoleId.PENYUSUN: return "/penyusun"
+      case RoleId.MANAJER_SERTIFIKASI: return "/manajers"
+      case RoleId.MANAGER_MUTU: return "/manager-mutu"
+      default: return null
+    }
+  })()
+
   const [tab, setTab] = useState<DocType>("ia04b")
   const [dokumen, setDokumen] = useState<DokumenRef | null>(null)
   const [soalList, setSoalList] = useState<any[]>([])
@@ -393,7 +402,7 @@ export default function PraktisiKerja() {
         const idx = TABS.findIndex(t => t.key === tab)
         const next = TABS[idx + 1]
         if (next) setTab(next.key)
-        else navigate(fromJabker ? `/penyusun/detail-jabker/${fromJabker}` : '/login')
+        else navigate(fromJabker && baseDetailPath ? `${baseDetailPath}/detail-jabker/${fromJabker}` : (baseDetailPath ? `${baseDetailPath}/dashboard` : '/login'))
         load(next ? next.key : tab)
       }
     } catch (e: any) {
