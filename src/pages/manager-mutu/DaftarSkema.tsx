@@ -103,7 +103,7 @@ export default function DaftarSkema() {
 
               return (
                 <div key={skema.id} className="border border-slate-200 dark:border-slate-600 rounded-lg p-4 hover:shadow-md transition-all cursor-pointer"
-                  onClick={() => navigate(`/manager-mutu/detail-jabker/${skema.id}`)}>
+                  onClick={() => navigate(`/manager-mutu/soal-kosong/${skema.id}`)}>
                   <div className="flex items-start justify-between mb-3">
                     <div>
                       <h3 className="font-semibold text-slate-800 dark:text-slate-100">{skema.nama || skema.jabatan_kerja}</h3>
@@ -127,7 +127,7 @@ export default function DaftarSkema() {
                   <div className="flex justify-between mt-2">
                     <span className="text-xs text-slate-500">{progress}% selesai</span>
                     <button
-                      onClick={(e) => { e.stopPropagation(); navigate(`/manager-mutu/detail-jabker/${skema.id}`) }}
+                      onClick={(e) => { e.stopPropagation(); navigate(`/manager-mutu/soal-kosong/${skema.id}`) }}
                       className="text-blue-600 hover:text-blue-800 dark:text-blue-400 text-xs font-medium"
                     >
                       Lihat Detail →

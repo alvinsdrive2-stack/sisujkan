@@ -140,6 +140,7 @@ const AssignPraktisiManajers = lazy(() => import('./pages/manajers/AssignPraktis
 const DetailJabkerManajers = lazy(() => import('./pages/manajers/DetailJabker'))
 const DetailSoalManajers = lazy(() => import('./pages/manajers/DetailSoal'))
 const ManajersMapaTtd = lazy(() => import('./pages/manajers/PenyusunMapaTtd'))
+const SoalKosongManajers = lazy(() => import('./pages/manajers/SoalKosong'))
 
 const DashboardValidator = lazy(() => import('./pages/validator/DashboardValidator'))
 const DaftarSkemaValidator = lazy(() => import('./pages/validator/DaftarSkema'))
@@ -156,6 +157,7 @@ const AssignPraktisiManagerMutu = lazy(() => import('./pages/manager-mutu/Assign
 const DetailJabkerManagerMutu = lazy(() => import('./pages/manager-mutu/DetailJabker'))
 const DetailSoalManagerMutu = lazy(() => import('./pages/manager-mutu/DetailSoal'))
 const ManagerMutuMapaTtd = lazy(() => import('./pages/manager-mutu/PenyusunMapaTtd'))
+const SoalKosongManagerMutu = lazy(() => import('./pages/manager-mutu/SoalKosong'))
 
 const DashboardPraktisi = lazy(() => import('./pages/praktisi/DashboardPraktisi'))
 const JawabSoal = lazy(() => import('./pages/praktisi/JawabSoal'))
@@ -283,6 +285,7 @@ function App() {
                       <Route path="muk/:idIzin" element={<MukResultManajers />} />
                       <Route path="assign-praktisi" element={<AssignPraktisiManajers />} />
                       <Route path="detail-jabker/:id" element={<DetailJabkerManajers />} />
+                      <Route path="soal-kosong/:id" element={<SoalKosongManajers />} />
                       <Route path="mapa-ttd/:jenis/:jabkerId" element={<ManajersMapaTtd />} />
                       <Route path="" element={<Navigate to="dashboard" replace />} />
                     </Routes>
@@ -481,6 +484,7 @@ function App() {
                       <Route path="muk/:idIzin" element={<MukResultManagerMutu />} />
                       <Route path="assign-praktisi" element={<AssignPraktisiManagerMutu />} />
                       <Route path="detail-jabker/:id" element={<DetailJabkerManagerMutu />} />
+                      <Route path="soal-kosong/:id" element={<SoalKosongManagerMutu />} />
                       <Route path="mapa-ttd/:jenis/:jabkerId" element={<ManagerMutuMapaTtd />} />
                       <Route path="" element={<Navigate to="dashboard" replace />} />
                     </Routes>
