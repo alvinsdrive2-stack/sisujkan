@@ -103,21 +103,21 @@ export default function PenyusunMapaTtd() {
         <div style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap' }}>
           {jenis === "mapa01" ? (
             <>
-              <Button variant="outline" onClick={() => navigate(`/penyusun/detail-jabker/${jabkerId}`)}>
+              <Button variant="outline" onClick={() => navigate(`/manager-mutu/detail-jabker/${jabkerId}`)}>
                 <ArrowLeft style={{ width: '16px', height: '16px', marginRight: '8px' }} />
                 Kembali ke Detail Jabker
               </Button>
-              <Button onClick={() => navigate(`/penyusun/mapa-ttd/mapa02/${jabkerId}`)}>
+              <Button onClick={() => navigate(`/manager-mutu/mapa-ttd/mapa02/${jabkerId}`)}>
                 Lanjut ke MAPA 02
               </Button>
             </>
           ) : (
             <>
-              <Button variant="outline" onClick={() => navigate(`/penyusun/mapa-ttd/mapa01/${jabkerId}`)}>
+              <Button variant="outline" onClick={() => navigate(`/manager-mutu/mapa-ttd/mapa01/${jabkerId}`)}>
                 <ArrowLeft style={{ width: '16px', height: '16px', marginRight: '8px' }} />
                 Kembali ke MAPA 01
               </Button>
-              <Button variant="default" onClick={() => navigate(`/penyusun/detail-jabker/${jabkerId}`)}>
+              <Button variant="default" onClick={() => navigate(`/manager-mutu/detail-jabker/${jabkerId}`)}>
                 Kembali ke Detail Jabker
               </Button>
             </>
@@ -401,7 +401,7 @@ export default function PenyusunMapaTtd() {
     <div style={{ padding: '24px', maxWidth: '1100px', margin: '0 auto' }}>
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px' }}>
-        <Button variant="ghost" size="icon" onClick={() => navigate(`/penyusun/detail-jabker/${jabkerId}`)}>
+        <Button variant="ghost" size="icon" onClick={() => navigate(`/manager-mutu/detail-jabker/${jabkerId}`)}>
           <ArrowLeft style={{ width: '20px', height: '20px' }} />
         </Button>
         <div>

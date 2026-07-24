@@ -278,11 +278,11 @@ export function PraktisiRoute({ children, fallback }: { children: React.ReactNod
 }
 
 /**
- * PraktisiOrPenyusunRoute - Accessible by Praktisi, Penyusun, Validator, or Manajer Sertifikasi
+ * PraktisiOrPenyusunRoute - Accessible by Praktisi, Penyusun, Validator, Manajer Sertifikasi, or Manager Mutu
  */
 export function PraktisiOrPenyusunRoute({ children, fallback }: { children: React.ReactNode; fallback?: string }) {
   return (
-    <RoleRoute allowedRoles={["Praktisi", "Penyusun", "Validator", "Manajer Sertifikasi"]} fallback={fallback}>
+    <RoleRoute allowedRoles={["Praktisi", "Penyusun", "Validator", "Manajer Sertifikasi", "Manager Mutu"]} fallback={fallback}>
       {children}
     </RoleRoute>
   )

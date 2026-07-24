@@ -1,15 +1,15 @@
 import { useParams } from "react-router-dom"
-import PenilaianForm from "../penyusun/PenilaianForm"
+import PenilaianForm from "./PenilaianForm"
 
-export default function PenilaianManagerMutu() {
+export default function PenilaianPenyusun() {
   const { idIzin, jenis } = useParams()
   return (
     <PenilaianForm
       idIzin={idIzin!}
       jenis={jenis!}
-      rolePrefix="manager-mutu"
-      title="Penilaian Asesi — Manager Mutu"
-      subtitle="Review penilaian dan berikan tanda tangan"
+      rolePrefix="penyusun"
+      title="Penilaian Asesi"
+      subtitle="Lihat jawaban asesi dan berikan nilai"
     />
   )
 }

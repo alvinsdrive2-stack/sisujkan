@@ -145,9 +145,17 @@ const DashboardValidator = lazy(() => import('./pages/validator/DashboardValidat
 const DaftarSkemaValidator = lazy(() => import('./pages/validator/DaftarSkema'))
 const PenilaianValidator = lazy(() => import('./pages/validator/Penilaian'))
 
-const DashboardManagerMutu = lazy(() => import('./pages/manager-mutu/DashboardManagerMutu'))
+// Manager Mutu (KAN) — clone Penyusun, base /manager-mutu/*
+const DashboardManagerMutu = lazy(() => import('./pages/manager-mutu/DashboardPenyusun'))
+const LihatSoalManagerMutu = lazy(() => import('./pages/manager-mutu/LihatSoal'))
 const DaftarSkemaManagerMutu = lazy(() => import('./pages/manager-mutu/DaftarSkema'))
+const DataDokumenManagerMutu = lazy(() => import('./pages/manager-mutu/DataDokumen'))
 const PenilaianManagerMutu = lazy(() => import('./pages/manager-mutu/Penilaian'))
+const MukResultManagerMutu = lazy(() => import('./pages/manager-mutu/MukResult'))
+const AssignPraktisiManagerMutu = lazy(() => import('./pages/manager-mutu/AssignPraktisi'))
+const DetailJabkerManagerMutu = lazy(() => import('./pages/manager-mutu/DetailJabker'))
+const DetailSoalManagerMutu = lazy(() => import('./pages/manager-mutu/DetailSoal'))
+const ManagerMutuMapaTtd = lazy(() => import('./pages/manager-mutu/PenyusunMapaTtd'))
 
 const DashboardPraktisi = lazy(() => import('./pages/praktisi/DashboardPraktisi'))
 const JawabSoal = lazy(() => import('./pages/praktisi/JawabSoal'))
@@ -455,7 +463,7 @@ function App() {
             }
           />
 
-          {/* Protected Routes - Manager Mutu (KAN) */}
+          {/* Protected Routes - Manager Mutu (KAN) — clone Penyusun */}
           <Route
             path="/manager-mutu/*"
             element={
@@ -464,8 +472,16 @@ function App() {
                   <DashboardLayout>
                     <Routes>
                       <Route path="dashboard" element={<DashboardManagerMutu />} />
+                      <Route path="lihat-soal/:id" element={<DetailSoalManagerMutu />} />
+                      <Route path="lihat-soal" element={<LihatSoalManagerMutu />} />
+                      <Route path="daftar-skema" element={<DaftarSkemaManagerMutu />} />
                       <Route path="skema" element={<DaftarSkemaManagerMutu />} />
+                      <Route path="data-dokumen" element={<DataDokumenManagerMutu />} />
                       <Route path="penilaian/:idIzin/:jenis" element={<PenilaianManagerMutu />} />
+                      <Route path="muk/:idIzin" element={<MukResultManagerMutu />} />
+                      <Route path="assign-praktisi" element={<AssignPraktisiManagerMutu />} />
+                      <Route path="detail-jabker/:id" element={<DetailJabkerManagerMutu />} />
+                      <Route path="mapa-ttd/:jenis/:jabkerId" element={<ManagerMutuMapaTtd />} />
                       <Route path="" element={<Navigate to="dashboard" replace />} />
                     </Routes>
                   </DashboardLayout>

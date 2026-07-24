@@ -398,7 +398,7 @@ export const roleConfig: Partial<Record<UserRole, RoleConfig>> = {
     name: "Manager Mutu",
     layout: "dashboard-admin",
     defaultRoute: "/manager-mutu/dashboard",
-    permissions: ["view_soal", "nilai_asesi", "sign_document"],
+    permissions: ["manage_soal", "view_soal", "nilai_asesi", "sign_document", "view_muk", "view_dokumen"],
     menus: [
       {
         title: "Dashboard",
@@ -406,9 +406,24 @@ export const roleConfig: Partial<Record<UserRole, RoleConfig>> = {
         icon: LayoutDashboard
       },
       {
+        title: "Lihat Soal",
+        path: "/manager-mutu/lihat-soal",
+        icon: FileText
+      },
+      {
         title: "Daftar Skema",
-        path: "/manager-mutu/skema",
+        path: "/manager-mutu/daftar-skema",
         icon: ClipboardList
+      },
+      {
+        title: "Data Dokumen",
+        path: "/manager-mutu/data-dokumen",
+        icon: Upload
+      },
+      {
+        title: "Assign Praktisi",
+        path: "/manager-mutu/assign-praktisi",
+        icon: UserCheck
       }
     ]
   },

@@ -65,12 +65,21 @@ export default function PenyusunMapaTtd() {
 
   // ── All Signed Section ──
   const renderAllSigned = () => {
+    const manajerSigned = !!mapaData?.manajer_info?.barcode
     const penyusunSigned = !!mapaData?.penyusun_info?.barcode
     const validatorSigned = !!mapaData?.validator_info?.barcode
 
     return (
       <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '24px', marginTop: '24px' }}>
         <h3 style={{ fontSize: '14px', fontWeight: 600, marginBottom: '16px' }}>Status Tanda Tangan</h3>
+        {manajerSigned && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 16px', background: '#f0fdf4', borderRadius: '8px', border: '1px solid #bbf7d0', marginBottom: '16px' }}>
+            <CheckCircle2 style={{ width: '20px', height: '20px', color: '#16a34a', flexShrink: 0 }} />
+            <span style={{ fontSize: '14px', fontWeight: 600, color: '#15803d' }}>
+              Manajer Sertifikasi Sudah TTD{mapaData?.manajer_info?.tanggal ? ` (${formatDate(mapaData.manajer_info.tanggal)})` : ''}
+            </span>
+          </div>
+        )}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '20px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 14px', background: penyusunSigned ? '#f0fdf4' : '#fef2f2', borderRadius: '6px', border: `1px solid ${penyusunSigned ? '#bbf7d0' : '#fecaca'}` }}>
             <CheckCircle2 style={{ width: '18px', height: '18px', color: penyusunSigned ? '#16a34a' : '#dc2626', flexShrink: 0 }} />
