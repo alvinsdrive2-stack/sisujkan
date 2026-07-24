@@ -42,11 +42,13 @@ export default function PenyusunMapaTtd() {
 
   useEffect(() => {
     if (!jabkerId) return
+    setLoading(true)
+    setError("")
+    setMapaData(null)
     loadAll()
-  }, [jabkerId])
+  }, [jabkerId, jenis])
 
   const loadAll = async () => {
-    setLoading(true)
     try {
       const res = await fetch(`${API_BASE_URL}/penyusun/jabker/${jabkerId}/${jenis}/data`, {
         headers: { Accept: "application/json", Authorization: `Bearer ${token}` },

@@ -104,7 +104,8 @@ export function Mapa01TandaTangan({
     const states: Record<string, boolean> = {}
     if (referensiForm) {
       referensiForm.forEach((item) => {
-        const kelompok = item.kelompok
+        const kelompok = item?.kelompok
+        if (!kelompok) return
         kelompok.kategoris?.forEach((kategori) => {
           if (kategori.nama === "Orang yang relevan untuk dikonfirmasi") {
             kategori.subkategoris?.forEach((subkategori) => {
@@ -139,7 +140,8 @@ export function Mapa01TandaTangan({
     const references: Array<{ id: number; nama: string }> = []
 
     referensiForm.forEach((item) => {
-      const kelompok = item.kelompok
+      const kelompok = item?.kelompok
+      if (!kelompok) return
       kelompok.kategoris?.forEach((kategori) => {
         if (kategori.nama === "Orang yang relevan untuk dikonfirmasi") {
           kategori.subkategoris?.forEach((subkategori) => {
