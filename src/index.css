@@ -27,10 +27,6 @@
     --input: 216 20% 88%;
     --ring: 222 72% 22%;
     --radius: 0.5rem;
-    -webkit-user-select: none; /* Safari, Chrome, Opera */
-  -moz-user-select: none;    /* Firefox */
-  -ms-user-select: none;     /* Internet Explorer/Edge */
-  user-select: none;         /* Standard syntax */
   }
 
   .dark {
