@@ -7,7 +7,7 @@ import { RoleId } from "@/lib/rbac-config"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, FileText, Upload, Plus, Save, X, BookOpen, Eye } from "lucide-react"
+import { ArrowLeft, FileText, Upload, Plus, Save, X, BookOpen, ExternalLink, Eye } from "lucide-react"
 
 type SoalRow = Record<string, string | number>
 type DocType = "ia04b" | "ia05" | "ia06"
@@ -434,6 +434,14 @@ export default function DetailSoal() {
 
         {/* Right: Info */}
         <div className="lg:col-span-3 space-y-4">
+          <Button
+            variant="outline"
+            className="w-full gap-2 text-primary border-primary hover:bg-primary/5"
+            onClick={() => navigate(`/manajers/soal-kosong/${id}`)}
+          >
+            <ExternalLink className="w-4 h-4" />
+            Lihat Hasil
+          </Button>
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base">

@@ -128,6 +128,7 @@ const AssignPraktisi = lazy(() => import('./pages/penyusun/AssignPraktisi'))
 const DetailJabker = lazy(() => import('./pages/penyusun/DetailJabker'))
 const DetailSoal = lazy(() => import('./pages/penyusun/DetailSoal'))
 const PenyusunMapaTtd = lazy(() => import('./pages/penyusun/PenyusunMapaTtd'))
+const SoalKosongPenyusun = lazy(() => import('./pages/penyusun/SoalKosong'))
 
 // Manajer Sertifikasi (KAN) — clone Penyusun, base /manajers/*
 const DashboardManajers = lazy(() => import('./pages/manajers/DashboardPenyusun'))
@@ -439,6 +440,7 @@ function App() {
                       <Route path="assign-praktisi" element={<AssignPraktisi />} />
                       <Route path="detail-jabker/:id" element={<DetailJabker />} />
                       <Route path="mapa-ttd/:jenis/:jabkerId" element={<PenyusunMapaTtd />} />
+                      <Route path="soal-kosong/:id" element={<SoalKosongPenyusun />} />
                       <Route path="" element={<Navigate to="dashboard" replace />} />
                     </Routes>
                   </DashboardLayout>
