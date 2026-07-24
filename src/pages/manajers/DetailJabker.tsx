@@ -45,6 +45,8 @@ export default function DetailJabker() {
   const navigate = useNavigate()
   const [jabkerName, setJabkerName] = useState("")
   const [praktisiList, setPraktisiList] = useState<PraktisiItem[]>([])
+  const [penyusunInfo, setPenyusunInfo] = useState<{ nama: string; noreg: string } | null>(null)
+  const [validatorInfo, setValidatorInfo] = useState<{ nama: string; noreg: string } | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
 
@@ -81,6 +83,8 @@ export default function DetailJabker() {
         const j = await praktisiRes.json()
         const data = j.data || j
         setPraktisiList(Array.isArray(data) ? data : [])
+        setPenyusunInfo(j.penyusun || null)
+        setValidatorInfo(j.validator || null)
       } else {
         setPraktisiList([])
       }
@@ -214,6 +218,20 @@ export default function DetailJabker() {
               <div>
                 <p className="text-slate-500 text-xs">Total Praktisi</p>
                 <p className="font-medium text-slate-800 dark:text-slate-200">{praktisiCount} orang</p>
+              </div>
+              <div className="border-t border-slate-200 dark:border-slate-700 pt-3">
+                <p className="text-slate-500 text-xs">Penyusun</p>
+                <p className="font-medium text-slate-800 dark:text-slate-200">{penyusunInfo?.nama || "-"}</p>
+                {penyusunInfo?.noreg && (
+                  <p className="text-xs text-slate-500 font-mono">{penyusunInfo.noreg}</p>
+                )}
+              </div>
+              <div>
+                <p className="text-slate-500 text-xs">Validator</p>
+                <p className="font-medium text-slate-800 dark:text-slate-200">{validatorInfo?.nama || "-"}</p>
+                {validatorInfo?.noreg && (
+                  <p className="text-xs text-slate-500 font-mono">{validatorInfo.noreg}</p>
+                )}
               </div>
             </CardContent>
           </Card>

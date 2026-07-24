@@ -233,11 +233,6 @@ export const roleConfig: Partial<Record<UserRole, RoleConfig>> = {
         title: "Data Dokumen",
         path: "/manajers/data-dokumen",
         icon: Upload
-      },
-      {
-        title: "Assign Praktisi",
-        path: "/manajers/assign-praktisi",
-        icon: UserCheck
       }
     ]
   },
@@ -419,11 +414,6 @@ export const roleConfig: Partial<Record<UserRole, RoleConfig>> = {
         title: "Data Dokumen",
         path: "/manager-mutu/data-dokumen",
         icon: Upload
-      },
-      {
-        title: "Assign Praktisi",
-        path: "/manager-mutu/assign-praktisi",
-        icon: UserCheck
       }
     ]
   },
