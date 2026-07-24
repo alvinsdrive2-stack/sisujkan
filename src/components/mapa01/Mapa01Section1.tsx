@@ -180,7 +180,8 @@ export function Mapa01Section1({ referensiForm, isAsesor = false, disabled = fal
     const states: Record<string, boolean> = {}
     if (referensiForm) {
       referensiForm.forEach((item) => {
-        const kelompok = item.kelompok
+        const kelompok = item?.kelompok
+        if (!kelompok) return
         kelompok.kategoris?.forEach((kategori) => {
           kategori.subkategoris?.forEach((subkategori) => {
             subkategori.referensis?.forEach((ref) => {
@@ -213,7 +214,8 @@ export function Mapa01Section1({ referensiForm, isAsesor = false, disabled = fal
   const getCheckedState = (kategoriNama: string, refNama: string, defaultKey: string): boolean => {
     if (referensiForm) {
       for (const item of referensiForm) {
-        const kelompok = item.kelompok
+        const kelompok = item?.kelompok
+        if (!kelompok) continue
         for (const kategori of kelompok.kategoris || []) {
           if (kategori.nama === kategoriNama) {
             for (const subkategori of kategori.subkategoris || []) {

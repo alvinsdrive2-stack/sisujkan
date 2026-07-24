@@ -410,7 +410,7 @@ export default function PenyusunMapaTtd() {
 
   // ── Main Render ──
   return (
-    <div style={{ padding: '24px', maxWidth: '1100px', margin: '0 auto' }}>
+    <div key={jenis} style={{ padding: '24px', maxWidth: '1100px', margin: '0 auto' }}>
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px' }}>
         <Button variant="ghost" size="icon" onClick={() => navigate(`/manajers/detail-jabker/${jabkerId}`)}>

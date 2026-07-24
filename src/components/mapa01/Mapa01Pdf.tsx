@@ -205,6 +205,7 @@ const PdfSection1 = ({ referensiForm }: { referensiForm?: ReferensiFormItem[] })
   const getChecked = (kategori: string, refNama: string): boolean => {
     if (!referensiForm) return false;
     for (const item of referensiForm) {
+      if (!item?.kelompok) continue;
       for (const kat of item.kelompok.kategoris || []) {
         if (kat.nama === kategori) {
           for (const sub of kat.subkategoris || []) {
@@ -406,7 +407,7 @@ const PdfSection3 = ({ referensiForm }: { referensiForm?: ReferensiFormItem[] })
   const getChecked = (refNama: string): boolean => {
     if (!referensiForm) return false;
     for (const item of referensiForm) {
-      if (item.kelompok.id === 3) {
+      if (item?.kelompok?.id === 3) {
         for (const kat of item.kelompok.kategoris || []) {
           for (const sub of kat.subkategoris || []) {
             for (const ref of sub.referensis || []) {

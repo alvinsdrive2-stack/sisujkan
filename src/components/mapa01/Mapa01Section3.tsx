@@ -98,9 +98,9 @@ export function Mapa01Section3({ referensiForm, kelompokKerja, isAsesor = false,
       "Peluang untuk kegiatan asesmen terintegrasi dan mencatat setiap perubahan yang diperlukan untuk alat asesmen": { prefix: "3.4.", label: "Peluang untuk kegiatan asesmen terintegrasi dan mencatat setiap perubahan yang diperlukan untuk alat asesmen" }
     }
     if (referensiForm) {
-      const kelompok3 = referensiForm.find(item => item.kelompok.id === 3)
+      const kelompok3 = referensiForm.find(item => item?.kelompok?.id === 3)
       if (kelompok3) {
-        kelompok3.kelompok.kategoris?.forEach((kategori) => {
+        kelompok3.kelompok?.kategoris?.forEach((kategori) => {
           kategori.subkategoris?.forEach((subkategori) => {
             subkategori.referensis?.forEach((ref) => {
               const mapping = labelMapping[ref.nama]
