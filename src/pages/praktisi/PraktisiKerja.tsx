@@ -445,7 +445,7 @@ export default function PraktisiKerja() {
                 disabled={saving}
                 style={{ background: '#2563eb', color: '#fff', border: 'none', padding: '10px 28px', cursor: saving ? 'not-allowed' : 'pointer', fontSize: '12pt', fontWeight: 600, borderRadius: '4px' }}
               >
-                {saving ? "Menyimpan..." : `${(barcodes as any)?.['asesi']?.url ? 'Lanjut' : 'Simpan'} ${tab.toUpperCase()}`}
+                {saving ? "Menyimpan..." : `${tab === 'ia06' && (barcodes as any)?.['asesi']?.url ? 'Lanjut ke Dashboard' : `${(barcodes as any)?.['asesi']?.url ? 'Lanjut' : 'Simpan'} ${tab.toUpperCase()}`} `}
               </button>
             </div>
           )}
