@@ -16,11 +16,15 @@ interface SoalItem {
   no: number
   soal: string
   soal1?: string | null
+  soal2?: string | null
   tipe: number
   jawab_a?: string | null
   jawab_b?: string | null
   jawab_c?: string | null
   jawab_d?: string | null
+  unit_kode?: string | null
+  kuk_kode?: string | null
+  kunci_jawaban?: string | null
 }
 
 interface ApiResponse {
@@ -273,7 +277,7 @@ export function SoalKosongPreview({ jabkerId }: SoalKosongPreviewProps) {
                     style={{ width: '100%', minHeight: '50px', border: '1px solid #ccc', padding: '6px', fontSize: '12px', background: '#e9e9e9', resize: 'none', overflow: 'hidden' }}
                   />
                 </Td>
-                <Td style={{ verticalAlign: 'top' }}></Td>
+                <Td style={{ verticalAlign: 'top' }}>{soal.soal2 || soal.unit_kode || ''}</Td>
                 {[0, 1, 2, 3].map(n => (
                   <td key={n} style={{ ...td, textAlign: 'center', verticalAlign: 'middle' }}>
                     <CustomCheckbox checked={false} onChange={() => {}} disabled />
@@ -360,18 +364,30 @@ export function SoalKosongPreview({ jabkerId }: SoalKosongPreviewProps) {
                 { key: 'C' as const, label: soal.jawab_c },
                 { key: 'D' as const, label: soal.jawab_d },
               ]
-              const optionRows = cols.filter(o => o.label).map(({ key, label }) => (
-                <tr key={`${soal.id}-${key}`}>
-                  <Td></Td>
-                  <Td style={{ textAlign: 'center' }}>
-                    <CustomRadio name={`soal-${soal.id}`} value={key} checked={false} onChange={() => {}} disabled />
-                  </Td>
-                  <Td>&nbsp; {key.toLowerCase()}. {label}</Td>
-                </tr>
-              ))
+              const isKunci = (s: SoalItem, k: string) => (s as any).kunci_jawaban === k
+              const optionRows = cols.filter(o => o.label).map(({ key, label }) => {
+                const kunci = isKunci(soal, key)
+                return (
+                  <tr key={`${soal.id}-${key}`}>
+                    <Td style={{ textAlign: 'center', backgroundColor: kunci ? '#d4edda' : undefined }}>
+                      {kunci && <span style={{ color: 'green' }}>✓</span>}
+                    </Td>
+                    <Td style={{ textAlign: 'center' }}>
+                      <CustomRadio name={`soal-${soal.id}`} value={key} checked={false} onChange={() => {}} disabled />
+                    </Td>
+                    <Td style={{ backgroundColor: kunci ? '#d4edda' : undefined }}>
+                      &nbsp; {key.toLowerCase()}. {label}
+                      {kunci && <span style={{ color: 'green', marginLeft: '8px', fontWeight: 'bold' }}>(Kunci Jawaban)</span>}
+                    </Td>
+                  </tr>
+                )
+              })
               return [
                 <tr key={soal.id}>
-                  <Td style={{ textAlign: 'center', fontWeight: 'bold', backgroundColor: '#d58a94' }}></Td>
+                  <Td style={{ textAlign: 'center', fontWeight: 'bold', backgroundColor: '#d58a94' }}>
+                    {soal.unit_kode && <>{soal.unit_kode}<br /></>}
+                    {soal.kuk_kode || ''}
+                  </Td>
                   <Td style={{ width: '40px', textAlign: 'center' }}>{soal.no}.</Td>
                   <Td>{soal.soal}</Td>
                 </tr>,
@@ -487,7 +503,10 @@ export function SoalKosongPreview({ jabkerId }: SoalKosongPreviewProps) {
             )}
             {soalList.map((soal, idx) => (
               <tr key={soal.id}>
-                <td style={{ ...td, textAlign: 'center', fontWeight: 'bold', backgroundColor: '#d58a94' }}></td>
+                <td style={{ ...td, textAlign: 'center', fontWeight: 'bold', backgroundColor: '#d58a94' }}>
+                  {soal.unit_kode && <>{soal.unit_kode}<br /></>}
+                  {soal.kuk_kode || ''}
+                </td>
                 <td style={{ ...td, width: '40px', textAlign: 'center' }}>{idx + 1}.</td>
                 <td style={td}>{soal.soal}</td>
               </tr>
@@ -507,7 +526,7 @@ export function SoalKosongPreview({ jabkerId }: SoalKosongPreviewProps) {
         <table style={{ border: '1px solid #000', borderCollapse: 'collapse', width: '100%' }} cellPadding="5" cellSpacing="0">
           <tbody>
             <tr style={{ ...hdDok, fontWeight: 'bold', textAlign: 'center' }}>
-              <Td rowSpan={2}>No</Td>
+              <Td rowSpan={2}>KUK</Td>
               <Td rowSpan={2} colSpan={2}>JAWABAN SOAL ESAI</Td>
               <Td colSpan={4}>Skor Penilaian</Td>
             </tr>
@@ -521,11 +540,11 @@ export function SoalKosongPreview({ jabkerId }: SoalKosongPreviewProps) {
               <tr><td colSpan={7} style={{ ...td, textAlign: 'center', padding: '20px' }}>Belum ada soal</td></tr>
             ) : soalList.map((soal, idx) => (
               <tr key={soal.id}>
-                <Td style={{ textAlign: 'center', width: '5%' }}>{idx + 1}</Td>
-                <Td style={{ width: '5%' }}></Td>
+                <Td style={{ textAlign: 'center', backgroundColor: '#d58a94', width: '15%' }}>{soal.unit_kode || idx + 1}</Td>
+                <Td style={{ width: '5%', textAlign: 'center', backgroundColor: '#d58a94' }}>{idx + 1}</Td>
                 <td style={{ ...td, textAlign: 'left' }}>
                   <textarea disabled
-                    style={{ width: '100%', border: '1px solid #ccc', padding: '4px', marginTop: '4px', minHeight: '60px', fontSize: '11pt', background: '#e9e9e9', resize: 'none', overflow: 'hidden' }}
+                    style={{ width: '100%', border: '1px solid #000', padding: '4px', marginTop: '4px', minHeight: '60px', fontSize: '11pt', background: '#e9e9e9', resize: 'none', overflow: 'hidden' }}
                     placeholder="Tulis jawaban Anda di sini..."
                   />
                 </td>
