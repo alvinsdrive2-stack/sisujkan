@@ -54,7 +54,7 @@ function getDefaultRouteForRole(role?: UserRole): string {
     "superadmin": "/superadmin/dashboard",
     "Admin LSP": "/admin-lsp/dashboard",
     "Direktur LSP": "/direktur/tandatangan",
-    "Manajer Sertifikasi": "/manajer/dashboard",
+    "Manajer Sertifikasi": "/manajers/dashboard",
     "Admin TUK": "/admin-tuk/dashboard",
     "Asesor": "/asesor/dashboard",
     "Asesi": "/asesi/dashboard",
@@ -278,11 +278,11 @@ export function PraktisiRoute({ children, fallback }: { children: React.ReactNod
 }
 
 /**
- * PraktisiOrPenyusunRoute - Accessible by Praktisi, Penyusun, or Validator
+ * PraktisiOrPenyusunRoute - Accessible by Praktisi, Penyusun, Validator, or Manajer Sertifikasi
  */
 export function PraktisiOrPenyusunRoute({ children, fallback }: { children: React.ReactNode; fallback?: string }) {
   return (
-    <RoleRoute allowedRoles={["Praktisi", "Penyusun", "Validator"]} fallback={fallback}>
+    <RoleRoute allowedRoles={["Praktisi", "Penyusun", "Validator", "Manajer Sertifikasi"]} fallback={fallback}>
       {children}
     </RoleRoute>
   )

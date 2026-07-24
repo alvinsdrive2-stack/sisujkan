@@ -8,7 +8,6 @@ import {
   UserCheck,
   Upload,
   FileCheck as FileCheckIcon,
-  Activity,
   PenTool,
   ClipboardList,
   Award
@@ -211,18 +210,33 @@ export const roleConfig: Partial<Record<UserRole, RoleConfig>> = {
   },
   "Manajer Sertifikasi": {
     name: "Manajer Sertifikasi",
-    layout: "dashboard-manager",
-    defaultRoute: "/manajer/dashboard",
-    permissions: ["monitor_assessment"],
+    layout: "dashboard-admin",
+    defaultRoute: "/manajers/dashboard",
+    permissions: ["manage_soal", "view_soal", "nilai_asesi", "sign_document", "view_muk", "view_dokumen"],
     menus: [
       {
-        title: "Monitoring Sertifikasi",
-        path: "/manajer/monitoring",
-        icon: Activity
+        title: "Dashboard",
+        path: "/manajers/dashboard",
+        icon: LayoutDashboard
       },
       {
-        title: "Daftar Asesi",
-        path: "/manajer/asesi",
+        title: "Lihat Soal",
+        path: "/manajers/lihat-soal",
+        icon: FileText
+      },
+      {
+        title: "Daftar Skema",
+        path: "/manajers/daftar-skema",
+        icon: ClipboardList
+      },
+      {
+        title: "Data Dokumen",
+        path: "/manajers/data-dokumen",
+        icon: Upload
+      },
+      {
+        title: "Assign Praktisi",
+        path: "/manajers/assign-praktisi",
         icon: UserCheck
       }
     ]

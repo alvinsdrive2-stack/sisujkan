@@ -61,7 +61,7 @@ const EditJadwalPage = lazy(() => import('./pages/komtek/EditJadwalPage'))
 const DaftarAsesiAll = lazy(() => import('./pages/komtek/DaftarAsesiAll'))
 
 // Manajer Pages
-const DashboardManajer = lazy(() => import('./pages/manajer/DashboardManajer'))
+// (legacy /pages/manajer/DashboardManajer no longer used — superseded by /manajers/* clone)
 
 // Admin TUK Pages
 const DashboardAdminTUK = lazy(() => import('./pages/admin-tuk/DashboardAdminTUK'))
@@ -128,6 +128,18 @@ const AssignPraktisi = lazy(() => import('./pages/penyusun/AssignPraktisi'))
 const DetailJabker = lazy(() => import('./pages/penyusun/DetailJabker'))
 const DetailSoal = lazy(() => import('./pages/penyusun/DetailSoal'))
 const PenyusunMapaTtd = lazy(() => import('./pages/penyusun/PenyusunMapaTtd'))
+
+// Manajer Sertifikasi (KAN) — clone Penyusun, base /manajers/*
+const DashboardManajers = lazy(() => import('./pages/manajers/DashboardPenyusun'))
+const LihatSoalManajers = lazy(() => import('./pages/manajers/LihatSoal'))
+const DaftarSkemaManajers = lazy(() => import('./pages/manajers/DaftarSkema'))
+const DataDokumenManajers = lazy(() => import('./pages/manajers/DataDokumen'))
+const PenilaianManajers = lazy(() => import('./pages/manajers/Penilaian'))
+const MukResultManajers = lazy(() => import('./pages/manajers/MukResult'))
+const AssignPraktisiManajers = lazy(() => import('./pages/manajers/AssignPraktisi'))
+const DetailJabkerManajers = lazy(() => import('./pages/manajers/DetailJabker'))
+const DetailSoalManajers = lazy(() => import('./pages/manajers/DetailSoal'))
+const ManajersMapaTtd = lazy(() => import('./pages/manajers/PenyusunMapaTtd'))
 
 const DashboardValidator = lazy(() => import('./pages/validator/DashboardValidator'))
 const DaftarSkemaValidator = lazy(() => import('./pages/validator/DaftarSkema'))
@@ -246,17 +258,24 @@ function App() {
             }
           />
 
-          {/* Protected Routes - Manajer Sertifikasi */}
+          {/* Protected Routes - Manajer Sertifikasi (clone Penyusun, base /manajers/*) */}
           <Route
-            path="/manajer/*"
+            path="/manajers/*"
             element={
               <ManajerSertifikasiRoute>
                 <ValidatedNavigationRoute>
                   <DashboardLayout>
                     <Routes>
-                      <Route path="dashboard" element={<DashboardManajer />} />
-                      <Route path="monitoring" element={<div className="p-4"><h2 className="text-xl font-bold">Monitoring Sertifikasi</h2><p className="text-slate-600">Coming soon...</p></div>} />
-                      <Route path="asesi" element={<div className="p-4"><h2 className="text-xl font-bold">Daftar Asesi</h2><p className="text-slate-600">Coming soon...</p></div>} />
+                      <Route path="dashboard" element={<DashboardManajers />} />
+                      <Route path="lihat-soal/:id" element={<DetailSoalManajers />} />
+                      <Route path="lihat-soal" element={<LihatSoalManajers />} />
+                      <Route path="daftar-skema" element={<DaftarSkemaManajers />} />
+                      <Route path="data-dokumen" element={<DataDokumenManajers />} />
+                      <Route path="penilaian/:idIzin/:jenis" element={<PenilaianManajers />} />
+                      <Route path="muk/:idIzin" element={<MukResultManajers />} />
+                      <Route path="assign-praktisi" element={<AssignPraktisiManajers />} />
+                      <Route path="detail-jabker/:id" element={<DetailJabkerManajers />} />
+                      <Route path="mapa-ttd/:jenis/:jabkerId" element={<ManajersMapaTtd />} />
                       <Route path="" element={<Navigate to="dashboard" replace />} />
                     </Routes>
                   </DashboardLayout>
@@ -264,6 +283,9 @@ function App() {
               </ManajerSertifikasiRoute>
             }
           />
+
+          {/* Legacy /manajer/* → redirect to /manajers/dashboard */}
+          <Route path="/manajer/*" element={<Navigate to="/manajers/dashboard" replace />} />
 
           {/* Protected Routes - Admin TUK */}
           <Route
