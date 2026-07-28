@@ -220,7 +220,7 @@ export const roleConfig: Partial<Record<UserRole, RoleConfig>> = {
         icon: LayoutDashboard
       },
       {
-        title: "Lihat Soal",
+        title: "Input Soal",
         path: "/manajers/lihat-soal",
         icon: FileText
       },
@@ -350,7 +350,7 @@ export const roleConfig: Partial<Record<UserRole, RoleConfig>> = {
         icon: LayoutDashboard
       },
       {
-        title: "Lihat Soal",
+        title: "Input Soal",
         path: "/penyusun/lihat-soal",
         icon: FileText
       },
@@ -401,7 +401,7 @@ export const roleConfig: Partial<Record<UserRole, RoleConfig>> = {
         icon: LayoutDashboard
       },
       {
-        title: "Lihat Soal",
+        title: "Input Soal",
         path: "/manager-mutu/lihat-soal",
         icon: FileText
       },

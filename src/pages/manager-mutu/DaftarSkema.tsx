@@ -130,7 +130,7 @@ export default function DaftarSkema() {
                       onClick={(e) => { e.stopPropagation(); navigate(`/manager-mutu/soal-kosong/${skema.id}`) }}
                       className="text-blue-600 hover:text-blue-800 dark:text-blue-400 text-xs font-medium"
                     >
-                      Lihat Detail →
+                      Lihat Detail MUK →
                     </button>
                   </div>
                 </div>
