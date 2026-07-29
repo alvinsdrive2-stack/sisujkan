@@ -243,7 +243,6 @@ export default function DataDokumen() {
             </div>
           )}
         </div>
-        )}
       </div>
 
       {/* Filters Card */}
