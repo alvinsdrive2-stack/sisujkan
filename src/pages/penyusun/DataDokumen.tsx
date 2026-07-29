@@ -183,8 +183,7 @@ export default function DataDokumen() {
     setAllLoading(true)
     setError("")
     try {
-      const res = await fetch(`${API_BASE_URL}/download-all-dokumen`, {
-        method: "POST",
+      const res = await fetch(`${API_BASE_URL}/kan/asesmen/download-all-dokumen`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       if (!res.ok) {

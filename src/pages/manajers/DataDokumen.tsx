@@ -47,6 +47,7 @@ export default function DataDokumen() {
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set())
   const [bulkLoading, setBulkLoading] = useState(false)
   const [downloadingId, setDownloadingId] = useState<number | null>(null)
+  const [allLoading, setAllLoading] = useState(false)
 
   const token = localStorage.getItem("access_token") || ""
 
@@ -178,6 +179,33 @@ export default function DataDokumen() {
     }
   }
 
+  const handleDownloadAll = async () => {
+    setAllLoading(true)
+    setError("")
+    try {
+      const res = await fetch(`${API_BASE_URL}/kan/asesmen/download-all-dokumen`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      if (!res.ok) {
+        const msg = (await res.json().catch(() => null))?.message || "Gagal download semua dokumen"
+        throw new Error(msg)
+      }
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = "dokumen-all-praktisi.zip"
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+    } catch (err: any) {
+      setError(err.message)
+    } finally {
+      setAllLoading(false)
+    }
+  }
+
   const SkeletonRow = ({ index }: { index: number }) => (
     <tr className="border-t border-slate-100 dark:border-slate-700" style={{ ...fadeIn, animationDelay: `${staggerDelays[index % 10]}s` }}>
       {[1,2,3,4].map(c => (
@@ -199,9 +227,20 @@ export default function DataDokumen() {
           <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm">Download dokumen praktisi per skema</p>
         </div>
         {selectedSkema && !pesertaLoading && pesertaList.length > 0 && (
-          <div className="hidden sm:flex items-center gap-2 text-xs text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-full">
-            <Users className="w-3.5 h-3.5" />
-            <span>{total} praktisi</span>
+          <div className="flex items-center gap-3">
+            <button onClick={handleDownloadAll} disabled={allLoading}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 disabled:bg-emerald-400 text-white text-sm font-medium rounded-lg transition-all duration-200 shadow-sm hover:shadow-md disabled:shadow-none">
+              {allLoading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Download className="w-4 h-4" />
+              )}
+              {allLoading ? "Memproses..." : "Download All Praktisi"}
+            </button>
+            <div className="hidden sm:flex items-center gap-2 text-xs text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-full">
+              <Users className="w-3.5 h-3.5" />
+              <span>{total} praktisi</span>
+            </div>
           </div>
         )}
       </div>
