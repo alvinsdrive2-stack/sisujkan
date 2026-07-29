@@ -48,6 +48,7 @@ export default function DataDokumen() {
   const [bulkLoading, setBulkLoading] = useState(false)
   const [downloadingId, setDownloadingId] = useState<number | null>(null)
   const [allLoading, setAllLoading] = useState(false)
+  const [progress, setProgress] = useState<{ show: boolean; pct: number; status: string; error?: string }>({ show: false, pct: 0, status: '' })
 
   const token = localStorage.getItem("access_token") || ""
 
@@ -182,10 +183,36 @@ export default function DataDokumen() {
   const handleDownloadAll = async () => {
     setAllLoading(true)
     setError("")
+    const uid = crypto.randomUUID?.() ?? Math.random().toString(36).slice(2)
+    setProgress({ show: true, pct: 0, status: 'Memulai...' })
+
     try {
-      const res = await fetch(`${API_BASE_URL}/kan/asesmen/download-all-dokumen`, {
+      const resP = fetch(`${API_BASE_URL}/kan/asesmen/download-all-dokumen?token=${uid}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
+
+      let done = false
+      while (!done) {
+        await new Promise(r => setTimeout(r, 2000))
+        try {
+          const pRes = await fetch(`${API_BASE_URL}/kan/asesmen/download-all-dokumen/progress?token=${uid}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          })
+          const pData = await pRes.json()
+          if (pData.status === 'done') {
+            setProgress(p => ({ ...p, pct: 100, status: 'Selesai, mendownload...' }))
+            done = true
+          } else if (pData.status === 'error') {
+            throw new Error(pData.error || 'Gagal memproses dokumen')
+          } else {
+            setProgress(p => ({ ...p, pct: pData.progress ?? 0, status: `Memproses ${pData.done}/${pData.total} praktisi` }))
+          }
+        } catch (e: any) {
+          if (e.message?.includes('Gagal memproses')) throw e
+        }
+      }
+
+      const res = await resP
       if (!res.ok) {
         const msg = (await res.json().catch(() => null))?.message || "Gagal download semua dokumen"
         throw new Error(msg)
@@ -201,8 +228,11 @@ export default function DataDokumen() {
       URL.revokeObjectURL(url)
     } catch (err: any) {
       setError(err.message)
+      setProgress(p => ({ ...p, status: 'error', error: err.message }))
+      setTimeout(() => setProgress(p => ({ ...p, show: false })), 3000)
     } finally {
       setAllLoading(false)
+      setProgress(p => ({ ...p, show: false }))
     }
   }
 
@@ -457,6 +487,33 @@ export default function DataDokumen() {
             )}
           </div>
         </>
+      )}
+
+      {/* Progress Modal */}
+      {progress.show && (
+        <div style={fadeIn} className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 p-6 w-full max-w-sm mx-4">
+            <div className="text-center">
+              <Loader2 className="w-8 h-8 animate-spin text-emerald-600 mx-auto mb-3" />
+              <h3 className="text-base font-semibold text-slate-800 dark:text-slate-100 mb-1">
+                Download All Praktisi
+              </h3>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">{progress.status}</p>
+
+              <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-3 overflow-hidden">
+                <div className="h-full bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-full transition-all duration-500 ease-out"
+                  style={{ width: `${progress.pct}%` }} />
+              </div>
+              <span className="text-xs font-medium text-slate-500 dark:text-slate-400 mt-1.5 block">
+                {progress.pct}%
+              </span>
+
+              {progress.status === 'error' && (
+                <p className="text-xs text-red-500 mt-2">{progress.error}</p>
+              )}
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )
