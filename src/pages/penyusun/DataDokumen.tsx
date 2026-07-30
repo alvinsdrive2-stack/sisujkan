@@ -187,12 +187,18 @@ export default function DataDokumen() {
     setProgress({ show: true, pct: 0, status: 'Memulai...' })
 
     try {
-      // Start download fetch (will resolve after server finishes)
-      const resP = fetch(`${API_BASE_URL}/kan/asesmen/download-all-dokumen?token=${uid}`, {
+      // Trigger background job — return langsung (status=started)
+      const startRes = await fetch(`${API_BASE_URL}/kan/asesmen/download-all-dokumen?token=${uid}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
+      if (startRes.status === 202) {
+        // Sudah ada process berjalan dari tab/request lain — lanjut polling
+      } else if (!startRes.ok) {
+        const msg = (await startRes.json().catch(() => null))?.message || "Gagal mulai proses"
+        throw new Error(msg)
+      }
 
-      // Poll progress
+      // Poll progress sampai done
       let done = false
       while (!done) {
         await new Promise(r => setTimeout(r, 2000))
@@ -215,9 +221,12 @@ export default function DataDokumen() {
         }
       }
 
-      const res = await resP
+      // ZIP siap — fetch ulang, backend stream file
+      const res = await fetch(`${API_BASE_URL}/kan/asesmen/download-all-dokumen?token=${uid}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
       if (!res.ok) {
-        const msg = (await res.json().catch(() => null))?.message || "Gagal download semua dokumen"
+        const msg = (await res.json().catch(() => null))?.message || "Gagal download ZIP"
         throw new Error(msg)
       }
       const blob = await res.blob()
