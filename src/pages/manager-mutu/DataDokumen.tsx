@@ -313,7 +313,7 @@ export default function DataDokumen() {
         <div className="flex flex-wrap items-end gap-4">
           <div className="w-full sm:w-72">
             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-              <FolderOpen className="w-3.5 h-3.5 inline mr-1.5 -mt-0.5" />
+              <FolderOpen className="w-full h-3.5 inline mr-1.5 -mt-0.5" />
               Pilih Skema
             </label>
             <div className="relative" ref={skemaRef}>
