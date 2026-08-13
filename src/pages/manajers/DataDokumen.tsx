@@ -312,7 +312,7 @@ export default function DataDokumen() {
       {/* Filters Card */}
       <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm p-4 sm:p-5">
         <div className="flex flex-wrap items-end gap-4">
-          <div className="w-full sm:w-72">
+          <div className="w-full">
             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
               <FolderOpen className="w-3.5 h-3.5 inline mr-1.5 -mt-0.5" />
               Pilih Skema
