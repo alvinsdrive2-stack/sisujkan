@@ -317,47 +317,47 @@ export default function DataDokumen() {
         <div className="flex flex-wrap items-end gap-4">
           <div className="w-full sm:w-72">
             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-              <FolderOpen className="w-full h-3.5 inline mr-1.5 -mt-0.5" />
+              <FolderOpen className="w-3.5 h-3.5 inline mr-1.5 -mt-0.5" />
               Pilih Skema
             </label>
             <div className="relative" ref={skemaRef}>
               <button type="button" onClick={() => setSkemaOpen(o => !o)}
-                className="w-full flex items-center justify-between gap-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2.5 text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow">
+                className="w-full flex items-center justify-between gap-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-4 py-3 text-base text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow">
                 <span className={`truncate ${selectedSkemaItem ? '' : 'text-slate-400 dark:text-slate-500'}`}>
                   {selectedSkemaItem ? (selectedSkemaItem.jabatan_kerja || selectedSkemaItem.nama) : '-- Pilih Skema --'}
                 </span>
-                <ChevronDown className={`w-4 h-4 text-slate-400 shrink-0 transition-transform duration-200 ${skemaOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`w-5 h-5 text-slate-400 shrink-0 transition-transform duration-200 ${skemaOpen ? 'rotate-180' : ''}`} />
               </button>
 
               {skemaOpen && (
                 <div className="absolute z-20 mt-2 w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 shadow-lg overflow-hidden">
-                  <div className="relative p-2 pb-0">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+                  <div className="relative p-2.5 pb-0">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
                     <input
                       autoFocus
                       type="text"
                       value={skemaQuery}
                       onChange={e => setSkemaQuery(e.target.value)}
                       placeholder="Cari skema..."
-                      className="w-full pl-9 pr-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-sm placeholder:text-slate-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-shadow"
+                      className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-base placeholder:text-slate-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-shadow"
                     />
                   </div>
-                  <ul className="py-1 max-h-60 overflow-y-auto">
+                  <ul className="py-1 max-h-96 overflow-y-auto">
                     {filteredSkema.length === 0 ? (
-                      <li className="px-3 py-2.5 text-sm text-slate-400 dark:text-slate-500 text-center">Skema tidak ditemukan</li>
+                      <li className="px-4 py-3 text-base text-slate-400 dark:text-slate-500 text-center">Skema tidak ditemukan</li>
                     ) : filteredSkema.map((s: any) => {
                       const label = s.jabatan_kerja || s.nama
                       const active = String(s.id) === String(selectedSkema)
                       return (
                         <li key={s.id}>
                           <button type="button" onClick={() => pickSkema(s.id)}
-                            className={`w-full flex items-center justify-between gap-2 px-3 py-2 text-sm text-left transition-colors ${
+                            className={`w-full flex items-center justify-between gap-2 px-4 py-2.5 text-base text-left transition-colors ${
                               active
                                 ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
                                 : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700'
                             }`}>
                             <span className="truncate">{label}</span>
-                            {active && <Check className="w-4 h-4 shrink-0 text-blue-600 dark:text-blue-400" />}
+                            {active && <Check className="w-5 h-5 shrink-0 text-blue-600 dark:text-blue-400" />}
                           </button>
                         </li>
                       )
