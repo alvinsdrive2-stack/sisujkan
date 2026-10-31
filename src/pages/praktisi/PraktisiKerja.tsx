@@ -52,7 +52,7 @@ const hdDokB = { backgroundColor: '#d58a94', color: '#000' }
 const panduanTitle = { backgroundColor: '#c00000', color: '#fff', fontWeight: 'bold' as const, padding: '4px 8px', fontSize: '11pt' }
 const fontS = { fontFamily: '"Arial Narrow", Calibri, Candara, Segoe, Segoe UI, Optima, Arial, sans-serif', fontSize: '12pt' }
 const formatter = new Intl.DateTimeFormat('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })
-const BULAN = ['','Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember']
+const BULAN = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember']
 const formatTgl = (t?: string) => {
   if (!t) return ''
   try {
@@ -253,6 +253,7 @@ export default function PraktisiKerja() {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState("")
   const [info, setInfo] = useState("")
+  const [showSurveyModal, setShowSurveyModal] = useState(false)
 
   const load = useCallback(async (doc: DocType) => {
     if (!id) return
@@ -347,6 +348,15 @@ export default function PraktisiKerja() {
     [soalList, answers]
   )
 
+  const handleSurveyClick = (openSurvey: boolean) => {
+    if (openSurvey) {
+      window.open('https://forms.gle/KHcxwSMvmmBFPHAq9', '_blank')
+    }
+    setShowSurveyModal(false)
+    // Navigate ke dashboard setelah tutup popup
+    navigate(fromJabker && baseDetailPath ? `${baseDetailPath}/detail-jabker/${fromJabker}` : (baseDetailPath ? `${baseDetailPath}/dashboard` : '/login'))
+  }
+
 
   const handleAnswerChange = (soalId: number, answer: 'A' | 'B' | 'C' | 'D') =>
     setAnswers(prev => ({ ...prev, [soalId]: answer }))
@@ -401,9 +411,15 @@ export default function PraktisiKerja() {
         // Already TTD → move to next tab
         const idx = TABS.findIndex(t => t.key === tab)
         const next = TABS[idx + 1]
-        if (next) setTab(next.key)
-        else navigate(fromJabker && baseDetailPath ? `${baseDetailPath}/detail-jabker/${fromJabker}` : (baseDetailPath ? `${baseDetailPath}/dashboard` : '/login'))
-        load(next ? next.key : tab)
+        if (next) {
+          setTab(next.key)
+          load(next.key)
+        } else if (tab === 'ia06') {
+          // IA06 selesai, show survey modal dulu
+          setShowSurveyModal(true)
+        } else {
+          navigate(fromJabker && baseDetailPath ? `${baseDetailPath}/detail-jabker/${fromJabker}` : (baseDetailPath ? `${baseDetailPath}/dashboard` : '/login'))
+        }
       }
     } catch (e: any) {
       setError(e.message)
@@ -458,6 +474,32 @@ export default function PraktisiKerja() {
               </button>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Survey Modal */}
+      {showSurveyModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-white dark:bg-slate-800 rounded-lg shadow-xl p-6 max-w-md mx-4">
+            <h2 className="text-xl font-bold mb-4 text-slate-900 dark:text-white">Mohon isi survey berikut</h2>
+            <p className="text-slate-600 dark:text-slate-300 mb-6">
+              Terima kasih telah menyelesaikan asesmen. Mohon luangkan waktu untuk mengisi survey kepuasan untuk membantu kami meningkatkan kualitas layanan.
+            </p>
+            <div className="flex gap-3 justify-end">
+              <button
+                onClick={() => handleSurveyClick(false)}
+                className="px-4 py-2 rounded-lg bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-medium hover:bg-slate-300 dark:hover:bg-slate-600"
+              >
+                Nanti Saja
+              </button>
+              <button
+                onClick={() => handleSurveyClick(true)}
+                className="px-4 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700"
+              >
+                Isi Survey
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

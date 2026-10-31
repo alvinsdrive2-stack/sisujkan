@@ -91,7 +91,7 @@ function Panduan({ title, children }: { title: string; children: React.ReactNode
   )
 }
 
-const BULAN = ['','Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember']
+const BULAN = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember']
 const formatTgl = (t?: string | null) => {
   if (!t) return ''
   try { const d = new Date(t); if (isNaN(d.getTime())) return t; return `${d.getDate()} ${BULAN[d.getMonth()]} ${d.getFullYear()}` }
